@@ -1,6 +1,6 @@
 # jstack
 
-i'm [vrubzy](https://x.com/Vrubzy). i'm not a president or ceo, but i've worked with millions of lines of code at Meta, Netflix, and Cursor. i'm also on the react core team where i help build and maintain react compiler.
+i'm [vrubzy](https://x.com/Vrubzy). jstack is my fork of [pstack](https://github.com/cursor/plugins/tree/main/pstack), lauren tan's engineering-rigor plugin for cursor. the skills, playbooks, and principles are hers; the harness-agnostic packaging and the changes on top are mine.
 
 there's a growing sense that ai writes too much slop code. i agree. i don't want to ship like a team of twenty slop artists. throughput without quality is not a goal i aspire to. if you want to go fast, go deep first. 
 
