@@ -1,0 +1,21 @@
+{
+	"name": "jstack",
+	"owner": {
+		"name": "Jenson Cripps",
+		"url": "https://github.com/jensoncr"
+	},
+	"description": "jstack: rigorous agent workflows you can parallelize with confidence",
+	"plugins": [
+		{
+			"name": "jstack",
+			"source": "./",
+			"description": "if you want to go fast, go deep first. jstack helps you write less, but higher quality code.",
+			"version": "0.14.6",
+			"author": {
+				"name": "Jenson Cripps"
+			},
+			"category": "developer-tools",
+			"tags": ["workflow", "principles", "review", "planning"]
+		}
+	]
+}
