@@ -22,9 +22,15 @@ prs=$(mktemp)
 gh pr list --author "@me" --state all --limit 1000 \
 	--json number,state,headRefName 2>/dev/null > "$prs" || echo "[]" > "$prs"
 
-# Transcripts dir: ~/.cursor/projects/<slugified-repo-path>/agent-transcripts.
-slug=$(printf '%s' "$main_wt" | sed 's#^/##; s#/#-#g')
-transcripts="$HOME/.cursor/projects/$slug/agent-transcripts"
+# Transcripts dir, first that exists: ~/.cursor/projects/<slug>/agent-transcripts
+# on Cursor, then ~/.claude/projects/<slug> on Claude Code. Both slugs are the
+# absolute repo path with / replaced by -; Cursor drops the leading /.
+cursor_slug=$(printf '%s' "$main_wt" | sed 's#^/##; s#/#-#g')
+claude_slug=$(printf '%s' "$main_wt" | sed 's#/#-#g')
+transcripts=""
+for d in "$HOME/.cursor/projects/$cursor_slug/agent-transcripts" "$HOME/.claude/projects/$claude_slug"; do
+	[ -d "$d" ] && { transcripts="$d"; break; }
+done
 now=$(date +%s)
 
 printf "SIZE\tAGE\tMERGED\tDIRTY\tREMOTE\tPR\tLAST_CHAT\tBUCKET\tWORKTREE\n"

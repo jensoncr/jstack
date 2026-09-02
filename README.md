@@ -8,14 +8,35 @@ there's a growing sense that ai writes too much slop code. i agree. i don't want
 
 **jstack gives you fearless parallelism.** when you can go deep on one agent and trust it to write good, verifiable code, you can truly parallelize with confidence. start multiple agents up with `vrub-mode` and trust that they'll apply rigorous engineering principles to their work.
 
-**cursor gives you the best of all worlds.** every frontier model has its strengths and weaknesses. use any model with jstack. in fact, many of my skills use multi-model workflows to take advantage of each model's unique strengths.
+**a multi-vendor harness gives you the best of all worlds.** every frontier model has its strengths and weaknesses. use any model with jstack. in fact, many of my skills use multi-model workflows to take advantage of each model's unique strengths. on a single-vendor harness the panels still run, with split lenses instead of split vendors.
 
 fork it. improve it. make it yours. PRs are welcome! 
 
 ## install
 
+cursor:
+
 ```bash
 /add-plugin jstack
+```
+
+claude code, for local testing:
+
+```bash
+claude --plugin-dir ~/path/to/jstack
+```
+
+claude code, installed:
+
+```bash
+/plugin marketplace add jensoncr/jstack
+/plugin install jstack
+```
+
+any harness that reads skills:
+
+```bash
+npx skills add jensoncr/jstack
 ```
 
 ## get started
@@ -27,7 +48,7 @@ two steps:
 
 new here? the [jstack guide](./docs/guide/README.md) walks you through a first real task, from setup and prompting through verification and overnight runs.
 
-that's it. the other skills are situational; the mode skill uses them for you as needed. out of the box the mode splits work by model strength: precisely-specified code, prose, and judgment go to fable 5.1, while fast mechanical code goes to grok. the default panel is fable 5.1 / sol / grok / opus 5. [`/setup-jstack`](./skills/setup-jstack/SKILL.md) changes any of it.
+that's it. the other skills are situational; the mode skill uses them for you as needed. out of the box the mode splits work by tier: `strong` for judgment, prose, and all delegated code, `fast` for exploration and verification fan-out, `panel` for reviewers, `judge` for the independent grader. each harness maps tiers to the models it can spawn: on cursor that is fable 5.1 / sol / grok / opus 5, on claude code it is fable and opus, on codex it is gpt-5.6 sol at two reasoning levels. [`/setup-jstack`](./skills/setup-jstack/SKILL.md) changes any of it.
 
 ## usage
 
@@ -90,7 +111,7 @@ the full rules and playbooks live in [`skills/vrub-mode/SKILL.md`](./skills/vrub
 
 [`/vrub-mode`](./skills/vrub-mode/SKILL.md) is also a sticky mode: once entered it stays on across turns, applying itself when a playbook matches or the task needs rigor and staying out of the way otherwise. opt out any time by saying so.
 
-[`/vrub-mode`](./skills/vrub-mode/SKILL.md) works extremely well with cursor's `/loop` command. you can make cursor work for many hours without sacrificing rigor.
+[`/vrub-mode`](./skills/vrub-mode/SKILL.md) works extremely well with `/loop` (cursor and claude code). you can make the agent work for many hours without sacrificing rigor.
 
 ## skills
 
@@ -117,14 +138,14 @@ the full rules and playbooks live in [`skills/vrub-mode/SKILL.md`](./skills/vrub
 | [`/architect`](./skills/architect/SKILL.md) | you're about to write code that crosses a function boundary and want the caller's usage, types, and module shape settled first. |
 | [`/arena`](./skills/arena/SKILL.md) | you want N parallel attempts at the same thing, then to grab the best parts of each. |
 | [`/swarm`](./skills/swarm/SKILL.md) | you want N parallel workers across different slices or races, then one aggregated report. |
-| [`/interrogate`](./skills/interrogate/SKILL.md) | you have a diff and want several different models to try to break it, including a strict code-quality lens. |
+| [`/interrogate`](./skills/interrogate/SKILL.md) | you have a diff and want a panel of reviewers to try to break it, including a strict code-quality lens. |
 | [`/automate-me`](./skills/automate-me/SKILL.md) | you want your own `-mode` skill, drafted from how you've actually worked. |
 | [`/make-bot-ui`](./skills/make-bot-ui/SKILL.md) | you want a page or dashboard whose buttons wake a Grok Bot over a webhook, including the sender-key handoff and Tailscale. |
-| [`/setup-jstack`](./skills/setup-jstack/SKILL.md) | you want to pick which models jstack uses per role. detects your models and writes a config rule. |
+| [`/setup-jstack`](./skills/setup-jstack/SKILL.md) | you want to pick which models jstack uses per role. detects your harness and models and writes a config file. |
 | [`/reflect`](./skills/reflect/SKILL.md) | a long task landed and you want the recipe captured as a skill edit. |
 | [`/teach`](./skills/teach/SKILL.md) | you want to actually understand a change or subsystem, not just have it summarized. runs how + why and weaves one plain explanation, built up diagram by diagram. |
 | [`/tdd`](./skills/tdd/SKILL.md) | you're fixing a bug and there's a cheap local test path. write the failing test first, then the fix. |
-| [`/no-comments`](./skills/no-comments/SKILL.md) | strip comments before review; spawns Comment Sicko, fixes accepted findings, offers encodings for claimed constraints. |
+| [`/no-comments`](./skills/no-comments/SKILL.md) | strip comments before review; spawns `comment-sicko`, fixes accepted findings, offers encodings for claimed constraints. |
 | [`/typescript-best-practices`](./skills/typescript-best-practices/SKILL.md) | you're reading or editing typescript. grounds the type-system-discipline principle in syntax. |
 | [`/figure-it-out`](./skills/figure-it-out/SKILL.md) | no bundled playbook fits. designs a rigorous, auditable playbook for the task. |
 | [`/show-me-your-work`](./skills/show-me-your-work/SKILL.md) | you want a reviewable decision trail. logs decisions to a tsv you can commit. |
@@ -183,13 +204,13 @@ automate-me:       /automate-me
 
 </details>
 
-## the `vrub-agent` and Comment Sicko subagents
+## the `vrub-agent` and `comment-sicko` subagents
 
-jstack also ships a subagent that runs my style end to end. spawn it from a parent agent via [`subagent_type: "vrub-agent"`](./agents/vrub-agent.md). it reads `vrub-mode` in full, including its inline principles index, before doing any work. substituting `generalPurpose` skips that read and drifts.
+jstack also ships a subagent that runs my style end to end. spawn it from a parent agent as the [`vrub-agent`](./agents/vrub-agent.md) named agent. it reads `vrub-mode` in full, including its inline principles index, before doing any work. substituting a general-purpose subagent skips that read and drifts.
 
-[`/vrub-mode`](./skills/vrub-mode/SKILL.md) and [`subagent_type: "vrub-agent"`](./agents/vrub-agent.md) route through the same wrapper.
+[`/vrub-mode`](./skills/vrub-mode/SKILL.md) and the [`vrub-agent`](./agents/vrub-agent.md) named agent route through the same wrapper.
 
-jstack also ships [Comment Sicko](./agents/comment-sicko.md), a read-only comment reviewer available as `subagent_type: "Comment Sicko"`. usually invoke it through [`/no-comments`](./skills/no-comments/SKILL.md), not directly.
+jstack also ships [`comment-sicko`](./agents/comment-sicko.md), a read-only comment reviewer available as the `comment-sicko` named agent. usually invoke it through [`/no-comments`](./skills/no-comments/SKILL.md), not directly.
 
 ## principles
 
@@ -228,15 +249,15 @@ twenty-one short skills, one principle each. `vrub-mode` indexes them inline and
 
 a few things `vrub-mode` references but doesn't bundle:
 
-- `/deslop` and the `deslop` skill ship in the `cursor-team-kit` plugin.
-- `control-cli` (for CLIs and TUIs) and `control-ui` (for browser, Electron, web) ship in `cursor-team-kit` too.
-- `/create-skill` is a cursor built-in. cursor also ships a built-in `/babysit`; inside `vrub-mode`, the [babysit playbook](./skills/vrub-mode/playbooks/babysit.md) supersedes it for pr-status requests.
+- `/deslop` and the `deslop` skill ship in the `cursor-team-kit` plugin (cursor). without it, `vrub-mode` falls back to the bundled `unslop` skill for prose and `no-comments` skill for code.
+- `control-cli` (for CLIs and TUIs) and `control-ui` (for browser, Electron, web) ship in `cursor-team-kit` too (cursor). without them, `vrub-mode` drives the app through the project's `verify-*` skill from [`/create-verification-skill`](./skills/create-verification-skill/SKILL.md).
+- `/create-skill` is a cursor built-in; on other harnesses the [authoring playbook](./skills/vrub-mode/playbooks/authoring-a-skill.md) covers it. cursor also ships a built-in `/babysit`; inside `vrub-mode`, the [babysit playbook](./skills/vrub-mode/playbooks/babysit.md) supersedes it for pr-status requests.
 
-install `cursor-team-kit` alongside jstack if you want the full set.
+on cursor, install `cursor-team-kit` alongside jstack if you want the full set.
 
 ## why are there no planning skills?
 
-cursor already has a great plan mode which works great with jstack. but personally, i don't believe in planning. the best spec is code. if you do want to make a plan, [`/vrub-mode`](./skills/vrub-mode/SKILL.md) covers it, but it's not a default. 
+your harness's plan mode works great with jstack. but personally, i don't believe in planning. the best spec is code. if you do want to make a plan, [`/vrub-mode`](./skills/vrub-mode/SKILL.md) covers it, but it's not a default. 
 
 ## make it yours
 
@@ -244,13 +265,13 @@ cursor already has a great plan mode which works great with jstack. but personal
 
 type [`/automate-me`](./skills/automate-me/SKILL.md). it mines your recent transcripts, drafts a `<your-name>-mode` skill from how you've actually worked, and routes through jstack underneath. you keep jstack as the base and end up with your own routing skill alongside `vrub-mode`.
 
-models are configurable too. type [`/setup-jstack`](./skills/setup-jstack/SKILL.md). it detects the models you have access to and writes a small always-applied rule mapping each role (code, judgment, the review panels) to a model. every skill reads it and falls back to sensible defaults when the rule is absent, so you override only what you want.
+models are configurable too. type [`/setup-jstack`](./skills/setup-jstack/SKILL.md). it detects your harness (cursor, claude code, or codex) and the models it can spawn, then writes a small always-loaded config mapping tiers to models and roles to tiers. every skill reads it and falls back to the harness defaults when a line is absent, so you override only what you want.
 
 ## automations
 
 jstack also ships a dormant [benny automation pack](./automations/benny/). benny triages slack issue reports, then reproduces and fixes confirmed bugs with real ui evidence. its files are not registered as slash skills.
 
-to set it up, point cursor at [`FOR_AGENTS.md`](./automations/benny/FOR_AGENTS.md). setup copies the pack into the target repository at `.cursor/automations/benny/`, enables jstack there for shared skills, and keeps user configuration outside the copied pack.
+to set it up, point Cursor at [`FOR_AGENTS.md`](./automations/benny/FOR_AGENTS.md) (benny is Cursor only). setup copies the pack into the target repository at `.cursor/automations/benny/`, enables jstack there for shared skills, and keeps user configuration outside the copied pack.
 
 ## license
 

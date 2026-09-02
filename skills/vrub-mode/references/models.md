@@ -1,0 +1,58 @@
+# Model resolution
+
+Every jstack delegation names a **role** and its **tier**. Roles and tiers are harness-neutral. Only the config file maps them to model tokens the current harness can spawn, so the same skill text runs on Cursor, Claude Code, and Codex.
+
+## Tiers
+
+| Tier | Intent | Shape |
+|---|---|---|
+| `strong` | Judgment, prose, vague intent, hard code, and precisely specified steps that must be followed to the letter. | one model |
+| `fast` | Mechanical edits, exploration, verification lanes, any cheap fan-out. | one model |
+| `panel` | Independent reviewers or runners. One subagent per entry, so the list length sets the count. Repeats are allowed. | list |
+| `judge` | The one independent reviewer that grades or verifies another agent's work. | one model, or `differs-from-parent` |
+
+`differs-from-parent` means the first `panel` entry whose model differs from the parent chat's model. When every entry matches the parent, use the first entry and say so in the reply.
+
+## Roles
+
+One line per role in the config. A value is a tier name, a model token, a list of model tokens, or the alias `inherit-parent` (`auto` means the same), which runs the role on the parent chat model by omitting the model field. Delete a line to fall back to the tier the skill names.
+
+| Role | Tier | Consumer |
+|---|---|---|
+| `feature, refactoring` | `strong` | feature and refactoring playbooks |
+| `bug-fix` | `strong` | bug-fix playbook |
+| `perf-issue` | `strong` | perf-issue playbook |
+| `hillclimb` | `strong` | hillclimb playbook |
+| `hardest tasks` | `strong` | vrub-mode delegate tiering |
+| `judgment and prose` | `strong` | vrub-mode delegate tiering |
+| `how explorer` | `fast` | how |
+| `how explainer` | `strong` | how |
+| `how critics` | `panel` | how, critique mode |
+| `why investigators` | `fast` | why |
+| `why synthesizer` | `strong` | why |
+| `reflect tooling` | `fast` | reflect |
+| `reflect judgment, divergent, synthesizer` | `strong` | reflect |
+| `arena runners` | `panel` | arena, architect, eval |
+| `arena cross-judge` | `judge` | arena, eval, figure-it-out |
+| `swarm workers` | `fast` | swarm, verification lanes in multi-phase plans |
+| `architect runners` | `panel` | architect |
+| `interrogate reviewers` | `panel` | interrogate |
+| `trail reviewer` | `judge` | show-me-your-work |
+| `orchestrate verifier` | `judge` | orchestrate |
+| `recall workers` | `fast` | recall |
+
+## Resolving a role
+
+1. Find the config. If a jstack model table is already in context (the always-applied rule on Cursor, the `CLAUDE.md` import on Claude Code, the `AGENTS.md` pointer on Codex), use it. Otherwise read the user file at the path your harness file names. A `jstack-models.md` at the repository root overrides the user file only when its `harness:` line matches the harness you are running in; a root file for another harness is ignored, since its tokens are not spawnable here. If neither exists, use the defaults in your harness file.
+2. Look up the role line. A tier name resolves through the `Tiers` section of the same config. A model token or list is used as written. `inherit-parent` or `auto` omits the model field; never treat these aliases as broken tokens.
+3. A role with no line uses the tier the skill names, resolved through the config's `Tiers` section.
+4. A rejected token is not a blocker. Pick the closest available model in the same tier, spawn with it, note the substitution in your reply, and open a separate change to fix the config. Never silently downgrade a `strong` role to a `fast` model.
+
+## Panels on a single-family harness
+
+A panel exists to surface independent blind spots. On Cursor the entries are different vendors. On Claude Code or Codex the list repeats one family, so:
+
+- Give every repeated model a distinct lens taken from the skill's rubric (split the rubric's sections across the repeats). Do not assign personas.
+- Agreement between distinct models is high-signal. Agreement between same-model lenses is medium-signal. Say which one the report is counting.
+- When the panel is generation-bound rather than judgment-bound (arena runners, architect runners), give each repeat a distinct design constraint instead of a lens so the candidates diverge structurally.
+- When the harness cannot run subagents in parallel, run the panel sequentially in fresh sessions and label the report `sequential, one model`.

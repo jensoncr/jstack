@@ -41,7 +41,7 @@ Output exactly the format below. No preamble, no narration. One sentence per cel
 |---|---|---|
 | <failure mode in a skill the parent used> | <change to that skill's body> | <skill path + section> |
 | <skill existed but didn't trigger> | <tune the skill's description so it fires next time> | <tune description: <skill path>> |
-| <new pattern, no existing skill is a real home> | <draft a new skill via create-skill> | <new skill via create-skill: <kebab-name>> |
+| <new pattern, no existing skill is a real home> | <draft a new skill via the authoring route in reflect step 5> | <new skill via create-skill: <kebab-name>> |
 
 One row per finding. The user approves row by row.
 

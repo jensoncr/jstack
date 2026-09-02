@@ -1,0 +1,25 @@
+{
+	"name": "jstack",
+	"description": "if you want to go fast, go deep first. jstack helps you write less, but higher quality code. rigorous agent workflows you can parallelize with confidence.",
+	"version": "0.14.6",
+	"author": {
+		"name": "Jenson Cripps",
+		"url": "https://x.com/Vrubzy"
+	},
+	"homepage": "https://github.com/jensoncr/jstack",
+	"repository": "https://github.com/jensoncr/jstack",
+	"license": "MIT",
+	"keywords": [
+		"jstack",
+		"vrub-mode",
+		"workflow",
+		"principles",
+		"subagents",
+		"unslop"
+	],
+	"skills": "./skills/",
+	"agents": [
+		"./agents/vrub-agent.md",
+		"./agents/comment-sicko.md"
+	]
+}
