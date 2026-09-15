@@ -1,6 +1,6 @@
 ### Opening a PR
 
-Invoked at the end of every other playbook.
+For code or instruction changes that should be submitted. Read-only investigations and status checks do not open PRs.
 
 **Worktree.** Work from a git worktree off main; subagents inherit it. Multiple subagents spawned on the same branch each get their own worktree, or `git fetch && git reset --hard origin/<branch>` between them. Dirty branch with unrelated work: patch out, fresh worktree, apply. Snarled worktree: reset from main, redo minimally.
 
@@ -26,6 +26,6 @@ After these sections, attach videos or screenshots when they prove a claim. Do n
 
 **Readiness.** Open every PR ready, never as a draft. With Origin, pass `--status open`; with `gh`, omit `--draft`. Cloud-agent PR tools default to draft, so set `draft: false` on every PR creation call. If a PR still opens as a draft, run `origin pr ready <number>` or `gh pr ready <number>` according to the resolved forge. Run `origin pr view <number>` or `gh pr view <number>` before you refer to PR status.
 
-**Babysit.** Opening a PR does not start a babysit. Post the URL and keep building. Finish the phase or stack first. Run a separate babysit pass only when the user asks for one after the whole stack exists. A babysit for each new PR stalls the build and spends checks on commits that later waves restart. Push back when feedback drifts from intent.
+**Next stage.** Opening a PR alone does not start a watch or authorize a merge. If the user already asked to get the change green, continue through the `babysit` skill after the planned build work finishes. If the request includes merging, continue through `ship` without asking for the same authorization again. For a stack, finish the planned build phase before driving its lowest unmerged PR. Otherwise report the PR URL and the requested build result. Push back when feedback drifts from intent.
 
 A subagent that opens a PR runs `interrogate`, the slop-strip above, and `/no-comments`. It returns the URL and does not babysit. Return to the parent.

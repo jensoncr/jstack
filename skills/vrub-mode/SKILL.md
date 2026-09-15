@@ -1,10 +1,6 @@
 ---
 name: vrub-mode
-description: vrubzy's agent style for concise, detailed responses, deliberate subagents, unslopped prose, simple code, and verified work. Use for vrubzy, /vrub-mode, or requests to work in this style.
-mode: true
-icon: crown
-color: yellow
-reminder: New task? Playbook match or rigor needed -> apply /vrub-mode. Casual turn or user opts out -> don't.
+description: Route engineering tasks through Jstack playbooks for investigation, implementation, verification, and PR delivery. Use for vrub-mode or a request for the full Jstack workflow. Use babysit directly for PR status or CI, and ship for merging.
 ---
 
 # Vrub mode
@@ -27,11 +23,11 @@ Remaining triggers:
 - Before commit → the `deslop` skill from the `cursor-team-kit` plugin when installed (Cursor); otherwise the **unslop** skill for prose and the **no-comments** skill for code.
 - Before review → the **no-comments** skill (`/no-comments`).
 - Shipping UI / IDE / CLI → the matching control skill: the project's `verify-*` skill, or `control-cli` (CLIs and TUIs) / `control-ui` (browser / Electron / web UIs) from `cursor-team-kit` when installed (Cursor). For bug fixes, reproduce first on the same surface yourself; hand to the user only under the narrow Bug fix step 1 exception.
-- Any PR-status request → the **Babysit** playbook (`playbooks/babysit.md`), and not a harness built-in babysit skill, whose description matches the same words. That includes "babysit this", "get it green", "address the bugbot comments", and the commonest phrasing, "check on PR X" / "anything outstanding on X". Never triggered by merely opening a PR. Declare its mode before polling; the playbook's step 1 owns the request-to-mode mapping. Reaching for `drive` inside a phase agent stops that agent finishing its turn.
-- Asked to land or ship a green stack → the **Shipping** playbook (`playbooks/shipping.md`). Green is not safe. Nothing gets armed before an independent per-PR verdict, and only the contiguous verified run from the root lands.
+- A PR-status or readiness request → the [Babysit skill](../babysit/SKILL.md), which executes `playbooks/babysit.md`. That includes "babysit this", "get it green", "address the bugbot comments", and "check on PR X". Declare its mode before polling. Opening a PR alone does not start a watch; an existing request to get it green or merge it continues after PR creation.
+- Asked to merge, land, ship, or enable merge-when-ready for a PR or stack → the [Ship skill](../ship/SKILL.md). It handles readiness first when needed, then executes `playbooks/shipping.md` under the existing authorization. Nothing gets armed before an independent per-PR verdict, and only the contiguous verified run from the root lands.
 - Bugbot or the agentic security review commented → skeptical posture. They catch real bugs and also file non-issues and nitpicks, so assess each on its merits and dismiss noise with a concrete reason instead of churning code. Triage fix / dismiss / ask per `references/bugbot-triage.md`.
 - Broken skill mid-task → fix it in its own PR. Don't block. Don't silently work around it.
-- Long, autonomous, or multi-phase work, or any task the user steps away from to review later ("going to bed", "trust it when i'm back", "/loop until X"; `/loop` is the `loop` verb, Cursor and Claude Code have `/loop`, Codex has none in the CLI) → a decision trail via the **show-me-your-work** skill. Commit it when stakes need an auditable record; keep it local otherwise.
+- Long, autonomous, or multi-phase work, or any task the user steps away from to review later ("going to bed", "trust it when i'm back", "keep watching until X") → a decision trail via the **show-me-your-work** skill and continuation through the [harness guide](references/harness/README.md). Commit the trail when stakes need an auditable record; keep it local otherwise.
 
 ## Principles
 
@@ -85,13 +81,13 @@ Read the leaf skill in full for any principle you apply. Each entry names when i
 
 ## Harness
 
-jstack runs on more than one harness. Before your first delegation, match your tools against `references/harness/cursor.md`, `references/harness/claude-code.md`, and `references/harness/codex.md`, and read the matching file. It maps every verb below (spawn, general-purpose subagent, read-only, background, own worktree, cloud, ask the user, todo list, loop, transcripts) to the real tool and names the model config path. A verb with no equivalent on your harness is skipped, stated as a skip, never faked.
+Read [the harness guide](references/harness/README.md) before using host-specific capabilities. It selects the matching adapter from the current tool schemas and defines continuation and missing-capability behavior. Required verification and authorization gates remain required on every host.
 
 ## Subagents
 
 **Use the `vrub-agent` named agent for any subagent you spawn inside a playbook step** (code-writing delegates, ad-hoc helpers). `/vrub-mode` and `vrub-agent` route through the same wrapper. Routed workflow skills (`how`, `why`, `interrogate`, `reflect`, `swarm`) prescribe general-purpose subagents for diverse-model review; respect what the skill prescribes, don't override to `vrub-agent`. Where the harness has no named agents, give a general-purpose subagent the agent file's body as its brief.
 
-**Defaults for every spawn.** Background, agent mode (read-only strips MCP on some harnesses), file pointers not inlined context, and an explicit model per role resolved through `references/models.md`. Roles map to tiers: `fast` for mechanical code and fan-out, `strong` for prose, judgment, vague intent, and precisely specified steps to execute to the letter, `panel` for reviewers and runners, `judge` for the independent grader. Code delegates tier by difficulty. Code delegates (`feature, refactoring`, `bug-fix`, `perf-issue`, `hillclimb`, `hardest tasks`) are all tier `strong`; only exploration and verification lanes (`how explorer`, `why investigators`, `swarm workers`, `recall workers`) run on `fast`. The config `/setup-jstack` writes overrides these defaults and the model choices in the routed skills (`how`, `why`, `arena`, `swarm`, `architect`, `interrogate`, `reflect`); a role with no line keeps its tier, and a role line of `inherit-parent` or `auto` runs that role on the parent chat model (omit the model field).
+**Defaults for every spawn.** Background, agent mode (read-only strips MCP on some harnesses), file pointers not inlined context, and a model per role resolved through `references/models.md` when the host supports that override. Inherited-context restrictions take precedence; omit conflicting model fields and report the effective choice. Roles map to tiers: `fast` for mechanical code and fan-out, `strong` for prose, judgment, vague intent, and precisely specified steps to execute to the letter, `panel` for reviewers and runners, `judge` for the independent grader. Code delegates tier by difficulty. Code delegates (`feature, refactoring`, `bug-fix`, `perf-issue`, `hillclimb`, `hardest tasks`) are all tier `strong`; only exploration and verification lanes (`how explorer`, `why investigators`, `swarm workers`, `recall workers`) run on `fast`. The config `/setup-jstack` writes overrides these defaults and the model choices in the routed skills (`how`, `why`, `arena`, `swarm`, `architect`, `interrogate`, `reflect`); a role with no line keeps its tier, and a role line of `inherit-parent` or `auto` runs that role on the parent chat model (omit the model field).
 
 You own every subagent's work. Review the diff and write your own summary, don't pass through what it said. Interrupt-chained resumes silently drop directives, so fire a fresh subagent with consolidated scope rather than trusting a "done" summary. A second opinion is the same prompt against a different model. Agreement is high-signal.
 
@@ -140,4 +136,4 @@ A large or cross-cutting effort (a migration across many call sites, an ambitiou
 - **Pause safely.** Suspending in-flight work cleanly so it can be resumed, on an explicit pause, going offline, a harness restart, or imminent context compaction. The complement to Session pickup. Full steps: `playbooks/pause-safely.md`.
 - **Multi-phase or multi-PR plan.** Work that spans phases or stacked PRs. `playbooks/multi-phase-plan.md`.
 - **Worktree and simulator cleanup.** Reclaiming local disk by pruning merged or abandoned git worktrees and stale iOS simulators ("what's using my disk", "clean up worktrees", "prune safe-to-prune worktrees", "free up space", "delete old simulators"). `playbooks/worktree-cleanup.md`.
-- **Opening a PR.** Invoked at the end of every other playbook. `playbooks/opening-a-pr.md`.
+- **Opening a PR.** For code or instruction changes that should be submitted. Read-only investigations and status checks do not open PRs. `playbooks/opening-a-pr.md`.

@@ -54,6 +54,8 @@ that's it. the other skills are situational; the mode skill uses them for you as
 
 use [`/vrub-mode`](./skills/vrub-mode/SKILL.md) at the start of a task. it reads your request, picks from a set of playbooks, and runs the other skills as the steps need them.
 
+for PR work, select [`babysit`](./skills/babysit/SKILL.md) to check status, fix CI, or address review feedback. select [`ship`](./skills/ship/SKILL.md) when you want a PR or stack merged. ship carries an authorized request through readiness and independent verification before merging. these are discoverable skills that share the existing playbooks; they do not require vrub-mode.
+
 ### just use [`/vrub-mode`](./skills/vrub-mode/SKILL.md)
 
 this skill is the main shortcut. i use it whenever i need the agent to do rigorous engineering work. it comes with twenty-two playbooks:
@@ -109,9 +111,9 @@ when invoked it:
 
 the full rules and playbooks live in [`skills/vrub-mode/SKILL.md`](./skills/vrub-mode/SKILL.md).
 
-[`/vrub-mode`](./skills/vrub-mode/SKILL.md) is also a sticky mode: once entered it stays on across turns, applying itself when a playbook matches or the task needs rigor and staying out of the way otherwise. opt out any time by saying so.
+on Cursor, you can select [`vrub-mode`](./skills/vrub-mode/SKILL.md) as a persistent custom mode. persistence and invocation syntax depend on the host. on other hosts, select the skill for the task instead of relying on Cursor-specific mode metadata.
 
-[`/vrub-mode`](./skills/vrub-mode/SKILL.md) works extremely well with `/loop` (cursor and claude code). you can make the agent work for many hours without sacrificing rigor.
+long-running work uses the host's available loop or scheduled continuation. the [harness guide](./skills/vrub-mode/references/harness/README.md) defines capability detection, saved watch state, and the foreground fallback when no scheduler exists. a skill file alone does not keep an agent running after its session ends.
 
 ## skills
 
@@ -131,6 +133,8 @@ the full rules and playbooks live in [`skills/vrub-mode/SKILL.md`](./skills/vrub
 | skill | use it when |
 |---|---|
 | [`/vrub-mode`](./skills/vrub-mode/SKILL.md) | default entry point for any non-trivial task. |
+| [`babysit`](./skills/babysit/SKILL.md) | check a PR, fix CI, or address review feedback; stop at the requested readiness state. |
+| [`ship`](./skills/ship/SKILL.md) | carry an authorized merge request through readiness, independent verification, and merge. |
 | [`/how`](./skills/how/SKILL.md) | you want a walkthrough of how a subsystem works. |
 | [`/why`](./skills/why/SKILL.md) | you want to know why something was built this way. discovers available MCPs at run time and queries each evidence category in parallel (source control, issue tracker, long-form docs, real-time chat, infra observability, error tracking, analytics warehouse). |
 | [`/recall`](./skills/recall/SKILL.md) | you're starting or resuming work and want your recent context on a topic rebuilt from your own chat history and the shared record, handed back as a tight current-state brief. |

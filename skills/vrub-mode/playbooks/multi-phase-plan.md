@@ -32,15 +32,15 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 ### Arm the program
 
 - [ ] State the protocol and this plan to the operator, then stop. Start execution only on her explicit go.
-- [ ] On her go, arm a `/goal` with this exact text. "<The plan path, the PR ids in order, the verification rule, who merges, and the done condition.>"
+- [ ] On her go, persist this objective and completion predicate through `references/harness/README.md`. "<The plan path, the PR ids in order, the verification rule, who merges, and the done condition.>"
 - [ ] Read these from trunk at program start. Re-read them at every tick.
   - [ ] `git show origin/main:jstack/skills/vrub-mode/playbooks/<execution playbook>.md` (or read the same playbook from your jstack install)
   - [ ] `git show origin/main:jstack/skills/swarm/SKILL.md` (or read the same skill from your jstack install)
   - [ ] `git show origin/main:<control skill path>`
   - [ ] `git show origin/main:jstack/skills/vrub-mode/playbooks/opening-a-pr.md` (or read the same playbook from your jstack install)
   - [ ] `git show origin/main:jstack/skills/<each other leaf skill the program uses>` (or read the same skill from your jstack install)
-- [ ] Arm the 30-minute audit tick. In a local session, a real terminal `/loop` (the `loop` verb; Cursor and Claude Code have `/loop`, Codex has none in the CLI). In a cloud root, a cloud-sleeper wake chain. Never leave the cadence to memory.
-- [ ] Use this tick prompt, verbatim. "Re-read the execution playbook from trunk and the armed /goal. Audit the operation against both and fix drift in this tick. Probe every active lane and judge progress by side effects only. Stand down a stuck lane and dispatch its replacement now. Then send the operator a status message, whether or not anything changed, with the queue table of PR, owner, state, and head SHA, the verdicts since the last tick, what merged, open operator gates, and blockers."
+- [ ] Arm the 30-minute audit tick. Use the native continuation mechanism in `references/harness/README.md`; when unavailable, audit within the active session and save a resumable handoff before ending. Never leave the cadence to memory.
+- [ ] Use this tick prompt, verbatim. "Re-read the execution playbook from trunk and the saved objective. Audit the operation against both and fix drift in this tick. Probe every active lane and judge progress by side effects only. Stand down a stuck lane and dispatch its replacement now. Then send the operator a status message, whether or not anything changed, with the queue table of PR, owner, state, and head SHA, the verdicts since the last tick, what merged, open operator gates, and blockers."
 - [ ] On the operator's hold or stand-down, send every owner a zero-writes order at once.
 
 ### Spawn owners

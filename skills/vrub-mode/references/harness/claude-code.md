@@ -1,6 +1,6 @@
 # Harness: Claude Code
 
-You are in Claude Code when the spawn tool is `Agent` (older builds also answer to `Task`), the question tool is `AskUserQuestion`, and the todo tool is `TodoWrite`.
+Use this adapter when the host identifies itself as Claude Code. Read [the shared capability guide](README.md) first. The mappings below are examples; tool names and optional arguments vary between versions.
 
 ## Model config
 
@@ -63,7 +63,7 @@ Claude Code hard-blocks the Skill tool on any skill with `disable-model-invocati
 | cloud | no equivalent; run locally |
 | ask the user | `AskUserQuestion` |
 | todo list | `TodoWrite` |
-| loop | `/loop`, or `ScheduleWakeup` from inside a loop |
+| loop | Use a native loop or scheduling tool only when exposed; otherwise follow the shared guide for foreground continuation. |
 | skill invocation | `Skill` tool, or `/jstack:<skill>` when installed as a plugin |
 | transcripts | `~/.claude/projects/<slug>/*.jsonl` (slug is the project path with `/` replaced by `-`) |
 | project skills dir | `.claude/skills/` |
