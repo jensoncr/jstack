@@ -6,7 +6,7 @@ You are in Claude Code when the spawn tool is `Agent` (older builds also answer 
 
 User file: `~/.claude/jstack-models.md`, imported into context by a `@~/.claude/jstack-models.md` line in `~/.claude/CLAUDE.md`. `/setup-jstack` writes both.
 
-Model tokens are the `Agent` tool's `model` aliases. jstack uses `fable` and `opus` only; `sonnet` and `haiku` are never written by default.
+Model tokens are the `Agent` tool's `model` aliases. jstack uses `opus` only; `fable`, `sonnet`, and `haiku` are never written by default. Single-model panels get split lenses per `../models.md`.
 
 Defaults when no config exists:
 
@@ -14,10 +14,10 @@ Defaults when no config exists:
 harness: claude-code
 
 ## Tiers
-strong: fable
+strong: opus
 fast: opus
-panel: fable, opus
-judge: differs-from-parent
+panel: opus, opus
+judge: opus
 
 ## Roles
 feature, refactoring: strong

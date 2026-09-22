@@ -48,7 +48,7 @@ two steps:
 
 new here? the [jstack guide](./docs/guide/README.md) walks you through a first real task, from setup and prompting through verification and overnight runs.
 
-that's it. the other skills are situational; the mode skill uses them for you as needed. out of the box the mode splits work by tier: `strong` for judgment, prose, and all delegated code, `fast` for exploration and verification fan-out, `panel` for reviewers, `judge` for the independent grader. each harness maps tiers to the models it can spawn: on cursor that is fable 5.1 / sol / grok / opus 5, on claude code it is fable and opus, on codex it is gpt-5.6 sol at two reasoning levels. [`/setup-jstack`](./skills/setup-jstack/SKILL.md) changes any of it.
+that's it. the other skills are situational; the mode skill uses them for you as needed. out of the box the mode splits work by tier: `strong` for judgment, prose, and all delegated code, `fast` for exploration and verification fan-out, `panel` for reviewers, `judge` for the independent grader. each harness maps tiers to the models it can spawn: on cursor that is fable 5.1 / sol / grok / opus 5, on claude code it is opus for every tier, on codex it is gpt-5.6 sol at two reasoning levels. [`/setup-jstack`](./skills/setup-jstack/SKILL.md) changes any of it.
 
 ## usage
 
