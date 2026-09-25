@@ -1,7 +1,7 @@
 {
 	"name": "jstack",
 	"description": "if you want to go fast, go deep first. jstack helps you write less, but higher quality code. rigorous agent workflows you can parallelize with confidence.",
-	"version": "0.14.7",
+	"version": "0.14.8",
 	"author": {
 		"name": "Jenson Cripps",
 		"url": "https://x.com/Vrubzy"
