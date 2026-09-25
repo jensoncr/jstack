@@ -1,6 +1,6 @@
 # Harness: Cursor
 
-You are in Cursor when the spawn tool is `Task` with `readonly` and `environment` parameters and the question tool is `AskQuestion`.
+Use this adapter when the host identifies itself as Cursor. Read [the shared capability guide](README.md) first. The mappings below are examples; use only the tools and arguments advertised by the current session.
 
 ## Model config
 
@@ -57,7 +57,7 @@ recall workers: fast
 | cloud | `environment: "cloud"`, with `cloud_base_branch` when starting from a pushed branch |
 | ask the user | `AskQuestion` |
 | todo list | the built-in todo list |
-| loop | `/loop` |
+| loop | Use `/loop` when available; otherwise follow the shared guide for scheduled or foreground continuation. |
 | skill invocation | `/<skill>` |
 | transcripts | `~/.cursor/projects/<slug>/agent-transcripts/<uuid>/<uuid>.jsonl`, named in the system prompt |
 | project skills dir | `.cursor/skills/` or `.agents/skills/` |

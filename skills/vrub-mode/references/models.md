@@ -1,6 +1,6 @@
 # Model resolution
 
-Every jstack delegation names a **role** and its **tier**. Roles and tiers are harness-neutral. Only the config file maps them to model tokens the current harness can spawn, so the same skill text runs on Cursor, Claude Code, and Codex.
+Every jstack delegation names a **role** and its **tier**. Read [the harness guide](harness/README.md) before resolving a role. Roles and tiers are shared across hosts; the config maps them to supported model tokens. The current spawn schema controls how an override is passed.
 
 ## Tiers
 
@@ -46,7 +46,7 @@ One line per role in the config. A value is a tier name, a model token, a list o
 1. Find the config. If a jstack model table is already in context (the always-applied rule on Cursor, the `CLAUDE.md` import on Claude Code, the `AGENTS.md` pointer on Codex), use it. Otherwise read the user file at the path your harness file names. A `jstack-models.md` at the repository root overrides the user file only when its `harness:` line matches the harness you are running in; a root file for another harness is ignored, since its tokens are not spawnable here. If neither exists, use the defaults in your harness file.
 2. Look up the role line. A tier name resolves through the `Tiers` section of the same config. A model token or list is used as written. `inherit-parent` or `auto` omits the model field; never treat these aliases as broken tokens.
 3. A role with no line uses the tier the skill names, resolved through the config's `Tiers` section.
-4. A rejected token is not a blocker. Pick the closest available model in the same tier, spawn with it, note the substitution in your reply, and open a separate change to fix the config. Never silently downgrade a `strong` role to a `fast` model.
+4. Validate the token and effort against the current host's advertised options. If an optional configured token is unavailable, use an available model appropriate to the role or inherit the parent and disclose the substitution. If the user requires a particular model or independent model diversity, report that unmet requirement instead of substituting. Do not change global configuration or launch another CLI to evade host restrictions.
 
 ## Panels on a single-family harness
 

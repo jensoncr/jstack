@@ -51,7 +51,9 @@ continue
 keep going until done
 ```
 
-Short works because the mode is sticky and the playbook holds the structure. Your words carry the intent, and the skill carries the rigor.
+Short follow-ups work while the task and chosen workflow remain in context. Cursor offers persistent custom modes; other hosts have their own invocation behavior. Select the skill again when starting a fresh task instead of assuming mode metadata carries across hosts.
+
+For PR work alone, select `babysit` or `ship` directly. `babysit` checks or fixes readiness according to your request. `ship` handles readiness first when necessary, then independent verification and merge. A request to build and merge carries through both stages without needing another merge instruction.
 
 ## Switch tasks with "new task"
 

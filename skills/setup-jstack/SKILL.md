@@ -11,11 +11,11 @@ Write the jstack model config for the harness you are running in. Skills resolve
 
 ### 1. Detect the harness
 
-Match your tools against the vrub-mode skill's `references/harness/` files: `cursor.md`, `claude-code.md`, `codex.md`. The file names the spawn tool, the config path, the model token syntax, and the defaults. If none matches, ask the user which harness this is and treat the closest file as the template.
+Read [the harness guide](../vrub-mode/references/harness/README.md), then the adapter matching the host. Inspect the actual spawn schema before choosing model configuration or tool arguments. On an unrecognized host, use its advertised capabilities; ask only for information that cannot be observed.
 
 ### 2. Detect available models
 
-Enumerate the model tokens the spawn tool accepts in this session; that is the dependable source. On Claude Code it is the `Agent` tool's `model` enum. On Codex it is `/model` plus the effort levels. On Cursor it is the slugs `Task` accepts, and a models API or CLI listing the user's entitled models is better when present. If you cannot detect any, ask the user to paste the tokens they have access to. Never write a real token you have not confirmed is available. The aliases `inherit-parent` and `auto` are always valid.
+Enumerate the model tokens the spawn tool accepts in this session; that is the dependable source. On Claude Code it is the `Agent` tool's `model` enum. On Codex prefer the exposed spawn tool's model and effort options, then current host model metadata; a CLI model picker does not prove that the session can select subagent models. On Cursor it is the slugs `Task` accepts, and a models API or CLI listing the user's entitled models is better when present. If you cannot detect any, ask the user to paste the tokens they have access to. Never write a real token you have not confirmed is available. The aliases `inherit-parent` and `auto` are always valid.
 
 ### 3. Load current state
 
@@ -44,7 +44,7 @@ Then the harness-specific wiring:
 
 - **Cursor.** Write `~/.cursor/rules/jstack-models.mdc` with frontmatter `description: jstack per-role model choices` and `alwaysApply: true`.
 - **Claude Code.** Write `~/.claude/jstack-models.md`. Ensure `~/.claude/CLAUDE.md` contains the line `@~/.claude/jstack-models.md`; append it if absent, never duplicate it.
-- **Codex.** Write `~/.codex/jstack-models.md`. Ensure `~/.codex/AGENTS.md` contains the line `Before any jstack delegation, read ~/.codex/jstack-models.md for the model per role.`; append it if absent. For each distinct model token in the file, write `~/.codex/agents/jstack-<slug>.toml` where `<slug>` is the token with `@` replaced by `-`, containing `name`, `description = "jstack <tier or role> delegate"`, `model`, `model_reasoning_effort` when the token names one, and `developer_instructions = "Follow the brief you are given. Read any skill file it names in full before starting."`. Confirm `[features] multi_agent = true` is present in `~/.codex/config.toml`, and that `[agents] default_subagent_model` names the `strong` tier's model (`gpt-5.6-sol` by default), because when the spawn schema carries no `agent_type` every subagent runs on that setting. If either line is missing or different, tell the user the exact lines to add rather than editing the file.
+- **Codex.** Write `~/.codex/jstack-models.md`. Ensure `~/.codex/AGENTS.md` contains the line `Before any jstack delegation, read ~/.codex/jstack-models.md for the model per role.`; append it if absent. If the native spawn tool accepts `model` and a reasoning field, use those at delegation time; no custom agent profile or global default change is needed. If it selects configured profiles through `agent_type`, inspect the current host's documented agent configuration before creating the required profiles. Do not infer a universal `default_subagent_model` setting or require a feature flag when native delegation already works. If no override mechanism exists, explain that role preferences are saved but this host inherits its default model.
 
 If the harness refuses the write under the home directory (a sandboxed or non-interactive session), do not write into the repository instead. Print the full file body and the exact shell commands that put it in place, then stop.
 

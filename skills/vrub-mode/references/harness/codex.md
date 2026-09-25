@@ -1,12 +1,12 @@
 # Harness: Codex
 
-You are in Codex when the spawn tool is `spawn_agent` (with `wait_agent`, `send_input`, `close_agent`), the question tool is `request_user_input`, and the todo tool is `update_plan`.
+Use this adapter when the host identifies itself as Codex. Read [the shared capability guide](README.md) first. Desktop, CLI, and hosted sessions expose different tool schemas; absent optional tools do not mean this is a different host.
 
 ## Model config
 
-User file: `~/.codex/jstack-models.md`, pointed at by a line in `~/.codex/AGENTS.md` that says to read it before any jstack delegation. `/setup-jstack` writes both, and one custom agent per distinct model token under `~/.codex/agents/jstack-<slug>.toml` so a token is spawnable by `agent_type`.
+User file: `~/.codex/jstack-models.md`, optionally referenced from `~/.codex/AGENTS.md`. Read it when present. Model configuration does not establish tool capabilities. `/setup-jstack` writes role choices; custom agent profiles are needed only on hosts that select configured profiles through `agent_type`.
 
-Model tokens are `<model>@<reasoning effort>`. The model is a Codex model id (`gpt-5.6-sol`, `gpt-5.6-luna`, or whatever `/model` lists), and the effort is one of `low`, `medium`, `high`, `xhigh`. A token without `@` uses the model's default effort.
+Model tokens are `<model>@<reasoning effort>`. The model is a Codex model id (`gpt-5.6-sol`, `gpt-5.6-luna`, or whatever `/model` lists), and the effort must be supported by that model in the current session. A token without `@` uses the model's default effort.
 
 Defaults when no config exists:
 
@@ -49,17 +49,25 @@ One family and often one model, so the rules in `../models.md` under "Panels on 
 
 | jstack says | Codex |
 |---|---|
-| spawn a subagent | `spawn_agent`; requires `[features] multi_agent = true` in `~/.codex/config.toml` |
-| general-purpose subagent | `agent_type: "worker"` (or `"explorer"` for read-only) |
-| named agent (`vrub-agent`, `comment-sicko`) | not available; give a worker the agent file's body as its brief |
-| model | `agent_type: "jstack-<slug>"`, the custom agent setup wrote for that token. When the spawn schema has no `agent_type`, a spawned subagent runs on `[agents] default_subagent_model` from `config.toml` (setup pins it to the `strong` model); for a `fast` role that must differ, run `codex exec -m <model> -c model_reasoning_effort=<effort> "<brief>"` from the shell instead |
-| read-only | `agent_type: "explorer"`, or `sandbox_mode = "read-only"` in the custom agent |
-| background | every `spawn_agent` is asynchronous; collect with `wait_agent` |
-| own worktree | create it with `git worktree add` and name the path in the brief |
-| cloud | no equivalent; run locally |
-| ask the user | `request_user_input` when enabled, otherwise ask in prose and stop |
-| todo list | `update_plan` when enabled (`[tools.update_plan] enabled = true`), otherwise a checklist in your reply |
-| loop | none in the CLI; Codex app Automations, or `codex exec` under cron |
-| skill invocation | `$<skill-name>` |
-| transcripts | `~/.codex/sessions/` |
+| spawn a subagent | Use the exposed native spawn tool, commonly `spawn_agent`, and its current schema. Do not require config edits when the tool is already available. |
+| general-purpose subagent | Use the default role, or a supported `agent_type` if the schema offers it. |
+| named agent | Use a registered agent only when the host exposes it; otherwise give a general-purpose agent the named agent file as its brief. |
+| model | Prefer supported `model` and reasoning fields. On hosts that expose only `agent_type`, use a confirmed configured profile. Otherwise inherit the parent and disclose any unavailable requested override. Respect restrictions on model overrides when forking full history. |
+| read-only | Use a supported read-only mode, or a no-writes brief for an ordinary delegate; the latter is an instruction, not a sandbox. |
+| background | Native spawning is generally asynchronous. Use the returned agent identifier with the available wait and messaging tools; names and parameters vary by host. |
+| own worktree | Create an isolated git worktree and put its absolute path and starting revision in the brief, unless native isolation is available. |
+| cloud | Use only an explicitly available remote subagent capability. A user-owned task-creation tool is not a substitute for a subagent. Otherwise work locally. |
+| ask the user | Use the current input tool, including an asynchronous variant when offered. Respect plan-mode-only restrictions. Use prose if no appropriate tool is available. |
+| todo list | Use a plan tool if exposed; otherwise keep a concise checklist. |
+| loop | Follow the continuation procedure below. |
+| skill invocation | Select the exposed plugin skill by name; CLI and IDE commonly support `$<skill-name>`. Use the host's actual namespacing. |
+| transcripts | Use the current task's supplied transcript location or read-task tool; CLI sessions commonly live under `~/.codex/sessions/`. |
 | project skills dir | `.agents/skills/` |
+
+## Continuing a watch
+
+When a native scheduling tool is available, use its documented create/update operation for an authorized ongoing watch. Prefer continuation in the current task over creating a new task for each check. Inspect existing continuations and reuse the one for this repository and PR. Preserve the watch state and stop conditions from [the shared guide](README.md).
+
+Codex desktop may expose an automation tool with a thread heartbeat mode. Follow that tool's current schema and scheduling rules. Confirm creation before reporting that monitoring will continue, and pause or remove the continuation once the requested outcome is reached. A status-only question does not create an automation.
+
+When no scheduling capability exists, run the watcher within the active session using bounded tool waits. Do not invent a CLI `/loop`, install cron as a fallback, or promise continued monitoring after the session ends. Persist a handoff when continued observation is unavailable.
