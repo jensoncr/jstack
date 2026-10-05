@@ -4,13 +4,10 @@ i'm [vrubzy](https://x.com/Vrubzy). jstack is my fork of [pstack](https://github
 
 there's a growing sense that ai writes too much slop code. i agree. i don't want to ship like a team of twenty slop artists. throughput without quality is not a goal i aspire to. if you want to go fast, go deep first. 
 
-**jstack is my answer.** these are the same skills i use everyday to ship high quality code at Cursor. this turns cursor into a real engineering team. the goal is not to maximize loc, in fact it's the opposite. jstack helps you write less, but higher quality code.
-
 **jstack gives you fearless parallelism.** when you can go deep on one agent and trust it to write good, verifiable code, you can truly parallelize with confidence. start multiple agents up with `vrub-mode` and trust that they'll apply rigorous engineering principles to their work.
 
 **a multi-vendor harness gives you the best of all worlds.** every frontier model has its strengths and weaknesses. use any model with jstack. in fact, many of my skills use multi-model workflows to take advantage of each model's unique strengths. on a single-vendor harness the panels still run, with split lenses instead of split vendors.
 
-fork it. improve it. make it yours. PRs are welcome! 
 
 ## install
 
