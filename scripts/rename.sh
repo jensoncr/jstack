@@ -16,7 +16,7 @@ cd "$dst"
 find . -depth -path ./.git -prune -o \( -name '*poteto*' -o -name '*pstack*' \) -print | while read -r p; do
   new="$(dirname "$p")/$(basename "$p" \
     | sed -e 's/poteto-mode/vrub-mode/g' -e 's/poteto-agent/vrub-agent/g' -e 's/poteto-help/vrub-help/g' \
-          -e 's/poteto/vrubzy/g' -e 's/pstack/jstack/g')"
+          -e 's/poteto/vrubzy/g' | perl -pe 's/(?<![A-Za-z])pstack/jstack/g')"
   [ "$p" != "$new" ] && mv "$p" "$new"
 done
 
@@ -31,7 +31,7 @@ grep -rlIE "poteto|Poteto|pstack" . --exclude-dir=.git | while read -r f; do
     s/Poteto subagent/Vrub subagent/g;
     s/Poteto/Vrubzy/g;
     s/poteto/vrubzy/g;
-    s/pstack/jstack/g;
+    s/(?<![A-Za-z])pstack/jstack/g;
     s#\@cursor-skill/vrub-mode-tools#\@jstack/vrub-mode-tools#g;
   ' "$f"
 done
