@@ -27,7 +27,6 @@ One line per role in the config. A value is a tier name, a model token, a list o
 | `judgment and prose` | `strong` | vrub-mode delegate tiering |
 | `how explorer` | `fast` | how |
 | `how explainer` | `strong` | how |
-| `how critics` | `panel` | how, critique mode |
 | `why investigators` | `fast` | why |
 | `why synthesizer` | `strong` | why |
 | `reflect tooling` | `fast` | reflect |

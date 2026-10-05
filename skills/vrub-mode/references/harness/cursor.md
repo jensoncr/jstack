@@ -14,9 +14,9 @@ Defaults when no config exists:
 harness: cursor
 
 ## Tiers
-strong: claude-fable-5-1-thinking-max
-fast: grok-4.6-fast-xhigh
-panel: claude-fable-5-1-thinking-max, gpt-5.6-sol-max, grok-4.6-fast-xhigh, claude-opus-5-thinking-xhigh
+strong: claude-opus-5-5-max
+fast: grok-4.7-xhigh-fast
+panel: claude-opus-5-5-max, gpt-5.6-sol-max, grok-4.7-xhigh-fast
 judge: differs-from-parent
 
 ## Roles
@@ -28,7 +28,6 @@ hardest tasks: strong
 judgment and prose: strong
 how explorer: fast
 how explainer: strong
-how critics: panel
 why investigators: fast
 why synthesizer: strong
 reflect tooling: gpt-5.6-sol-max

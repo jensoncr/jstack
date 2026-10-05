@@ -28,7 +28,6 @@ hardest tasks: strong
 judgment and prose: strong
 how explorer: fast
 how explainer: strong
-how critics: panel
 why investigators: fast
 why synthesizer: strong
 reflect tooling: fast
