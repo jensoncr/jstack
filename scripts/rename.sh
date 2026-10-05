@@ -2,8 +2,9 @@
 # Deterministic transform from an upstream pstack tree to the jstack tree.
 # Usage: scripts/rename.sh <upstream-pstack-dir> <output-dir>
 # The output dir is emptied first (its .git, if any, is kept).
-# Pure mechanical renames only. Anything that is jstack's own content lives
-# as commits on main, not here, so upstream changes merge cleanly.
+# Mechanical transforms only: renames, plus the edits every sync would
+# otherwise conflict on. Anything that is jstack's own content lives as commits
+# on main, not here, so upstream changes merge cleanly.
 set -euo pipefail
 src="$(cd "$1" && pwd)"
 mkdir -p "$2"
@@ -34,7 +35,16 @@ grep -rlIE "poteto|Poteto|pstack" . --exclude-dir=.git | while read -r f; do
   ' "$f"
 done
 
+# Claude Code blocks routed invocation of flagged skills, so vrub-mode could
+# not run them. These two stay typed-only on purpose.
+for f in skills/*/SKILL.md; do
+  case "$f" in skills/automate-me/*|skills/make-bot-ui/*) continue ;; esac
+  perl -ni -e 'print unless /^disable-model-invocation: true\s*$/' "$f"
+done
+
+# jstack versions itself (scripts/bump-version.sh), so drop pstack's number.
 perl -0pi -e '
+  s/\n\t"version": "[^"]*",//;
   s/"author": \{\s*"name": "[^"]*"\s*\}/"author": {\n\t\t"name": "Jenson Cripps",\n\t\t"url": "https:\/\/x.com\/Vrubzy"\n\t}/;
   s#"homepage": "[^"]*"#"homepage": "https://github.com/jensoncr/jstack"#;
   s#"repository": "[^"]*"#"repository": "https://github.com/jensoncr/jstack"#;

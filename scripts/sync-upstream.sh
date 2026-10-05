@@ -35,13 +35,11 @@ echo "$gen_branch now at pstack $version ($short)."
 echo
 echo "merging into $(git branch --show-current)..."
 if git merge --no-edit "$gen_branch"; then
-  for manifest in .claude-plugin/plugin.json .codex-plugin/plugin.json; do
-    [ -f "$manifest" ] && perl -pi -e "s/\"version\": *\"[^\"]+\"/\"version\": \"$version\"/" "$manifest"
-  done
-  git add .claude-plugin .codex-plugin 2>/dev/null || true
-  git diff --cached --quiet || git commit --quiet -m "chore: bump plugin manifests to $version"
-  echo "merged clean. run the tests in skills/vrub-mode/scripts, then scripts/install-cursor-local.sh."
+  next="$(bash scripts/bump-version.sh minor)"
+  git add .claude-plugin .codex-plugin .cursor-plugin
+  git commit --quiet -m "chore: release jstack $next (pstack $version)"
+  echo "merged clean as jstack $next. run the tests in skills/vrub-mode/scripts, then scripts/install-cursor-local.sh."
 else
-  echo "merge has conflicts. resolve them, then: git commit"
+  echo "merge has conflicts. resolve them, git commit, then: scripts/bump-version.sh minor"
   exit 1
 fi
