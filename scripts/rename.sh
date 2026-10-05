@@ -37,9 +37,9 @@ grep -rlIE "poteto|Poteto|pstack" . --exclude-dir=.git | while read -r f; do
 done
 
 # Claude Code blocks routed invocation of flagged skills, so vrub-mode could
-# not run them. These two stay typed-only on purpose.
+# not run them. These stay typed-only on purpose.
 for f in skills/*/SKILL.md; do
-  case "$f" in skills/automate-me/*|skills/make-bot-ui/*) continue ;; esac
+  case "$f" in skills/automate-me/*|skills/make-bot-ui/*|skills/vrub-help/*) continue ;; esac
   perl -ni -e 'print unless /^disable-model-invocation: true\s*$/' "$f"
 done
 

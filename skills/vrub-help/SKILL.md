@@ -1,54 +1,57 @@
 ---
 name: vrub-help
-description: Guides users through jstack setup, /vrub-mode, and picking the skill, playbook, or principle for a task. Type /vrub-help with a question.
+description: Guides users through jstack setup on Cursor, Claude Code, or Codex, /vrub-mode, and picking the skill, playbook, or principle for a task. Type /vrub-help with a question.
+disable-model-invocation: true
 ---
 
-# Vrubzy help
+# Vrub help
 
 Answer the user's question about jstack, hand them a prompt they can send, and link the file the answer came from. For a help question, don't start the work. The user asked how, and a jstack run spends real tokens, so let them send the prompt.
 
-A message that asks for work, such as "use jstack to fix this bug", is not a help question. Read [`vrub-mode`](../vrub-mode/SKILL.md), do the work under it, and mention once that a Custom Mode keeps it on.
+A message that asks for work, such as "use jstack to fix this bug", is not a help question. Read [`vrub-mode`](../vrub-mode/SKILL.md) and do the work under it.
 
-This file maps questions to the skills and guide pages that hold the answers. Those files own the details. Read the file you route to before you quote it, and trust it when it disagrees with this map. The links here point into the installed plugin, which the user may not be able to open, so give the user the file's public copy: `https://github.com/cursor/plugins/blob/main/jstack/` followed by its path.
+This file maps questions to the skills and guide pages that hold the answers. Those files own the details. Read the file you route to before you quote it, and trust it when it disagrees with this map. The links here point into the installed plugin, which the user may not be able to open, so give the repo copy: `https://github.com/jensoncr/jstack/blob/main/` followed by its path.
 
 ## Find out what they need
 
-Infer the need from the message and the conversation. A named situation, such as "which skill reviews a PR?", goes straight to its section. If the need is still unclear, ask one multiple-choice question with these options, then answer only the section they pick:
+Infer the need from the message and the conversation. A named situation, such as "which skill reviews a PR?", goes straight to its section. If the need is still unclear, ask the user one multiple-choice question with these options, then answer only the section they pick:
 
-- Get set up
+- Get set up or updated
 - Start a task with `/vrub-mode`
 - Pick a skill for a situation
 - Fix a run that went wrong
 - Make jstack my own
 
-Check the state that changes the answer, and mention it only when it does:
+Answers differ by harness. Identify the one you are running in (Cursor, Claude Code, or Codex) and answer for it. Its adapter is `../vrub-mode/references/harness/<harness>.md`. Check the state that changes the answer, and mention it only when it does:
 
-- No `~/.cursor/rules/jstack-models.mdc` means `/setup-jstack` hasn't run for this user, so every role uses its default model.
+- No model config for this harness means `/setup-jstack` hasn't run here, so every role uses the harness defaults in its adapter. The config is `~/.cursor/rules/jstack-models.mdc` on Cursor, `~/.claude/jstack-models.md` (imported by `~/.claude/CLAUDE.md`) on Claude Code, and `~/.codex/jstack-models.md` on Codex.
 - No `verify-*` skill or other app harness in the project means agents have no scripted way to drive the app. Mention `/create-verification-skill` when the question is about proving a change works.
 
-## Get set up
+## Get set up or updated
 
-1. Install with `/add-plugin jstack` in chat, or from Customize in the sidebar.
-2. Run [`/setup-jstack`](../setup-jstack/SKILL.md). It asks for a reasoning budget, maps a model to each role, and writes a rule. The rule applies to new chats.
+1. Install the plugin.
+   - Cursor: `/add-plugin jstack`. From a local checkout, run `scripts/install-cursor-local.sh`, then Developer: Reload Window.
+   - Claude Code: `/plugin marketplace add jensoncr/jstack`, then `/plugin install jstack`.
+   - Codex: `codex plugin marketplace add jensoncr/jstack`, then `codex plugin add jstack@jstack`.
+2. Run [`/setup-jstack`](../setup-jstack/SKILL.md). It detects the harness, maps a model to each role, and writes the config above. The config applies to new sessions.
 3. Start a real task with `/vrub-mode`, a goal, and a check that can pass or fail.
 
-Installing changes nothing until the user invokes a skill. Only `/setup-jstack` loads from the user's words. The [README](../../README.md) and [guide page 1](../../docs/guide/01-setup.md) have the details. Offer to word their first prompt with them, per [`references/prompting.md`](references/prompting.md).
+The command syntax differs by harness: `/vrub-mode` on Cursor, `/jstack:vrub-mode` on Claude Code (or `/vrub-mode` when no other plugin claims the name), and `$vrub-mode` on Codex. Most jstack skills also load when the request matches their description. `/vrub-help`, `/automate-me`, and `/make-bot-ui` run only when typed. The [README](../../README.md) and [guide page 1](../../docs/guide/01-setup.md) have the details. Offer to word their first prompt with them, per [`references/prompting.md`](references/prompting.md).
 
-If cost is the worry, say where the tokens go and how to spend fewer. jstack spends extra tokens on subagents and review panels. Rerun `/setup-jstack` and pick a smaller budget or cheaper models. A role set to `auto` or `inherit-parent` runs on the chat's model, which saves tokens when the chat runs on Auto or a cheaper model. A shorter panel list runs fewer subagents, one for each entry. Save `/vrub-mode` for work that needs rigor.
+To update, the plugin's version must change. Claude Code: `claude plugin marketplace update jstack`, then `claude plugin update jstack@jstack`, then restart. Codex: `codex plugin marketplace upgrade jstack`, then start a new session. Cursor: rerun the install script, or update from Customize, then reload the window.
 
-jstack is built for Cursor. Its skills use the Agent Skills format, so other tools can read them. But most workflow skills, including `/vrub-mode`, `/how`, `/why`, and `/teach`, spawn Cursor subagents with per-role models, and Custom Modes and `/loop` are Cursor features, so those parts may not work there.
+If cost is the worry, say where the tokens go and how to spend fewer. jstack spends extra tokens on subagents and review panels. Rerun `/setup-jstack` and point the `fast` tier at a cheaper model, shorten the `panel` list (one subagent runs per entry), or set a role to `inherit-parent` so it runs on the chat's model. Save `/vrub-mode` for work that needs rigor.
 
 ## Start a task with `/vrub-mode`
 
 `/vrub-mode` matches the task to a playbook, copies the playbook's steps into the todo list, and runs the other skills as the steps need them. A step it skips stays in the list as `skip: <reason>`. A good prompt states the goal and how to tell it's done. It doesn't list skills, because a hand-written sequence tends to drop or reorder steps the playbook would keep. Read [`references/prompting.md`](references/prompting.md) before you help word one. [Guide page 2](../../docs/guide/02-vrub-mode.md) has examples.
 
-Whether `/vrub-mode` stays on depends on how the user starts it:
+Whether `/vrub-mode` stays on depends on the harness:
 
-- Enter on `/vrub-mode` attaches the skill to one message. It fades as the chat moves on.
-- Option+Enter on Mac or Alt+Enter on Windows, or Use as Mode from the skill entry, makes it a Custom Mode. It stays in context every turn until the user exits the mode, and it stays out of casual turns.
-- Cursor's docs list Custom Modes in the Agents Window and the CLI. Elsewhere, start each new task with `/vrub-mode`.
+- Cursor: Enter on `/vrub-mode` attaches it to one message, and it fades as the chat moves on. Option+Enter on Mac, Alt+Enter on Windows, or Use as Mode from the skill entry makes it a Custom Mode that stays in context every turn until the user exits it.
+- Claude Code and Codex have no persistent mode. The loaded skill stays in the conversation but weighs less as the chat grows. Start each new task with `/vrub-mode`.
 
-Link [Cursor's skills docs](https://cursor.com/docs/skills) when this comes up. Mid-chat, "new task" makes the mode match a fresh playbook. `/vrub-mode` already uses `vrub-agent` for the subagents its playbook steps spawn. To get the same style from a subagent of your own, spawn it with `subagent_type: "vrub-agent"`.
+Mid-chat, "new task" makes the mode match a fresh playbook. `/vrub-mode` already uses `vrub-agent` for the subagents its playbook steps spawn. To get the same style from a subagent of your own, spawn the named agent `vrub-agent` (`jstack:vrub-agent` on Claude Code).
 
 ## Pick a skill
 
@@ -64,8 +67,8 @@ The default answer is `/vrub-mode`, which runs most of the others when its steps
 | Know what a small diff could break outside itself | [`/blast-radius`](../blast-radius/SKILL.md) |
 | Settle types and module shape before code that crosses a function boundary | [`/architect`](../architect/SKILL.md) |
 | Get several attempts at one brief, merged into the best one | [`/arena`](../arena/SKILL.md) |
-| Run parallel checks over slices, or race workers, as cloud agents | [`/swarm`](../swarm/SKILL.md) |
-| Have several models review a diff and try to break it | [`/interrogate`](../interrogate/SKILL.md) |
+| Run parallel checks over slices, or race workers | [`/swarm`](../swarm/SKILL.md) |
+| Have a panel of reviewers try to break a diff | [`/interrogate`](../interrogate/SKILL.md) |
 | Fix a bug test-first when a cheap local test exists | [`/tdd`](../tdd/SKILL.md) |
 | Apply TypeScript rules to `.ts` or `.tsx` work | [`/typescript-best-practices`](../typescript-best-practices/SKILL.md) |
 | Strip comments before review, using a reviewer that didn't write them | [`/no-comments`](../no-comments/SKILL.md) |
@@ -77,7 +80,9 @@ The default answer is `/vrub-mode`, which runs most of the others when its steps
 | Vet a performance number before reporting or acting on it | [`/benchmark-checklist`](../benchmark-checklist/SKILL.md) |
 | Run a large or cross-cutting change, or one to review after stepping away | [`/figure-it-out`](../figure-it-out/SKILL.md) |
 | Keep a decision log during a run, and review it afterward | [`/show-me-your-work`](../show-me-your-work/SKILL.md) |
-| Pick a model for each role and a reasoning budget | [`/setup-jstack`](../setup-jstack/SKILL.md) |
+| Check a PR's status, fix CI, or address review feedback | [`/babysit`](../babysit/SKILL.md) |
+| Merge a PR or land a stack | [`/ship`](../ship/SKILL.md) |
+| Pick a model for each role | [`/setup-jstack`](../setup-jstack/SKILL.md) |
 | Turn their own working habits into a personal mode skill | [`/automate-me`](../automate-me/SKILL.md) |
 | Turn what a finished task taught into skill edits | [`/reflect`](../reflect/SKILL.md) |
 | Stop agents from repeating the same mistakes in this repo | [`/correct`](../correct/SKILL.md) |
@@ -92,29 +97,30 @@ Close calls:
 - `/arena` gives every worker the same brief and merges the best parts. `/swarm` splits work into slices or a race and returns one report.
 - `/architect` implements right after it settles the design. Add "with checkpoint" to review the design before it writes code.
 - `/interrogate` reviews the diff. `/blast-radius` looks for breakage outside the diff and proves the one fact that makes the change safe.
+- `/babysit` drives a PR to merge-ready and stops there. `/ship` merges, and only when the user asks to merge, land, or ship.
 - `/recall` rebuilds context across recent chats. Resuming one specific chat or branch is the Session pickup playbook.
 - `/figure-it-out` designs one rigorous run. The Orchestrate playbook runs a program that spans days and many PRs. The Autonomous run playbook drives one task to a finish condition.
 
 Not in jstack:
 
-- `/deslop`, `control-cli`, and `control-ui` ship in the `cursor-team-kit` plugin.
-- `/loop` and `/create-skill` are Cursor built-ins.
-- jstack has no `/orchestrate` skill. Orchestrate is a `/vrub-mode` playbook. If the slash menu shows `/orchestrate`, another plugin provides it.
+- `/deslop`, `control-cli`, and `control-ui` ship in Cursor's `cursor-team-kit` plugin. On other harnesses, a project `verify-*` skill from `/create-verification-skill` drives the app.
+- `/loop` is built into Cursor and Claude Code. The Codex CLI has none, so jstack falls back to the continuation steps in `../vrub-mode/references/harness/README.md`.
+- jstack has no `/orchestrate` skill. Orchestrate is a `/vrub-mode` playbook. If the command list shows `/orchestrate`, another plugin provides it.
 
 ## Playbooks and principles
 
-Playbooks are step lists inside `/vrub-mode`, not skills, so they have no slash command. Inside `/vrub-mode`, describing the task picks one, and these phrases name one directly:
+Playbooks are step lists inside `/vrub-mode`, not skills, so they have no command. Inside `/vrub-mode`, describing the task picks one, and these phrases name one directly:
 
-- "babysit this pr" or "check on pr 123" runs Babysit. It drives the PR to merge-ready and stops there. It doesn't merge unless the user asks to merge, land, or ship.
+- "babysit this pr" or "check on pr 123" runs Babysit. It drives the PR to merge-ready and stops there.
 - "land the stack" runs Shipping.
 - "take over this branch" runs Session pickup.
 - "pause safely" runs Pause safely.
 - "full autopilot on this queue" runs Autopilot-full. "stack them, don't ship" runs Autopilot-stack.
 - "run the eval playbook" runs Eval.
 
-Without `/vrub-mode`, a phrase such as "babysit this pr" can start Cursor's own skill for the same job instead. The Playbooks section of [`vrub-mode`](../vrub-mode/SKILL.md) lists every playbook and when it applies. [Guide page 6](../../docs/guide/06-verify-and-ship.md) covers opening, babysitting, and landing a PR.
+Outside `/vrub-mode`, the `/babysit` and `/ship` skills reach the same playbooks. The Playbooks section of [`vrub-mode`](../vrub-mode/SKILL.md) lists every playbook and when it applies. [Guide page 6](../../docs/guide/06-verify-and-ship.md) covers opening, babysitting, and landing a PR.
 
-jstack has no planning skill. Cursor's Plan Mode works alongside it. For work that spans phases or stacked PRs, asking `/vrub-mode` for a plan runs the [Multi-phase plan playbook](../vrub-mode/playbooks/multi-phase-plan.md), which writes the plan and doesn't implement it. For a design question, the Prototype playbook or `/architect` settles it in code first.
+jstack has no planning skill. A harness plan mode works alongside it. For work that spans phases or stacked PRs, asking `/vrub-mode` for a plan runs the [Multi-phase plan playbook](../vrub-mode/playbooks/multi-phase-plan.md), which writes the plan and doesn't implement it. For a design question, the Prototype playbook or `/architect` settles it in code first.
 
 Principles are one-rule skills that `/vrub-mode` reads and cites in its replies. The user rarely invokes one. They steer with the names instead, as in "apply prove it works. show me the real output." Typing `/principle-<name>` still loads one on demand. [Guide page 8](../../docs/guide/08-principles.md) lists them.
 
@@ -122,12 +128,12 @@ Principles are one-rule skills that `/vrub-mode` reads and cites in its replies.
 
 | Symptom | Fix |
 |---|---|
-| The mode stopped applying after a few turns | It was started with Enter. Start it as a Custom Mode, or start each task with `/vrub-mode`. |
+| The mode stopped applying after a few turns | On Cursor, start it as a Custom Mode. Elsewhere, start each task with `/vrub-mode`. |
 | A question got treated as the next step of the last task | Say "new task", or say the turn doesn't need the mode. |
-| A new model choice had no effect | The rule from `/setup-jstack` applies to new chats. Start one. |
-| Runs cost more than expected | See the cost paragraph under Get set up. |
-| A skill didn't load on its own | Only `/setup-jstack` loads from the user's words. The others load when the user types them or when `/vrub-mode` runs them, and it doesn't run every skill. |
-| Parallel agents overwrote each other | Give each agent its own worktree, or run them as cloud agents, which each get their own machine. |
+| A new model choice had no effect | The config loads when a session starts. Start a new one. |
+| An update had no effect | The version didn't change, or the session predates the update. See Get set up or updated. |
+| Runs cost more than expected | See the cost paragraph under Get set up or updated. |
+| Parallel agents overwrote each other | Give each agent its own worktree, or run them as cloud agents on Cursor, which each get their own machine. |
 | An overnight run moved but finished nothing | `/loop` needs a check that can pass or fail, not a duration. See [guide page 7](../../docs/guide/07-overnight.md). |
 | The reply claims success from a green build | Ask for the real command, flow, stored value, or profile. That's the prove-it-works principle. |
 
@@ -139,9 +145,10 @@ For a run that drifts, [`references/prompting.md`](references/prompting.md) has 
 - [`/reflect`](../reflect/SKILL.md) after a session turns its lessons into skill edits the user approves.
 - `/vrub-mode write a skill for <workflow>` runs the authoring playbook. The eval playbook tests a skill change blind.
 - Fix a misbehaving skill in its own PR, not inside the feature work where it went wrong.
+- jstack is a fork of pstack. `scripts/sync-upstream.sh` merges new pstack releases. After resolving conflicts, `scripts/bump-version.sh minor` sets jstack's own version, and each harness updates as above.
 
 [Guide page 9](../../docs/guide/09-make-it-yours.md) covers each of these.
 
 ## Reply
 
-Lead with the answer. Give at most one example prompt in a code block, adapted from [`references/recipes.md`](references/recipes.md) when one fits, then the link to that file. Keep it short unless the user asked for the whole map.
+Lead with the answer. Give at most one example prompt in a code block, adapted from [`references/recipes.md`](references/recipes.md) when one fits and written in the harness's command syntax, then the link to that file. Keep it short unless the user asked for the whole map.
