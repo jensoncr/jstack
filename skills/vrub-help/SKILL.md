@@ -81,7 +81,8 @@ The default answer is `/vrub-mode`, which runs most of the others when its steps
 | Run a large or cross-cutting change, or one to review after stepping away | [`/figure-it-out`](../figure-it-out/SKILL.md) |
 | Keep a decision log during a run, and review it afterward | [`/show-me-your-work`](../show-me-your-work/SKILL.md) |
 | Check a PR's status, fix CI, or address review feedback | [`/babysit`](../babysit/SKILL.md) |
-| Merge a PR or land a stack | [`/ship`](../ship/SKILL.md) |
+| Merge a PR or land a stack, and clean up its worktrees | [`/ship`](../ship/SKILL.md) |
+| Take over or resume a prior session's branch | [`/pickup`](../pickup/SKILL.md) |
 | Pick a model for each role | [`/setup-jstack`](../setup-jstack/SKILL.md) |
 | Turn their own working habits into a personal mode skill | [`/automate-me`](../automate-me/SKILL.md) |
 | Turn what a finished task taught into skill edits | [`/reflect`](../reflect/SKILL.md) |
@@ -98,7 +99,7 @@ Close calls:
 - `/architect` implements right after it settles the design. Add "with checkpoint" to review the design before it writes code.
 - `/interrogate` reviews the diff. `/blast-radius` looks for breakage outside the diff and proves the one fact that makes the change safe.
 - `/babysit` drives a PR to merge-ready and stops there. `/ship` merges, and only when the user asks to merge, land, or ship.
-- `/recall` rebuilds context across recent chats. Resuming one specific chat or branch is the Session pickup playbook.
+- `/recall` rebuilds context across recent chats. Resuming one specific chat or branch is `/pickup`.
 - `/figure-it-out` designs one rigorous run. The Orchestrate playbook runs a program that spans days and many PRs. The Autonomous run playbook drives one task to a finish condition.
 
 Not in jstack:

@@ -51,7 +51,7 @@ that's it. the other skills are situational; the mode skill uses them for you as
 
 use [`/vrub-mode`](./skills/vrub-mode/SKILL.md) at the start of a task. it reads your request, picks from a set of playbooks, and runs the other skills as the steps need them.
 
-for PR work, select [`babysit`](./skills/babysit/SKILL.md) to check status, fix CI, or address review feedback. select [`ship`](./skills/ship/SKILL.md) when you want a PR or stack merged. ship carries an authorized request through readiness and independent verification before merging. these are discoverable skills that share the existing playbooks; they do not require vrub-mode.
+for PR work, select [`babysit`](./skills/babysit/SKILL.md) to check status, fix CI, or address review feedback. select [`ship`](./skills/ship/SKILL.md) when you want a PR or stack merged. ship carries an authorized request through readiness and independent verification before merging, then removes the merged branches' worktrees. select [`pickup`](./skills/pickup/SKILL.md) to take over a prior session's branch. these are discoverable skills that share the existing playbooks; they do not require vrub-mode.
 
 ### just use [`/vrub-mode`](./skills/vrub-mode/SKILL.md)
 
@@ -132,7 +132,8 @@ long-running work uses the host's available loop or scheduled continuation. the 
 | [`/vrub-mode`](./skills/vrub-mode/SKILL.md) | default entry point for any non-trivial task. |
 | [`/vrub-help`](./skills/vrub-help/SKILL.md) | you're new to jstack, or unsure which skill, playbook, or principle fits. finds out what you're trying to do, answers that part, and hands you a prompt to type. type `/vrub-help` with your question. |
 | [`babysit`](./skills/babysit/SKILL.md) | check a PR, fix CI, or address review feedback; stop at the requested readiness state. |
-| [`ship`](./skills/ship/SKILL.md) | carry an authorized merge request through readiness, independent verification, and merge. |
+| [`ship`](./skills/ship/SKILL.md) | carry an authorized merge request through readiness, independent verification, and merge, then remove the merged worktrees. |
+| [`pickup`](./skills/pickup/SKILL.md) | take over or resume a prior agent's in-flight work without redoing it. |
 | [`/how`](./skills/how/SKILL.md) | you want a walkthrough of how a subsystem works. |
 | [`/why`](./skills/why/SKILL.md) | you want to know why something was built this way. discovers available MCPs at run time and queries each evidence category in parallel (source control, issue tracker, long-form docs, real-time chat, infra observability, error tracking, analytics warehouse). |
 | [`/recall`](./skills/recall/SKILL.md) | you're starting or resuming work and want your recent context on a topic rebuilt from your own chat history and the shared record, handed back as a tight current-state brief. |
