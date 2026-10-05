@@ -43,9 +43,13 @@ for f in skills/*/SKILL.md; do
   perl -ni -e 'print unless /^disable-model-invocation: true\s*$/' "$f"
 done
 
-# jstack versions itself (scripts/bump-version.sh), so drop pstack's number.
+# pstack's logo is its author's avatar. jstack ships none.
+rm -rf assets
+
+# jstack versions itself (scripts/bump-version.sh) and has no logo, so drop both.
 perl -0pi -e '
   s/\n\t"version": "[^"]*",//;
+  s/\n\t"logo": "[^"]*",//;
   s/"author": \{\s*"name": "[^"]*"\s*\}/"author": {\n\t\t"name": "Jenson Cripps",\n\t\t"url": "https:\/\/x.com\/Vrubzy"\n\t}/;
   s#"homepage": "[^"]*"#"homepage": "https://github.com/jensoncr/jstack"#;
   s#"repository": "[^"]*"#"repository": "https://github.com/jensoncr/jstack"#;
