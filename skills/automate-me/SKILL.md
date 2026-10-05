@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 A guided flow for turning the user's working conventions into a skill agents will follow. The output is one `-mode` skill tailored to them (e.g. `jay-mode`, `priya-mode`).
 
-This skill orchestrates three others: an inline mining pass (see step 1), Cursor's built-in `create-skill` skill where it exists; on other harnesses follow `playbooks/authoring-a-skill.md` in the vrub-mode skill (authoring; either one is "the authoring guide" below), and the **unslop** skill (prose discipline). It sequences them; it doesn't replace them.
+This skill orchestrates three others: an inline mining pass (see step 1), the authoring guide (Cursor's built-in `create-skill` skill where it exists, otherwise `playbooks/authoring-a-skill.md` in the vrub-mode skill), and the **unslop** skill (prose discipline). It sequences them. It doesn't replace them.
 
 ## Flow
 
@@ -17,12 +17,12 @@ This skill orchestrates three others: an inline mining pass (see step 1), Cursor
 Look recursively for `*-mode/SKILL.md` under the project skills directory (`project skills dir` verb) and the user skills directory for your harness, matching the user's handle. Mode skills can live in a personal category directory (`<project skills dir>/<handle>/`), not only at the top level. If one exists, confirm intent with the harness question tool (the `ask the user` verb) (unless they already said "update my skill" or similar):
 
 - Update the existing skill (default for repeat runs)
-- Start fresh (rare; ask why before doing it)
+- Start fresh (rare, ask why before doing it)
 
 Update mode changes the rest of the flow:
 - Step 1 mines only history since the skill was last edited (`git log -1 --format=%cI <path>`).
 - Step 2 asks what's changed or missing, not what to capture from zero.
-- Step 4 edits the existing file in place. Preserve sections the user hasn't contradicted; revise ones with new evidence; add new sections only for genuinely new rules.
+- Step 4 edits the existing file in place. Preserve sections the user hasn't contradicted. Revise ones with new evidence. Add new sections only for genuinely new rules.
 
 ### 1. Mine their history
 
@@ -32,27 +32,27 @@ Survey recent agent conversations within that scope for recurring patterns. Run 
 
 - Response preferences (length, tone, format, "dumb it down" corrections)
 - Delegation habits (subagents, models, specialized workflows, parallelism)
-- Verification posture (what "done" means; unit tests vs live repro; reviewers)
+- Verification posture (what "done" means, unit tests vs live repro, reviewers)
 - Code and prose discipline (style, principles cited, lint/format tools)
 - Process conventions (worktrees, commits, PRs, review/merge tooling)
 - Meta preferences (fixing skills mid-task, proposing new ones)
 
-Cross-check across slices before elevating a signal. Patterns seen in 2+ slices are high-confidence; lone signals are weak and usually get dropped.
+Cross-check across slices before elevating a signal. Patterns seen in 2+ slices are high-confidence. Lone signals are weak and usually get dropped.
 
 ### 2. Ask the user directly
 
-Mining misses intent that hasn't come up yet. Use the harness question tool (the `ask the user` verb) (structured multi-choice) rather than asking the user to type from scratch. Lower cognitive load, higher hit rate.
+Mining misses intent that hasn't come up yet. Use the harness question tool (the `ask the user` verb) for structured multi-choice rather than asking the user to type from scratch.
 
 Shape: one or two questions with 4-6 options each, multi-select enabled for category questions. Start broad ("Which areas matter most?"), then follow up on selected areas with specific options. After the structured rounds, one free-form chat question catches anything the options missed.
 
-Don't dump 20 questions. Two structured rounds plus one open question is usually enough.
+Don't dump 20 questions.
 
 ### 3. Cluster findings
 
 Group the combined signals into sections. Common ones (use only what applies):
 
 - **Response style**: length, tone, format.
-- **Autonomy**: how much to do without asking; MCP tool use.
+- **Autonomy**: how much to do without asking, MCP tool use.
 - **Understand first**: which skills to reach for when scoping or investigating a change.
 - **Subagents**: default, parallelism, model-to-task, specialized workflows.
 - **Prose / code discipline**: principles, lint tools, style guides.
@@ -60,27 +60,27 @@ Group the combined signals into sections. Common ones (use only what applies):
 - **Process**: git worktrees, commits, PRs, review/merge tooling.
 - **Skills**: skill-authoring habits, fix-the-skill-first, proposing new skills.
 
-The **vrub-mode** skill shows the shape. Read it for granularity. Don't copy its content; the user's rules are not the same as vrub-mode's.
+The **vrub-mode** skill shows the shape. Read it for granularity. Don't copy its content. The user's rules are not the same as vrub-mode's.
 
 ### 4. Draft the skill
 
-Use Cursor's built-in `create-skill` skill where it exists; on other harnesses follow `playbooks/authoring-a-skill.md` in the vrub-mode skill. Placement:
+Author the skill with the authoring guide. Placement:
 
-- Path: preserve an existing mode skill's category. For a new mode, use `<project skills dir>/<handle>/<handle>-mode/SKILL.md` when the repo has an established personal category for that handle; otherwise default to `<project skills dir>/<handle>-mode/SKILL.md` in the project (the `project skills dir` verb), or `<handle>-mode/` under the user skills directory for your harness if the user prefers a personal skill.
+- Path: preserve an existing mode skill's category. For a new mode, use `<project skills dir>/<handle>/<handle>-mode/SKILL.md` when the repo has an established personal category for that handle. Otherwise default to `<project skills dir>/<handle>-mode/SKILL.md` in the project (the `project skills dir` verb), or `<handle>-mode/` under the user skills directory for your harness if the user prefers a personal skill.
 - Handle: the user's first name or chosen identifier.
 - Frontmatter `description`: trigger on their name + `/<handle>-mode` + "work in their style", not on generic keywords like "write code" or "review PR".
-- Frontmatter formatting: follow the authoring guide's YAML rules. Keep `description` as one YAML scalar; quote it or use `description: >-` with indented continuation lines when punctuation or wrapping requires it.
-- Frontmatter `disable-model-invocation: true` by default. Mode skills are heavy and opinionated; they should only apply when the user explicitly invokes them (by name or slash command), not auto-trigger on description matching. Opt out only if the user explicitly wants their mode to apply on every turn.
+- Frontmatter formatting: follow the authoring guide's YAML rules. Keep `description` as one YAML scalar. Quote it or use `description: >-` with indented continuation lines when punctuation or wrapping requires it.
+- Frontmatter `disable-model-invocation: true` by default. Opt out only if the user explicitly wants their mode to apply on every turn.
 
 ### 5. Iterate on prose
 
-Apply the **unslop** skill and the authoring guide's writing guidelines to every line. Both apply to any agent-read prose, not just skills.
+Apply the **unslop** skill and the authoring guide's writing guidelines to every line.
 
-Show the draft to the user and take feedback. Expect multiple iterations. Cut ruthlessly; a mode skill is not a manual.
+Show the draft to the user and take feedback. Expect multiple iterations. Cut ruthlessly. A mode skill is not a manual.
 
 ### 6. Land it
 
-Work in a worktree off main. Commit and open a PR so the user can review it. Don't push to main directly.
+Work in a worktree off main. Commit and open a PR. Don't push to main directly.
 
 ## Guardrails
 
@@ -88,8 +88,8 @@ Work in a worktree off main. Commit and open a PR so the user can review it. Don
 - **Don't be clever.** Restating other skills' contents, inventing metaphors, or writing "poetic" prose for an agent reader is cost without benefit. Keep it operational.
 - **Reference, don't inline.** Other skills the user relies on should appear as path references, not pasted excerpts. Same for any principle docs they maintain elsewhere.
 - **Keep sections minimal.** Only add a section if the user has a specific, non-default rule there. "Communicate clearly" is not a section. "Short paragraphs. Tables when comparing options. Bullets only when items are genuinely parallel." is.
-- **Name conventions generic.** Use "the user" or "the human" in imperatives, not the author's first name. Others may read or adopt the skill.
-- **Don't force symmetry.** If a user has no process rules worth writing down, skip the Process section entirely. Sparse is fine; bloated is not.
+- **Name conventions generic.** Use "the user" or "the human" in imperatives, not the author's first name.
+- **Don't force symmetry.** If a user has no process rules worth writing down, skip the Process section entirely.
 
 ## Evaluation
 
@@ -100,10 +100,4 @@ Run a description-optimization loop only if the skill's trigger accuracy turns o
 ## When not to use
 
 - User wants a task-specific skill (not working conventions): the authoring guide alone, no mining required.
-- User wants to capture one narrow workflow (e.g. "how I write commit messages"): that's a regular skill, not a mode skill.
-
-## Reference files
-
-- The **vrub-mode** skill: example of the output shape.
-- The **unslop** skill: prose discipline for every line.
-- Cursor's built-in `create-skill` skill where it exists; on other harnesses follow `playbooks/authoring-a-skill.md` in the vrub-mode skill: skill authoring process and writing guidelines.
+- User wants to capture one narrow workflow (e.g. "how I write commit messages"). That's a regular skill, not a mode skill.

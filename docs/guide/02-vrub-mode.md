@@ -1,6 +1,6 @@
 # Route work through `/vrub-mode`
 
-`/vrub-mode` is the front door. You give it a goal, it matches one of twenty-two playbooks, copies that playbook's steps into the todo list, and calls the other skills as the steps need them. In this page you learn what a good prompt looks like, and how little of one you actually need.
+`/vrub-mode` is the front door. You give it a goal, it matches one of twenty-three playbooks, copies that playbook's steps into the todo list, and calls the other skills as the steps need them. In this page you learn what a good prompt looks like, and how little of one you actually need.
 
 ## What happens to your prompt
 
@@ -49,7 +49,7 @@ continue
 keep going until done
 ```
 
-Short follow-ups work while the task and chosen workflow remain in context. Cursor offers persistent custom modes; other hosts have their own invocation behavior. Select the skill again when starting a fresh task instead of assuming mode metadata carries across hosts.
+Short works because the playbook holds the structure. Your words carry the intent, and the skill carries the rigor. Follow-ups work while the task and its playbook stay in context. On Cursor, a Custom Mode keeps `/vrub-mode` in context on every turn, and [Set up jstack](./01-setup.md#run-your-first-task) shows how to start one. Other hosts have their own invocation behavior, so select the skill again when you start a fresh task.
 
 For PR work alone, select `babysit` or `ship` directly. `babysit` checks or fixes readiness according to your request. `ship` handles readiness first when necessary, then independent verification and merge. A request to build and merge carries through both stages without needing another merge instruction.
 

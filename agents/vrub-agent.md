@@ -1,6 +1,6 @@
 ---
 name: vrub-agent
-description: Routing target for `/vrub-mode` and any request for vrubzy's style. Resume an existing `vrub-agent` for the conversation rather than spawning a sibling. Reads the `vrub-mode` skill's `SKILL.md` in full before any work, including its inline Principles index. Substituting a general-purpose subagent skips that read and drifts.
+description: Routing target for `/vrub-mode` and any request for vrubzy's style. Spawn a fresh `vrub-agent` for each new task, and resume one only in the strict cases that vrub-mode's Subagents section names. Reads the `vrub-mode` skill's `SKILL.md` in full before any work, including its inline Principles index. Substituting a general-purpose subagent skips that read and drifts.
 is_background: true
 ---
 

@@ -43,9 +43,9 @@ two steps:
 1. run [`/setup-jstack`](./skills/setup-jstack/SKILL.md) and choose which models you want.
 2. use [`/vrub-mode`](./skills/vrub-mode/SKILL.md) whenever you're doing anything that requires rigor.
 
-new here? the [jstack guide](./docs/guide/README.md) walks you through a first real task, from setup and prompting through verification and overnight runs.
+new here? the [jstack guide](./docs/guide/README.md) walks you through a first real task, from setup and prompting through verification and overnight runs. stuck, or unsure which skill fits? ask [`/vrub-help`](./skills/vrub-help/SKILL.md).
 
-that's it. the other skills are situational; the mode skill uses them for you as needed. out of the box the mode splits work by tier: `strong` for judgment, prose, and all delegated code, `fast` for exploration and verification fan-out, `panel` for reviewers, `judge` for the independent grader. each harness maps tiers to the models it can spawn: on cursor that is fable 5.1 / sol / grok / opus 5, on claude code it is opus for every tier, on codex it is gpt-5.6 sol at two reasoning levels. [`/setup-jstack`](./skills/setup-jstack/SKILL.md) changes any of it.
+that's it. the other skills are situational; the mode skill uses them for you as needed. out of the box the mode splits work by tier: `strong` for judgment, prose, and all delegated code, `fast` for exploration and verification fan-out, `panel` for reviewers, `judge` for the independent grader. each harness maps tiers to the models it can spawn: on cursor that is fable 5.1 / sol / grok / opus 5, on claude code it is opus for every tier, on codex it is gpt-6.1 sol at two reasoning levels. [`/setup-jstack`](./skills/setup-jstack/SKILL.md) changes any of it.
 
 ## usage
 
@@ -55,7 +55,7 @@ for PR work, select [`babysit`](./skills/babysit/SKILL.md) to check status, fix 
 
 ### just use [`/vrub-mode`](./skills/vrub-mode/SKILL.md)
 
-this skill is the main shortcut. i use it whenever i need the agent to do rigorous engineering work. it comes with twenty-two playbooks:
+this skill is the main shortcut. i use it whenever i need the agent to do rigorous engineering work. it comes with twenty-three playbooks:
 
 ```
 /vrub-mode this pr has a subtle bug where the scroll drifts every 750ms even when idle. repro
@@ -68,7 +68,7 @@ morning.
 ```
 
 <details>
-<summary>the twenty-two playbooks</summary>
+<summary>the twenty-three playbooks</summary>
 
 | playbook | for |
 |---|---|
@@ -88,12 +88,13 @@ morning.
 | [shipping](./skills/vrub-mode/playbooks/shipping.md) | independently verify a green stack, then land the contiguous verified run bottom-up through github by default or origin when available. |
 | [autonomous run](./skills/vrub-mode/playbooks/autonomous-run.md) | drive a long task to completion without stopping. |
 | [orchestrate](./skills/vrub-mode/playbooks/orchestrate.md) | a standing project handed to one coordinator chat: multi-day, many stacked prs, fleets of subagents. |
-| [autopilot-full](./skills/vrub-mode/playbooks/autopilot-full.md) | run independent prs to merged with one owner per pr and root verification of each merge-ready head. |
+| [autopilot-full](./skills/vrub-mode/playbooks/autopilot-full.md) | run independent prs to merged with one owner per pr and a root swarm verdict on each round, from the code-ready head on. |
 | [autopilot-stack](./skills/vrub-mode/playbooks/autopilot-stack.md) | build and verify one linear base-branch stack for the operator to review and land. |
 | [session pickup](./skills/vrub-mode/playbooks/session-pickup.md) | resume or take over a prior agent's in-flight work. |
 | [pause safely](./skills/vrub-mode/playbooks/pause-safely.md) | suspend in-flight work cleanly so it can be resumed later. |
 | [multi-phase plan](./skills/vrub-mode/playbooks/multi-phase-plan.md) | work that spans phases or stacked PRs. |
 | [worktree cleanup](./skills/vrub-mode/playbooks/worktree-cleanup.md) | reclaim disk by pruning merged or abandoned worktrees and stale ios simulators, safety-gated. |
+| [opening a pr](./skills/vrub-mode/playbooks/opening-a-pr.md) | open a ready pr from small ordered commits with a conventional commits title and a briefing-style body. invoked at the end of every other playbook. |
 
 </details>
 
@@ -101,14 +102,13 @@ morning.
 
 when invoked it:
 
-1. opens a todo list. the first item is reading the inline principles index in the skill.
-2. matches your task to a [playbook](./skills/vrub-mode/playbooks/) and copies the steps in verbatim.
-3. routes to the other skills as the steps fire.
-4. writes unslopped replies framed for the consumer and the maintainer.
+1. matches your task to a [playbook](./skills/vrub-mode/playbooks/) and opens a todo list whose first items are its steps, copied in verbatim.
+2. routes to the other skills as the steps fire.
+3. writes unslopped replies framed for the consumer and the maintainer.
 
 the full rules and playbooks live in [`skills/vrub-mode/SKILL.md`](./skills/vrub-mode/SKILL.md).
 
-on Cursor, you can select [`vrub-mode`](./skills/vrub-mode/SKILL.md) as a persistent custom mode. persistence and invocation syntax depend on the host. on other hosts, select the skill for the task instead of relying on Cursor-specific mode metadata.
+on cursor, to keep [`/vrub-mode`](./skills/vrub-mode/SKILL.md) on across turns, pick it from the `/` menu and press option+enter (mac) or alt+enter (windows) instead of enter. that makes it a [custom mode](https://cursor.com/docs/skills), which cursor offers in the agents window and the cli. it stays in context every turn, applies itself when a playbook matches or the task needs rigor, and stays out of the way otherwise. plain enter attaches it to one message only. on claude code and codex, persistence and invocation syntax depend on the host, so select the skill for each new task instead of relying on cursor's mode metadata.
 
 long-running work uses the host's available loop or scheduled continuation. the [harness guide](./skills/vrub-mode/references/harness/README.md) defines capability detection, saved watch state, and the foreground fallback when no scheduler exists. a skill file alone does not keep an agent running after its session ends.
 
@@ -130,6 +130,7 @@ long-running work uses the host's available loop or scheduled continuation. the 
 | skill | use it when |
 |---|---|
 | [`/vrub-mode`](./skills/vrub-mode/SKILL.md) | default entry point for any non-trivial task. |
+| [`/vrub-help`](./skills/vrub-help/SKILL.md) | you're new to jstack, or unsure which skill, playbook, or principle fits. finds out what you're trying to do, answers that part, and hands you a prompt to type. type `/vrub-help` with your question. |
 | [`babysit`](./skills/babysit/SKILL.md) | check a PR, fix CI, or address review feedback; stop at the requested readiness state. |
 | [`ship`](./skills/ship/SKILL.md) | carry an authorized merge request through readiness, independent verification, and merge. |
 | [`/how`](./skills/how/SKILL.md) | you want a walkthrough of how a subsystem works. |
@@ -144,8 +145,10 @@ long-running work uses the host's available loop or scheduled continuation. the 
 | [`/make-bot-ui`](./skills/make-bot-ui/SKILL.md) | you want a page or dashboard whose buttons wake a Grok Bot over a webhook, including the sender-key handoff and Tailscale. |
 | [`/setup-jstack`](./skills/setup-jstack/SKILL.md) | you want to pick which models jstack uses per role. detects your harness and models and writes a config file. |
 | [`/reflect`](./skills/reflect/SKILL.md) | a long task landed and you want the recipe captured as a skill edit. |
+| [`/correct`](./skills/correct/SKILL.md) | you keep correcting agents for the same mistakes. mines history for mistake classes, fixes each at the highest level that works (architecture, then types, lint, and ci, then tests, with docs last), and keeps a table pairing each rule with what enforces it. |
 | [`/teach`](./skills/teach/SKILL.md) | you want to actually understand a change or subsystem, not just have it summarized. runs how + why and weaves one plain explanation, built up diagram by diagram. |
 | [`/tdd`](./skills/tdd/SKILL.md) | you're fixing a bug and there's a cheap local test path. write the failing test first, then the fix. |
+| [`/benchmark-checklist`](./skills/benchmark-checklist/SKILL.md) | you ran a benchmark or measured a speedup or regression. vets the number (limiter, tuning, errors, repeat runs, end-to-end relevance) before you report or act on it. |
 | [`/no-comments`](./skills/no-comments/SKILL.md) | strip comments before review; spawns `comment-sicko`, fixes accepted findings, offers encodings for claimed constraints. |
 | [`/typescript-best-practices`](./skills/typescript-best-practices/SKILL.md) | you're reading or editing typescript. grounds the type-system-discipline principle in syntax. |
 | [`/figure-it-out`](./skills/figure-it-out/SKILL.md) | no bundled playbook fits. designs a rigorous, auditable playbook for the task. |
@@ -199,8 +202,10 @@ tdd:               /tdd implement
 unslop:            can we unslop and tighten the new changes?
 reflect:           /reflect that took too long. capture what we learned so the next run doesn't
                    repeat it.
+correct:           /correct
 show-me-your-work: /show-me-your-work keep a decision trail i can review when i'm back.
 automate-me:       /automate-me
+help:              /vrub-help which skill should i use to review this branch?
 ```
 
 </details>
@@ -215,16 +220,17 @@ jstack also ships [`comment-sicko`](./agents/comment-sicko.md), a read-only comm
 
 ## principles
 
-twenty-one short skills, one principle each. `vrub-mode` indexes them inline and reads that index at task start. the standalone files are there so other skills can reference a principle by name, and so the index can point at the full rule for each.
+twenty-four short skills, one principle each. `vrub-mode` indexes them inline and reads that index at task start. the standalone files are there so other skills can reference a principle by name, and so the index can point at the full rule for each.
 
 <details>
-<summary>all twenty-one principles</summary>
+<summary>all twenty-four principles</summary>
 
 | principle | group | rule |
 |---|---|---|
 | [laziness-protocol](./skills/principle-laziness-protocol/SKILL.md) | core | Bias toward deletion and the smallest change that solves the problem. |
 | [foundational-thinking](./skills/principle-foundational-thinking/SKILL.md) | core | Apply before writing logic: choosing core types and data structures, sequencing scaffold-vs-feature work, asking what concurrent actors share. Get the data structures right so downstream code becomes obvious. |
 | [redesign-from-first-principles](./skills/principle-redesign-from-first-principles/SKILL.md) | core | Redesign as if the requirement had been a foundational assumption from day one, instead of bolting it on. |
+| [attack-the-premise](./skills/principle-attack-the-premise/SKILL.md) | core | Apply when two or more fixes that share one premise have failed the same gate. Take a census of which actors hold the imbalance before the next fix, then question the premise instead of writing another fix that assumes it. |
 | [subtract-before-you-add](./skills/principle-subtract-before-you-add/SKILL.md) | core | Remove dead weight, redundant validators, and stub references first, then build on the simpler base. |
 | [minimize-reader-load](./skills/principle-minimize-reader-load/SKILL.md) | core | Count layers between question and answer, and hidden state in the reader's head; collapse one-caller wrappers and shrink mutable scope. |
 | [outcome-oriented-execution](./skills/principle-outcome-oriented-execution/SKILL.md) | core | Apply during planned rewrites and migrations with explicit phase boundaries. Converge on the target architecture; don't preserve smooth intermediate states with throwaway compatibility code. |
@@ -240,6 +246,8 @@ twenty-one short skills, one principle each. `vrub-mode` indexes them inline and
 | [prove-it-works](./skills/principle-prove-it-works/SKILL.md) | verification | Apply after completing a task, before declaring done. Verify against the real artifact (run the feature, read the actual value, inspect the diff), not a proxy, self-report, or 'it compiles.'. |
 | [fix-root-causes](./skills/principle-fix-root-causes/SKILL.md) | verification | Trace each symptom to its root cause and fix it there; reproduce first, ask why until you reach it, resist nil-check guards that silence crashes. |
 | [sequence-verifiable-units](./skills/principle-sequence-verifiable-units/SKILL.md) | verification | Apply to multi-step work (sweeps, migrations, runs of similar edits) and to how you stack commits and PRs. Break work into small units that each end in a verifiable state, check each before the next, and order delivery so the sequence proves itself to a reviewer. |
+| [test-behavior-not-implementation](./skills/principle-test-behavior-not-implementation/SKILL.md) | verification | Apply when you write, change, or keep a test. Call the code the way its users do and assert the result they observe against a literal expected value. If the test would still pass when every imported function returns undefined, rewrite the assertion or delete the test. |
+| [explain-the-number](./skills/principle-explain-the-number/SKILL.md) | verification | Apply before you trust, report, or act on a number you measured: a speedup, a regression, a throughput, a latency, or an eval result. Find what limits it, and rule out that it measured something other than the work you think. |
 | [guard-the-context-window](./skills/principle-guard-the-context-window/SKILL.md) | delegation | Route bulk to subagents; keep summaries in the main thread, not raw payloads. |
 | [never-block-on-the-human](./skills/principle-never-block-on-the-human/SKILL.md) | delegation | Proceed, present the result, let the human course-correct after the fact; reserve confirmation for irreversible actions. |
 | [encode-lessons-in-structure](./skills/principle-encode-lessons-in-structure/SKILL.md) | meta | Encode the rule as a lint, metadata flag, runtime check, or script instead of more text. |
@@ -267,6 +275,8 @@ your harness's plan mode works great with jstack. but personally, i don't believ
 type [`/automate-me`](./skills/automate-me/SKILL.md). it mines your recent transcripts, drafts a `<your-name>-mode` skill from how you've actually worked, and routes through jstack underneath. you keep jstack as the base and end up with your own routing skill alongside `vrub-mode`.
 
 models are configurable too. type [`/setup-jstack`](./skills/setup-jstack/SKILL.md). it detects your harness (cursor, claude code, or codex) and the models it can spawn, then writes a small always-loaded config mapping tiers to models and roles to tiers. every skill reads it and falls back to the harness defaults when a line is absent, so you override only what you want.
+
+a rerun starts from your current config and drops lines for retired roles, such as `how critics`.
 
 ## automations
 
