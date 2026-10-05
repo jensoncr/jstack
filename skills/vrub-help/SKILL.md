@@ -65,6 +65,7 @@ The default answer is `/vrub-mode`, which runs most of the others when its steps
 | Understand a change or subsystem, explained plainly | [`/teach`](../teach/SKILL.md) |
 | Catch up on their own recent work on a topic | [`/recall`](../recall/SKILL.md) |
 | Know what a small diff could break outside itself | [`/blast-radius`](../blast-radius/SKILL.md) |
+| Get interviewed on a request or plan until the intent is pinned down, before any work starts | [`/grill-me`](../grill-me/SKILL.md) |
 | Settle types and module shape before code that crosses a function boundary | [`/architect`](../architect/SKILL.md) |
 | Get several attempts at one brief, merged into the best one | [`/arena`](../arena/SKILL.md) |
 | Run parallel checks over slices, or race workers | [`/swarm`](../swarm/SKILL.md) |
