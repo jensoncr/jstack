@@ -6,7 +6,7 @@ Use this adapter when the host identifies itself as Codex. Read [the shared capa
 
 User file: `~/.codex/jstack-models.md`, optionally referenced from `~/.codex/AGENTS.md`. Read it when present. Model configuration does not establish tool capabilities. `/setup-jstack` writes role choices; custom agent profiles are needed only on hosts that select configured profiles through `agent_type`.
 
-Model tokens are `<model>@<reasoning effort>`. The model is a Codex model id (`gpt-5.6-sol`, `gpt-5.6-luna`, or whatever `/model` lists), and the effort must be supported by that model in the current session. A token without `@` uses the model's default effort.
+Model tokens are `<model>@<reasoning effort>`. The model is a Codex model id (`gpt-6.1-sol`, `gpt-6-luna`, or whatever `/model` lists), and the effort must be supported by that model in the current session. A token without `@` uses the model's default effort.
 
 Defaults when no config exists:
 
@@ -14,10 +14,10 @@ Defaults when no config exists:
 harness: codex
 
 ## Tiers
-strong: gpt-5.6-sol@xhigh
-fast: gpt-5.6-sol@high
-panel: gpt-5.6-sol@xhigh, gpt-5.6-sol@high
-judge: gpt-5.6-sol@xhigh
+strong: gpt-6.1-sol@xhigh
+fast: gpt-6.1-sol@high
+panel: gpt-6.1-sol@xhigh, gpt-6.1-sol@high
+judge: gpt-6.1-sol@xhigh
 
 ## Roles
 feature, refactoring: strong
