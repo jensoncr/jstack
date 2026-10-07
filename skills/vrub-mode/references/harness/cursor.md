@@ -16,7 +16,7 @@ harness: cursor
 ## Tiers
 strong: claude-opus-5-5-max
 fast: grok-4.7-xhigh-fast
-panel: claude-opus-5-5-max, gpt-5.6-sol-max, grok-4.7-xhigh-fast
+panel: claude-opus-5-5-max, gpt-6.1-sol-max, grok-4.7-xhigh-fast
 judge: differs-from-parent
 
 ## Roles
@@ -30,7 +30,7 @@ how explorer: fast
 how explainer: strong
 why investigators: fast
 why synthesizer: strong
-reflect tooling: gpt-5.6-sol-max
+reflect tooling: gpt-6.1-sol-max
 reflect judgment, divergent, synthesizer: strong
 arena runners: panel
 arena cross-judge: judge
