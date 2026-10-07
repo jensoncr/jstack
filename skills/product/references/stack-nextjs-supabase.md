@@ -36,7 +36,7 @@ identically. Consistency is the feature.
   for RSC/actions/routes. The `service_role` key is CI/admin-script territory only — it appears
   in **no** app code path, ever.
 - **RLS on from the first migration.** Every table gets policies when created, not "later" —
-  and each policy gets its denial test (testing.md §RLS).
+  and each policy gets its denial test (the Verify, unit rule in `../templates/plan.md`).
 - **Migrations are the only schema channel**: `supabase migration new …`, applied locally, then
   linked/pushed. Never mutate schema through the dashboard on a linked project.
 - **Types are generated**, not hand-written: `supabase gen types typescript` into

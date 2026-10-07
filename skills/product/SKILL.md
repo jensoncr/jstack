@@ -172,8 +172,9 @@ see this conversation. Each returns findings in this format:
 Write `docs/spec/plan.md` per `templates/plan.md`. It is a vrub-mode multi-phase plan, so it
 follows `../vrub-mode/playbooks/multi-phase-plan.md` in full, including the `check-plan.mjs` run.
 The first PR is always the walking skeleton, which also creates the project's `verify-*` control
-skill. Then re-run the feasibility, consistency, and security validators against plan.md, with
-the same merge, repair, and converge loop as Phase 5.
+skill. Then re-run validators against plan.md with the same merge, repair, and converge loop as
+Phase 5. Tier 1 re-runs consistency and simplicity. Tier 2 and up re-run feasibility, consistency,
+and security.
 
 ## Phase 7. Human gate and handoff
 

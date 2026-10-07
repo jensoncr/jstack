@@ -21,6 +21,12 @@ user steps away from for days takes `playbooks/orchestrate.md`.
    runs `../../create-verification-skill/SKILL.md` so the project gains the `verify-*` control
    skill every later live lane drives. It applies the auth approach from ADR-001 to one
    protected page. Integration risk surfaces here, not later.
+
+   A new project needs a repository with an `origin` remote and a pushed `main` before the
+   program arms, so the plan's first box creates them. The skeleton's **Arm the program** reads
+   the control skill with `git show origin/main:<path>`, which does not exist until this PR
+   merges. For this PR only, owners and live lanes read it from the PR head. Every later PR reads
+   it from `main` as the skeleton says.
 2. **Core workflow next.** A user gets value from the first two PRs alone.
 3. **One PR per story slice after that,** dependency-ordered. A PR is one change with its own
    evidence. No epics ("build the backend"), no confetti (twenty PRs that are one change).
@@ -32,12 +38,12 @@ user steps away from for days takes `playbooks/orchestrate.md`.
   tests. Every database access policy gets its allowed case and its cross-tenant denial case, in
   the same PR as the policy. Do not add tests after the code to cover it, and do not write unit
   tests that only exercise mocks (`../../principle-test-behavior-not-implementation/SKILL.md`).
+  The design-conformance check is a unit box, or a CI lint step from the walking skeleton on.
+  It fails on raw color literals or arbitrary values outside the token layer in touched files.
 - **Verify, live.** The ten lanes walk ux.md's flows for the stories this PR delivers through the
   project's `verify-*` skill: happy path, each error and empty branch, and security.md's
   unauthorized and revoked paths (request another user's resource and assert the response, not
-  just the missing UI). One lane runs the design-conformance check: no raw color literals or
-  arbitrary values outside the token layer in the files this PR touched. When a journey should
-  stay fixed, the PR also adds a re-runnable journey script and records its output, per
+  just the missing UI). When a journey should stay fixed, the PR also adds a re-runnable journey script and records its output, per
   `../../principle-prove-it-works/SKILL.md`.
 - **Verify, perf.** Use the NFR budgets from spec.md. Where the spec is silent, default to
   LCP < 2.5 s, CLS < 0.1, and INP < 200 ms on the core-workflow pages.
@@ -54,6 +60,19 @@ user steps away from for days takes `playbooks/orchestrate.md`.
   | Story | Priority | Architecture components | Security reqs | PR ids |
   |---|---|---|---|---|
   | US-01 | P0 | api, web, db | SR-01 | PR-2, PR-3 |
+
+## Gaps found while building
+
+An owner who hits a minor gap (a decision no artifact records, with no effect a user would
+notice) makes the call, logs it in product-definition.md's assumptions log, and names it in the
+PR body. A material gap (behavior a user would notice) goes to the user before the PR continues.
+
+Each PR that adds tables or access policies also runs the platform's security and performance
+advisors when the stack has them (for example Supabase advisors), and a security review of the
+diff. Missing access policies block the PR.
+
+Name the domain skills each PR should load in Appendix D (database, data visualization, React,
+or framework skills the harness has).
 
 ## Spec drift
 
