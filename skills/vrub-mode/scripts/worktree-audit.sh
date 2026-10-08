@@ -12,7 +12,7 @@ repo="${1:-$(git rev-parse --show-toplevel 2>/dev/null)}"
 cd "$repo" || exit 1
 
 # Main worktree is the first entry; everything else is a candidate.
-main_wt=$(git worktree list --porcelain | sed -n '1s/^worktree //p')
+main_wt=$(git worktree list --porcelain | awk '/^worktree /{print $2; exit}')
 
 # origin/main drives the merge check. Best-effort; stale is fine for a first pass.
 git fetch origin main --quiet 2>/dev/null || echo "warn: could not fetch origin/main; merged column may be stale" >&2
