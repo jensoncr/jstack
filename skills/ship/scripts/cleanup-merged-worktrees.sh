@@ -6,7 +6,7 @@
 set -euo pipefail
 [ $# -gt 0 ] || { echo "usage: cleanup-merged-worktrees.sh <branch>..." >&2; exit 1; }
 
-main_wt=$(git worktree list --porcelain | awk '/^worktree /{print $2; exit}')
+main_wt=$(git worktree list --porcelain | sed -n '1s/^worktree //p')
 here=$(git rev-parse --show-toplevel)
 
 for branch in "$@"; do
