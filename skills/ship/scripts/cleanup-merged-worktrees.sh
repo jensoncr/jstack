@@ -8,6 +8,8 @@
 set -euo pipefail
 [ $# -gt 0 ] || { echo "usage: cleanup-merged-worktrees.sh <branch>..." >&2; exit 1; }
 
+# gh would otherwise read PRs from `upstream` when that remote exists.
+GH_REPO=$(git remote get-url origin); export GH_REPO
 git worktree prune
 main_wt=$(git worktree list --porcelain | sed -n '1s/^worktree //p')
 here=$(git rev-parse --show-toplevel)
