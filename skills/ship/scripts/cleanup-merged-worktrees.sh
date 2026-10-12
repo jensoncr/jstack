@@ -36,7 +36,10 @@ for branch in "$@"; do
     [ -d "$wt" ] && rm -rf "$wt"
     echo "removed  $wt${scratch:+ (dropped untracked: $scratch)}"
   fi
-  if git show-ref -q --verify "$ref"; then git branch -q -D "$branch"; echo "deleted  $branch"; fi
+  if git show-ref -q --verify "$ref"; then
+    git branch -q -D "$branch" 2>/dev/null || { echo "held     $branch (branch delete failed)"; continue; }
+    echo "deleted  $branch"
+  fi
 
   remote=0
   git ls-remote --exit-code -q --heads origin "$ref" >/dev/null || remote=$?
