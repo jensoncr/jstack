@@ -7,7 +7,7 @@ description: "Use for 'why does X work this way', 'why we picked Y', design rati
 
 Investigate the motivation and intent behind code. The companion `how` skill answers what the code does and how it works. `why` answers what forces led to its shape.
 
-Each spawn below names a role and its tier, resolved per the vrub-mode skill's `references/models.md`. Map the verbs below to tools per your harness file under its `references/harness/`. Pick each subagent's reasoning level and fast or standard speed for the job, per the Subagents section of the **vrub-mode** skill.
+Each spawn below names a role and its tier, resolved per the vrub-mode skill's `references/models.md`. Map the verbs below to tools per your harness file under its `references/harness/`. Pick each subagent's reasoning level for the job, per the Subagents section of the **vrub-mode** skill.
 
 Every spawn is a general-purpose subagent in agent mode, which keeps MCP access. **Do not use a read-only mode.** On harnesses where read-only strips MCP access, it disables the MCP-backed investigators and the synthesizer's citation spot-checks. Investigators still shouldn't write anything.
 

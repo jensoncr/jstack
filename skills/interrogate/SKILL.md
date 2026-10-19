@@ -27,7 +27,7 @@ Launch all reviewers in a single message. Resolve `interrogate reviewers` (tier 
 
 When entries repeat a model, give each repeat a distinct subset of the sections in `references/rubric.md` as its lens. Every reviewer still gets the full code-quality lens from `references/code-quality-review.md`. A rejected model token follows the fallback rule in `references/models.md` and never blocks the review.
 
-Read `references/reviewer-prompt.md` and fill in the same template for every reviewer with the stated intent, the diff or file contents, the rubric from `references/rubric.md`, and the code-quality lens from `references/code-quality-review.md`, substituting the lens subset where the panel repeats a model. Pick each subagent's reasoning level and fast or standard speed for the job, per the Subagents section of the **vrub-mode** skill.
+Read `references/reviewer-prompt.md` and fill in the same template for every reviewer with the stated intent, the diff or file contents, the rubric from `references/rubric.md`, and the code-quality lens from `references/code-quality-review.md`, substituting the lens subset where the panel repeats a model. Pick each subagent's reasoning level for the job, per the Subagents section of the **vrub-mode** skill.
 
 ## Step 4, Synthesize
 

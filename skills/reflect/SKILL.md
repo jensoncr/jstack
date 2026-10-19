@@ -23,7 +23,7 @@ That covers Cursor's legacy flat (`<id>.jsonl`), current nested (`<id>/<id>.json
 
 One message, three general-purpose subagents, explicit model on each, agent mode (keeps MCP access). Reviewers need MCP access to look up the tickets, chat threads, and observability traces the transcript references, and read-only modes strip MCPs on some harnesses. The prompt forbids file writes. The parent applies edits.
 
-Each spawn below names a role and its tier, resolved per the vrub-mode skill's `references/models.md`. Map the verbs below to tools per your harness file under its `references/harness/`. Pick each subagent's reasoning level and fast or standard speed for the job, per the Subagents section of the **vrub-mode** skill.
+Each spawn below names a role and its tier, resolved per the vrub-mode skill's `references/models.md`. Map the verbs below to tools per your harness file under its `references/harness/`. Pick each subagent's reasoning level for the job, per the Subagents section of the **vrub-mode** skill.
 
 | Lens | `model` | Prompt template |
 |---|---|---|
