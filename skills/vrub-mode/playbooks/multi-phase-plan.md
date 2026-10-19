@@ -58,7 +58,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 - [ ] Run the local checks from **Opening a PR** on the committed head before every push to the PR. Push with hooks on.
 - [ ] Run `/deslop` from the `cursor-team-kit` plugin before each commit when it is installed (Cursor). Otherwise run the **unslop** skill on prose and the **no-comments** skill on code. Run `/no-comments` before review.
 - [ ] Triage every Bugbot and security-reviewer comment per `../references/bugbot-triage.md`.
-- [ ] Rebase onto current trunk before the code-ready report and babysit. Keep that merge base in fix rounds. Rebase again only at merge prep, on a `git merge-tree` conflict with trunk, or on a CI failure that comes from a change on trunk.
+- [ ] Rebase onto current trunk before the code-ready report and babysit. Keep that merge base in fix rounds. Rebase again only when the rebase test in `playbooks/shipping.md` step 4 calls for one, or on a CI failure that comes from a change on trunk.
 
 ### Verdict and merge, for every PR
 
@@ -127,7 +127,7 @@ Each live lane runs on its own cloud VM at the PR head. Drive through the projec
 
 - [ ] Root's clean verdict at the exact head SHA.
 - [ ] Bugbot triage done.
-- [ ] Rebased onto current trunk after the verdict, patch-id unchanged.
+- [ ] Rebase test from `playbooks/shipping.md` step 4 applied right before the merge, and patch-id unchanged by any rebase it called for.
 - [ ] <The owner squash-merges its own PR, or the root appends it to the base-branch stack and the operator lands it bottom-up.>
 
 ## Close the program
