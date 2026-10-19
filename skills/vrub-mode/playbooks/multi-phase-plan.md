@@ -62,7 +62,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 
 ### Verdict and merge, for every PR
 
-- [ ] A full swarm runs once, at the code-ready head. Another full swarm runs only for new behavior, a redesign, or a large new diff. A rebase, a merge-conflict resolution, or a minor fix gets a single verifier at the new head. Run each full swarm per `jstack/skills/swarm/SKILL.md`. One gates lane. The ten live lanes from the PR's **Verify, live** block. The perf lane from its **Verify, perf** block. Two or more audit lanes, each with its own focus, that read the diff and the receipts and distrust the PR body. The root audits the receipts in the merge-ready report before the verdict.
+- [ ] A full swarm runs once, at the code-ready head. Another full swarm runs only for new behavior, a redesign, or a large new diff. A rebase, a merge-conflict resolution, or a minor fix gets a single verifier at the new head. Run each full swarm per `jstack/skills/swarm/SKILL.md`. One gates lane. The ten live lanes from the PR's **Verify, live** block. The perf lane from its **Verify, perf** block. Two or more audit lanes, each with its own focus, that read the diff and the receipts and distrust the PR body. The root audits the owner's receipts for that SHA before the verdict.
 - [ ] Clean only when every lane is `PASS`. Findings go back to the owner, including a defect that a lane filed as a note. A new head gets a fresh verdict, except for results that stay valid under the patch-id rule in `playbooks/shipping.md`. Cap review at two rounds per PR, as in `playbooks/autopilot-full.md` step 4.
 - [ ] <The merge or append rule from the execution playbook, with the patch-id rule from `playbooks/shipping.md`.>
 
@@ -125,7 +125,8 @@ Each live lane runs on its own cloud VM at the PR head. Drive through the projec
 
 **Merge.**
 
-- [ ] Root's clean verdict at the exact head SHA.
+- [ ] Root's clean verdict for the head's patch, per the patch-id rule in `playbooks/shipping.md`. A fix gets its verdict on the local commit before its push.
+- [ ] Green CI on the remote head that merges.
 - [ ] Bugbot triage done.
 - [ ] Rebase test from `playbooks/shipping.md` step 4 applied right before the merge, and patch-id unchanged by any rebase it called for.
 - [ ] <The owner squash-merges its own PR, or the root appends it to the base-branch stack and the operator lands it bottom-up.>
