@@ -36,6 +36,8 @@ any harness that reads skills:
 npx skills add jensoncr/jstack
 ```
 
+claude code prefixes plugin commands and agents, so `/vrub-mode` is `/jstack:vrub-mode`.
+
 ## get started
 
 two steps:
@@ -50,6 +52,8 @@ that's it. the other skills are situational; the mode skill uses them for you as
 ## usage
 
 use [`/vrub-mode`](./skills/vrub-mode/SKILL.md) at the start of a task. it reads your request, picks from a set of playbooks, and runs the other skills as the steps need them.
+
+on cursor, pick `/vrub-mode` from the `/` menu before you type your task, so cursor attaches the skill to the message.
 
 for PR work, select [`babysit`](./skills/babysit/SKILL.md) to check status, fix CI, or address review feedback. select [`ship`](./skills/ship/SKILL.md) when you want a PR or stack merged. ship carries an authorized request through readiness and independent verification before merging, then removes the merged branches' worktrees. select [`pickup`](./skills/pickup/SKILL.md) to take over a prior session's branch. these are discoverable skills that share the existing playbooks; they do not require vrub-mode.
 
@@ -108,7 +112,7 @@ when invoked it:
 
 the full rules and playbooks live in [`skills/vrub-mode/SKILL.md`](./skills/vrub-mode/SKILL.md).
 
-on cursor, to keep [`/vrub-mode`](./skills/vrub-mode/SKILL.md) on across turns, pick it from the `/` menu and press option+enter (mac) or alt+enter (windows) instead of enter. that makes it a [custom mode](https://cursor.com/docs/skills), which cursor offers in the agents window and the cli. it stays in context every turn, applies itself when a playbook matches or the task needs rigor, and stays out of the way otherwise. plain enter attaches it to one message only. on claude code and codex, persistence and invocation syntax depend on the host, so select the skill for each new task instead of relying on cursor's mode metadata.
+on cursor, to keep [`/vrub-mode`](./skills/vrub-mode/SKILL.md) on across turns, pick it from the `/` menu and press option+enter (mac) or alt+enter (windows) instead of enter. that makes it a [custom mode](https://cursor.com/docs/skills#using-a-skill-as-a-custom-mode), which cursor offers in the agents window and the cli. it stays in context every turn until you exit the mode. plain enter attaches it to one message only. on claude code and codex, persistence and invocation syntax depend on the host, so select the skill for each new task instead of relying on cursor's mode metadata.
 
 long-running work uses the host's available loop or scheduled continuation. the [harness guide](./skills/vrub-mode/references/harness/README.md) defines capability detection, saved watch state, and the foreground fallback when no scheduler exists. a skill file alone does not keep an agent running after its session ends.
 
@@ -131,12 +135,15 @@ long-running work uses the host's available loop or scheduled continuation. the 
 |---|---|
 | [`/vrub-mode`](./skills/vrub-mode/SKILL.md) | default entry point for any non-trivial task. |
 | [`/vrub-help`](./skills/vrub-help/SKILL.md) | you're new to jstack, or unsure which skill, playbook, or principle fits. finds out what you're trying to do, answers that part, and hands you a prompt to type. type `/vrub-help` with your question. |
+| [`/in-your-own-words`](./skills/in-your-own-words/SKILL.md) | you want the agent to play back your goal and the problem before it starts. |
+| [`/sharpen`](./skills/sharpen/SKILL.md) | you want a task approached the way a top expert would, aimed at what you're really after, without overspecifying it or deciding your choices for you. |
 | [`babysit`](./skills/babysit/SKILL.md) | check a PR, fix CI, or address review feedback; stop at the requested readiness state. |
 | [`ship`](./skills/ship/SKILL.md) | carry an authorized merge request through readiness, independent verification, and merge, then remove the merged worktrees. |
 | [`pickup`](./skills/pickup/SKILL.md) | take over or resume a prior agent's in-flight work without redoing it. |
 | [`/how`](./skills/how/SKILL.md) | you want a walkthrough of how a subsystem works. |
 | [`/why`](./skills/why/SKILL.md) | you want to know why something was built this way. discovers available MCPs at run time and queries each evidence category in parallel (source control, issue tracker, long-form docs, real-time chat, infra observability, error tracking, analytics warehouse). |
 | [`/recall`](./skills/recall/SKILL.md) | you're starting or resuming work and want your recent context on a topic rebuilt from your own chat history and the shared record, handed back as a tight current-state brief. |
+| [`/ketchup`](./skills/ketchup/SKILL.md) | you want what changed in this chat since your last message, in plain words and small visuals, with every item waiting on you listed and decidable from the reply alone, even when that makes the reply long. |
 | [`/blast-radius`](./skills/blast-radius/SKILL.md) | you have a small-looking change and want to know what else it could break, with the one fact it's safe because of proven by running code, not asserted. |
 | [`/grill-me`](./skills/grill-me/SKILL.md) | you want to be interviewed on a request or plan before any work starts. asks in rounds of numbered questions with a recommended answer each, looks up facts instead of asking you, and ends with an intent brief you confirm. adapted from [matt pocock's grilling skills](https://github.com/mattpocock/skills). |
 | [`/product`](./skills/product/SKILL.md) | you're starting a new product. runs design-system when there's none, interviews you into a validated spec, and writes a vrub-mode plan the autopilot playbooks build. explicit invoke only. |
@@ -159,6 +166,8 @@ long-running work uses the host's available loop or scheduled continuation. the 
 | [`/show-me-your-work`](./skills/show-me-your-work/SKILL.md) | you want a reviewable decision trail. logs decisions to a tsv you can commit. |
 | [`/create-verification-skill`](./skills/create-verification-skill/SKILL.md) | your project has no scripted way to prove app behavior. generates a project-local verify skill with a feature map, for any language or platform. |
 | [`/maintain-verification-skill`](./skills/maintain-verification-skill/SKILL.md) | your verify skill's feature map has drifted from the app. source wave + one live pass, at most one PR of proven corrections. |
+| [`/create-formal-verification-skill`](./skills/create-formal-verification-skill/SKILL.md) | tests can't reach the case that breaks a race, retry, state machine, parser, or unsafe code. verifies one property with the tool that fits and generates a project-local skill to recheck it on every change. |
+| [`/maintain-formal-verification-skill`](./skills/maintain-formal-verification-skill/SKILL.md) | code your formal verification covers has changed since it was last checked. updates the model, harness, or properties to match the code, reruns, and says whether each failure is drift in the verification or a bug in the code. |
 | [`/unslop`](./skills/unslop/SKILL.md) | you're cleaning up writing. removes AI tells. |
 | [`/bro`](./skills/bro/SKILL.md) | you want the last message restated in plain human language, no jargon. |
 | [`/technical-writing`](./skills/technical-writing/SKILL.md) | layered doc standard (Diátaxis + Google developer style + STE + Global English) for docs, RFCs, readmes, PR descriptions, commit messages. |
@@ -217,7 +226,9 @@ help:              /vrub-help which skill should i use to review this branch?
 
 ## the `vrub-agent` and `comment-sicko` subagents
 
-jstack also ships a subagent that runs my style end to end. spawn it from a parent agent as the [`vrub-agent`](./agents/vrub-agent.md) named agent. it reads `vrub-mode` in full, including its inline principles index, before doing any work. substituting a general-purpose subagent skips that read and drifts.
+[`/vrub-mode`](./skills/vrub-mode/SKILL.md) runs in the chat that receives it. that chat owns the playbook, the todo list, and every subagent spawn.
+
+jstack also ships the [`vrub-agent`](./agents/vrub-agent.md) named agent as the wrapper for delegates spawned during a run. it reads `vrub-mode` in full, including its inline principles index, before doing any work. substituting a general-purpose subagent skips that read and drifts. do not spawn `vrub-agent` to run the playbook itself.
 
 [`/vrub-mode`](./skills/vrub-mode/SKILL.md) and the [`vrub-agent`](./agents/vrub-agent.md) named agent route through the same wrapper.
 
@@ -235,7 +246,7 @@ twenty-four short skills, one principle each. `vrub-mode` indexes them inline an
 | [laziness-protocol](./skills/principle-laziness-protocol/SKILL.md) | core | Bias toward deletion and the smallest change that solves the problem. |
 | [foundational-thinking](./skills/principle-foundational-thinking/SKILL.md) | core | Apply before writing logic: choosing core types and data structures, sequencing scaffold-vs-feature work, asking what concurrent actors share. Get the data structures right so downstream code becomes obvious. |
 | [redesign-from-first-principles](./skills/principle-redesign-from-first-principles/SKILL.md) | core | Redesign as if the requirement had been a foundational assumption from day one, instead of bolting it on. |
-| [attack-the-premise](./skills/principle-attack-the-premise/SKILL.md) | core | Apply when two or more fixes that share one premise have failed the same gate. Take a census of which actors hold the imbalance before the next fix, then question the premise instead of writing another fix that assumes it. |
+| [attack-the-premise](./skills/principle-attack-the-premise/SKILL.md) | core | Apply when two or more fixes that share one premise have failed the same gate. Write the premise down and test it directly before you write another fix that assumes it. |
 | [subtract-before-you-add](./skills/principle-subtract-before-you-add/SKILL.md) | core | Remove dead weight, redundant validators, and stub references first, then build on the simpler base. |
 | [minimize-reader-load](./skills/principle-minimize-reader-load/SKILL.md) | core | Count layers between question and answer, and hidden state in the reader's head; collapse one-caller wrappers and shrink mutable scope. |
 | [outcome-oriented-execution](./skills/principle-outcome-oriented-execution/SKILL.md) | core | Apply during planned rewrites and migrations with explicit phase boundaries. Converge on the target architecture; don't preserve smooth intermediate states with throwaway compatibility code. |
@@ -244,14 +255,14 @@ twenty-four short skills, one principle each. `vrub-mode` indexes them inline an
 | [build-the-lever](./skills/principle-build-the-lever/SKILL.md) | core | Apply to any non-trivial work, not just bulk work: edits, migrations, analyses, checks. Build the tool that does it or proves it (codemod, script, generator, or a skill your subagents follow) instead of working by hand. The tool is the artifact a reviewer can rerun. |
 | [model-the-domain](./skills/principle-model-the-domain/SKILL.md) | architecture | Encode the domain in a structure instead of scattered conditionals. |
 | [boundary-discipline](./skills/principle-boundary-discipline/SKILL.md) | architecture | Concentrate guards at system boundaries (CLI, config, network, external APIs); trust internal types and keep business logic in pure functions. |
-| [type-system-discipline](./skills/principle-type-system-discipline/SKILL.md) | architecture | Make illegal states unrepresentable, brand semantic primitives, parse external data at boundaries, refuse to lie to the compiler, exhaust variants, derive from authoritative schemas. |
+| [type-system-discipline](./skills/principle-type-system-discipline/SKILL.md) | architecture | Make illegal states unrepresentable, brand semantic primitives, parse external data at boundaries, exhaust variants, derive from authoritative schemas. |
 | [make-operations-idempotent](./skills/principle-make-operations-idempotent/SKILL.md) | architecture | Converge to the same end state regardless of partial prior runs. |
 | [migrate-callers-then-delete-legacy-apis](./skills/principle-migrate-callers-then-delete-legacy-apis/SKILL.md) | architecture | Migrate callers and delete the old API in the same wave instead of preserving compatibility layers. |
 | [separate-before-serializing-shared-state](./skills/principle-separate-before-serializing-shared-state/SKILL.md) | architecture | Eliminate the sharing first; serialize structurally only when one shared writer is a real invariant. |
 | [prove-it-works](./skills/principle-prove-it-works/SKILL.md) | verification | Apply after completing a task, before declaring done. Verify against the real artifact (run the feature, read the actual value, inspect the diff), not a proxy, self-report, or 'it compiles.'. |
-| [fix-root-causes](./skills/principle-fix-root-causes/SKILL.md) | verification | Trace each symptom to its root cause and fix it there; reproduce first, ask why until you reach it, resist nil-check guards that silence crashes. |
+| [fix-root-causes](./skills/principle-fix-root-causes/SKILL.md) | verification | Trace each symptom back to the first place the system went wrong and fix it there. A guard is a fix only when the state it handles is legitimate. |
 | [sequence-verifiable-units](./skills/principle-sequence-verifiable-units/SKILL.md) | verification | Apply to multi-step work (sweeps, migrations, runs of similar edits) and to how you stack commits and PRs. Break work into small units that each end in a verifiable state, check each before the next, and order delivery so the sequence proves itself to a reviewer. |
-| [test-behavior-not-implementation](./skills/principle-test-behavior-not-implementation/SKILL.md) | verification | Apply when you write, change, or keep a test. Call the code the way its users do and assert the result they observe against a literal expected value. If the test would still pass when every imported function returns undefined, rewrite the assertion or delete the test. |
+| [test-behavior-not-implementation](./skills/principle-test-behavior-not-implementation/SKILL.md) | verification | Apply when you write, change, or keep a test. Assert what the code's users can observe, so the test fails when that behavior breaks and keeps passing when only the internals change. |
 | [explain-the-number](./skills/principle-explain-the-number/SKILL.md) | verification | Apply before you trust, report, or act on a number you measured: a speedup, a regression, a throughput, a latency, or an eval result. Find what limits it, and rule out that it measured something other than the work you think. |
 | [guard-the-context-window](./skills/principle-guard-the-context-window/SKILL.md) | delegation | Route bulk to subagents; keep summaries in the main thread, not raw payloads. |
 | [never-block-on-the-human](./skills/principle-never-block-on-the-human/SKILL.md) | delegation | Proceed, present the result, let the human course-correct after the fact; reserve confirmation for irreversible actions. |
@@ -265,7 +276,7 @@ a few things `vrub-mode` references but doesn't bundle:
 
 - `/deslop` and the `deslop` skill ship in the `cursor-team-kit` plugin (cursor). without it, `vrub-mode` falls back to the bundled `unslop` skill for prose and `no-comments` skill for code.
 - `control-cli` (for CLIs and TUIs) and `control-ui` (for browser, Electron, web) ship in `cursor-team-kit` too (cursor). without them, `vrub-mode` drives the app through the project's `verify-*` skill from [`/create-verification-skill`](./skills/create-verification-skill/SKILL.md).
-- `/create-skill` is a cursor built-in; on other harnesses the [authoring playbook](./skills/vrub-mode/playbooks/authoring-a-skill.md) covers it. cursor also ships a built-in `/babysit`; inside `vrub-mode`, the [babysit playbook](./skills/vrub-mode/playbooks/babysit.md) supersedes it for pr-status requests.
+- `/create-skill` is a cursor built-in; on other harnesses the [authoring playbook](./skills/vrub-mode/playbooks/authoring-a-skill.md) covers it. cursor also ships a built-in `/autopilot` that watches a pr. inside `vrub-mode`, pr-status requests go to the [babysit playbook](./skills/vrub-mode/playbooks/babysit.md) instead.
 
 on cursor, install `cursor-team-kit` alongside jstack if you want the full set.
 
