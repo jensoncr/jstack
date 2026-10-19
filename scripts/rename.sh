@@ -46,6 +46,11 @@ done
 # pstack's logo is its author's avatar. jstack ships none.
 rm -rf assets
 
+# jstack ships one manifest per harness and its own adapters under
+# skills/vrub-mode/references/harness/, so upstream's Agent Plugins manifest and
+# Cursor-name adapter docs would only contradict them.
+rm -rf plugin.json docs/harness
+
 # jstack versions itself (scripts/bump-version.sh) and has no logo, so drop both.
 perl -0pi -e '
   s/\n\t"version": "[^"]*",//;
