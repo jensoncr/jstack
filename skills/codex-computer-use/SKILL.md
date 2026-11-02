@@ -15,7 +15,7 @@ description: Run a task in a native macOS app (Excel, Finder, Preview, System Se
 
 ## Run it
 
-1. Check that the target app is approved: `scripts/run.sh --approved-apps` prints bundle IDs. A headless run cannot answer an approval prompt. When the app is missing, ask the user to run any small task on it once in the Codex app and choose **Always allow**. Do not edit the approvals file yourself.
+1. Check that the target app is approved: `scripts/run.sh --approved-apps` prints bundle IDs. A headless run cannot answer an approval prompt (see [App approvals](#app-approvals)). When the app is missing, ask the user. With their go, run `scripts/run.sh --approve <bundle-id>` (`osascript -e 'id of app "Name"'` gives the ID), or have them choose **Always allow** for it in the Codex app.
 2. Write the task to a file in a scratch directory outside any repository. State:
    - the goal and the app by name,
    - **Authorized:** the exact actions allowed (for example "type into a new untitled document, then discard it"). Anything that sends, buys, deletes, publishes, or changes a setting must be listed here, or Codex stops before it,
@@ -38,9 +38,20 @@ The script prepends [the rules](scripts/preamble.md) every run follows: use only
 |---|---|---|
 | 0 | Codex finished; read the report's first line | Check the screenshots |
 | 75 | Another computer-use run holds the screen | Wait, or rerun with `--wait` |
-| 77 | An app needs approval | Ask the user to choose Always allow for it in the Codex app |
+| 77 | An app needs approval | Ask the user, then `--approve <bundle-id>` |
 | 69 | Codex had no Computer Use tool | Check that Computer Use is turned on in the Codex app |
 | other | Preflight or codex failure | Read the message and `stderr.log` |
+
+## App approvals
+
+The first time Computer Use touches an app, it asks the Codex client "Allow Computer Use to use X?". The desktop app shows that as a dialog. `codex exec` has no one to ask, so it declines, whatever `approval_policy`, `approvals_reviewer`, or `[computer_use]` config says (checked 2026-11-02). The one thing a headless run honors is the Computer Use service's own **Always allow** list, `ComputerUseAppApprovals.json` in the `2DC432GLL2.com.openai.sky.CUAService` group container.
+
+- `--approve <bundle-id>...` adds apps to that list, the same as choosing Always allow.
+- `--approve-all` adds every app installed under `/Applications`, `/System/Applications`, and `~/Applications`. Rerun it after installing an app.
+- Both back up the file to `~/.codex/tmp/` first and print the `cp` that undoes them.
+- Apps that OpenAI's policy forbids or the user's organization denies stay blocked. The list cannot override those.
+
+Approving an app also lets Codex desktop sessions use it without asking. Change the list only when the user asks.
 
 ## Model
 
