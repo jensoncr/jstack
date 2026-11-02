@@ -39,6 +39,9 @@ One line per role in the config. A value is a tier name, a model token, a list o
 | `trail reviewer` | `judge` | show-me-your-work |
 | `orchestrate verifier` | `judge` | orchestrate |
 | `recall workers` | `fast` | recall |
+| `computer use` | Codex token | codex-computer-use |
+
+`computer use` is always a Codex `<model>@<effort>` token, whatever the harness, because the run goes through the codex CLI that ships inside ChatGPT.app. Its default is `gpt-6.1-sol@high`.
 
 ## Resolving a role
 

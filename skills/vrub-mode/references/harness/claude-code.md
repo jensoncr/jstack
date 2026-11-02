@@ -40,6 +40,7 @@ interrogate reviewers: panel
 trail reviewer: judge
 orchestrate verifier: judge
 recall workers: fast
+computer use: gpt-6.1-sol@high
 ```
 
 The panel is one family, so the rules in `../models.md` under "Panels on a single-family harness" apply. Lengthen the `panel` list to add reviewers; repeats get split lenses.

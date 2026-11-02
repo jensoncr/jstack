@@ -29,7 +29,7 @@ Explain the shapes once. A tier is one model, except `panel`, which is a list, a
 
 ### 5. Validate
 
-Every real token written must be in the detected set. Tier names and aliases always pass. If a chosen token is not available, stop and ask again.
+Every real token written must be in the detected set. Tier names and aliases always pass. The `computer use` role is the exception: it is a Codex `<model>@<effort>` token on every harness, so check it against the models the codex CLI lists, not the spawn tool. If a chosen token is not available, stop and ask again.
 
 ### 6. Write the config
 

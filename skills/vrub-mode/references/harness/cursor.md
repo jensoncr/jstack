@@ -40,6 +40,7 @@ interrogate reviewers: panel
 trail reviewer: judge
 orchestrate verifier: judge
 recall workers: fast
+computer use: gpt-6.1-sol@high
 ```
 
 ## Vocabulary

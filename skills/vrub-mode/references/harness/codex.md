@@ -40,6 +40,7 @@ interrogate reviewers: panel
 trail reviewer: judge
 orchestrate verifier: judge
 recall workers: fast
+computer use: gpt-6.1-sol@high
 ```
 
 One family and often one model, so the rules in `../models.md` under "Panels on a single-family harness" apply. `judge` is a fixed token here because `differs-from-parent` cannot be satisfied.
