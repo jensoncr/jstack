@@ -6,6 +6,7 @@
 #        run.sh --approve <bundle-id>...
 #        run.sh --approve-all     (every installed app; backs up the approvals file and prints the undo)
 set -euo pipefail
+unset CDPATH
 
 APP_CODEX=/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex
 CODEX_HOME_DIR=${CODEX_HOME:-$HOME/.codex}
@@ -15,10 +16,10 @@ model="" effort="" wait=0
 
 die() { echo "codex-computer-use: $1" >&2; exit "${2:-1}"; }
 # Apps the user chose "Always allow" for in the Codex app. A headless run cannot answer an approval prompt.
-approved_apps() { [ -f "$APPROVALS" ] && plutil -extract approvedBundleIdentifiers json -o - "$APPROVALS" | tr -d '[]"' | tr ',' '\n' | awk NF; }
+approved_apps() { [ ! -f "$APPROVALS" ] || plutil -extract approvedBundleIdentifiers json -o - "$APPROVALS" | tr -d '[]"' | tr ',' '\n' | awk NF; }
 installed_apps() {
   for dir in /Applications /Applications/Utilities /System/Applications /System/Applications/Utilities "$HOME/Applications"; do
-    find "$dir" -maxdepth 2 -name '*.app' -prune 2>/dev/null
+    find "$dir" -maxdepth 2 -name '*.app' -prune 2>/dev/null || true
   done | while IFS= read -r app; do defaults read "$app/Contents/Info" CFBundleIdentifier 2>/dev/null || true; done | sort -u
 }
 # Same effect as choosing Always allow in the Codex app, for each bundle ID on stdin. Backs the file up first.
@@ -53,6 +54,7 @@ done
 [ $# -eq 2 ] || die "usage: run.sh [--model M] [--effort E] [--wait SECONDS] <task.md> <out-dir>" 64
 task=$1 out=$2
 [ -s "$task" ] || die "task file $task is missing or empty" 66
+prompt=$(cat "$HERE/preamble.md" && printf '\n## Task\n\n' && cat "$task") || die "cannot read the run rules in $HERE/preamble.md or the task file $task" 66
 
 # The `computer use` role line in the jstack model config, e.g. `computer use: gpt-6.1-sol@high`.
 if [ -z "$model" ]; then
@@ -82,7 +84,7 @@ if [ -n "$effort" ]; then args+=(-c "model_reasoning_effort=$effort"); fi
 
 echo "codex-computer-use: model=$model effort=${effort:-default} out=$out" >&2
 set +e
-{ cat "$HERE/preamble.md"; printf '\n## Task\n\n'; cat "$task"; } \
+printf '%s\n' "$prompt" \
   | lockf -t "$wait" "$lock" "$APP_CODEX" "${args[@]}" - > "$out/events.jsonl" 2> "$out/stderr.log"
 status=$?
 set -e
