@@ -35,7 +35,7 @@ jstack is a fork of [pstack](https://github.com/cursor/plugins/tree/main/pstack)
 5. Run the checks below, then `scripts/bump-version.sh minor`.
 6. Open the PR and merge it with a merge commit, never a squash. `main` must keep `upstream-renamed` as a parent, or the next sync conflicts on everything again. Push `upstream-renamed` too.
 
-`UPSTREAM` is how the sync script knows where it left off. The script compares the file's first line with pstack's current commit, and stops when they match. Deleting the file from `main` would also make every later sync conflict, because each sync rewrites it.
+`UPSTREAM` is how the sync script knows where it left off. The script reads the copy on the `upstream-renamed` branch, compares its first line with pstack's current commit, and stops when they match. `main` gets its copy through the merge. Deleting it from `main` would make every later sync conflict, because each sync rewrites the file.
 
 ## Checks
 
