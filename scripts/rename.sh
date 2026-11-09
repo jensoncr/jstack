@@ -50,6 +50,9 @@ done
 # pstack's logo is its author's avatar. jstack ships none.
 rm -rf assets
 
+# The benny automation pack runs only on Cursor automations. jstack ships none.
+rm -rf automations
+
 # jstack ships one manifest per harness and its own adapters under
 # skills/vrub-mode/references/harness/, so upstream's Agent Plugins manifest and
 # Cursor-name adapter docs would only contradict them.
