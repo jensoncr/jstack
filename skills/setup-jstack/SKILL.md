@@ -19,17 +19,17 @@ Enumerate the model tokens the spawn tool accepts in this session. That is the d
 
 ### 3. Load current state
 
-If the harness's user file already exists, read it and treat its values as the current choices. Otherwise start from the harness file's defaults. A role line that is not in the harness file's defaults block, such as `how critics`, is from a retired role. Drop it.
+If the harness's user file already exists, read it and treat its values as the current choices. Otherwise start from the harness file's defaults. A role line that is not in the harness file's defaults block, such as `how critics`, is from a retired role. Drop it, except a `council` line, which has no default. Keep that one as written.
 
 ### 4. Map and confirm
 
-Show the four tiers and every role with its current value, marking any real token not in the detected set as needing a choice. Also list each line step 3 dropped. Ask whether to accept as-is or change specific lines. Offer the detected tokens, the tier names, and `inherit-parent` (which runs the role on the parent chat model, and `auto` means the same) as the options. Prefer the harness's structured question tool over free text. In a non-interactive session (no question tool, or a scripted run) accept the current values without asking and say so.
+Show the four tiers and every role with its current value, marking any real token not in the detected set as needing a choice. A `council` seat is not marked, because step 5 checks it against the cross-provider tool instead. Also list each line step 3 dropped. Ask whether to accept as-is or change specific lines. Offer the detected tokens, the tier names, and `inherit-parent` (which runs the role on the parent chat model, and `auto` means the same) as the options. Prefer the harness's structured question tool over free text. In a non-interactive session (no question tool, or a scripted run) accept the current values without asking and say so.
 
 Explain the shapes once. A tier is one model, except `panel`, which is a list, and `judge`, which may be `differs-from-parent`. That value picks a `panel` entry from another model family first, so list panel entries in order of preference. A role value is a tier name, a token, a token list, or an alias. For panel roles one subagent runs per entry, alias entries included, so the list length sets the count. On a single-family harness repeated entries get split lenses, per `references/models.md`.
 
 ### 5. Validate
 
-Every real token written must be in the detected set. Tier names and aliases always pass. The `computer use` role is the exception: it is a Codex `<model>@<effort>` token on every harness, so check it against the models the codex CLI lists, not the spawn tool. If a chosen token is not available, stop and ask again.
+Every real token written must be in the detected set. Tier names and aliases always pass. The `computer use` role is the exception: it is a Codex `<model>@<effort>` token on every harness, so check it against the models the codex CLI lists, not the spawn tool. The `council` role is the other exception: its seats name other providers, so check them against the host's cross-provider tool (the `another provider's model` verb in the harness file) when the session has one, and otherwise keep the line and say it was not checked. If a chosen token is not available, stop and ask again.
 
 ### 6. Write the config
 

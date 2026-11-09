@@ -61,3 +61,4 @@ computer use: gpt-6.1-sol@high
 | skill invocation | `/<skill>` |
 | transcripts | `~/.cursor/projects/<slug>/agent-transcripts/<uuid>/<uuid>.jsonl`, named in the system prompt |
 | project skills dir | `.cursor/skills/` or `.agents/skills/` |
+| another provider's model | the `Task` tool's `model` field. A `council` seat is a model picker slug, which names its provider and carries its effort, and the picker lists the providers. Inside T3 Code, the README's T3 route and its seat form win. |
