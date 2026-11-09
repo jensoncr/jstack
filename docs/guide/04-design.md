@@ -68,6 +68,16 @@ Reach for it when parallelism buys coverage or lets independent checks race. `/a
 
 Read the Dropped list too. You can override the verdict.
 
+## Get other providers' review with `/council`
+
+```text
+/council review this branch
+```
+
+[`/council`](../../skills/council/SKILL.md) seats one strong model from each provider your harness can reach, such as Claude and GPT, and gives each the same request, read-only. Each member returns its findings and a score out of 10. The lead agent checks every finding against the code, fixes what blocks, lists the rest as follow-ups, and asks for a fresh review until no member has a blocking finding.
+
+The two reviews differ. `/interrogate` reports only the bugs a run proves, and fixes nothing. `/council` also covers approach and readability, and it makes the fixes. It needs a harness that can run other providers' models, such as T3 Code or Cursor. Set the seats with a `council` line in your model config.
+
 ## Prototype instead of debating
 
 Never take the first design. Ask for a few, and pick from evidence you can see:
@@ -113,6 +123,16 @@ For a migration, state the bar in the prompt:
 ```
 
 "bugs included" keeps the migration from quietly fixing things on the way, which would make the old and new output impossible to compare. For a project that spans many days, you can commit the plan to the repo for a while so other agents see the work in progress. Delete it when the work lands.
+
+## Start a new product with `/product`
+
+When there is no design to settle yet, because the product or feature doesn't exist, type:
+
+```text
+/product a booking tool for dog groomers
+```
+
+[`/product`](../../skills/product/SKILL.md) settles the visual system first, with [`/design-system`](../../skills/design-system/SKILL.md) when the project has none. Then it interviews you in depth, researches as it goes, drafts a spec, and has independent validators check it. It ends with a validated spec and a multi-phase plan, and builds only on your go. It runs only when you type it. Run `/design-system` alone when all you want is design tokens from reference sites or screenshots.
 
 ## How much design work does a task deserve?
 

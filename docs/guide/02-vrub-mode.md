@@ -64,6 +64,14 @@ For a noisy report, such as a long thread or a vague bug, make the restatement t
 
 A misreading shows up in the restatement, before any code exists. Correct it there, and it costs you one message instead of one wrong fix. For the restatement alone, with no playbook, run [`/in-your-own-words`](../../skills/in-your-own-words/SKILL.md). It restates what the agent thinks your goals are and what problem you're trying to solve.
 
+For a big request, or one where you're not sure you've said everything, ask to be interviewed first:
+
+```text
+/grill-me i want offline mode in the editor. grill me before you build anything.
+```
+
+[`/grill-me`](../../skills/grill-me/SKILL.md) asks rounds of numbered questions, each with a recommended answer, and looks facts up in the code instead of asking you for them. It ends with an intent brief that you confirm before any work starts. It runs only when you ask for it.
+
 When you're unsure whether a prompt is aimed right, run [`/sharpen`](../../skills/sharpen/SKILL.md) on it before you send it:
 
 ```text
@@ -90,7 +98,7 @@ keep going until done
 
 Short works because the playbook holds the structure. Your words carry the intent, and the skill carries the rigor. Follow-ups work while the task and its playbook stay in context. On Cursor, a Custom Mode keeps `/vrub-mode` in context on every turn, and [Set up jstack](./01-setup.md#run-your-first-task) shows how to start one. Other hosts have their own invocation behavior, so select the skill again when you start a fresh task.
 
-For PR work alone, select `babysit` or `ship` directly. `babysit` checks or fixes readiness according to your request. `ship` handles readiness first when necessary, then independent verification and merge. A request to build and merge carries through both stages without needing another merge instruction.
+For PR work alone, run [`/babysit`](../../skills/babysit/SKILL.md) or [`/ship`](../../skills/ship/SKILL.md) directly. `babysit` checks or fixes readiness according to your request. `ship` handles readiness first when necessary, then independent verification and merge. A request to build and merge carries through both stages without needing another merge instruction.
 
 ## Switch tasks with "new task"
 

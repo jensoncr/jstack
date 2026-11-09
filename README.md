@@ -11,34 +11,41 @@ there's a growing sense that ai writes too much slop code. i agree. i don't want
 
 ## install
 
-cursor:
+the repo is private, so each install needs github access to it.
 
-```bash
-/add-plugin jstack
-```
-
-claude code, for local testing:
-
-```bash
-claude --plugin-dir ~/path/to/jstack
-```
-
-claude code, installed:
+claude code:
 
 ```bash
 /plugin marketplace add jensoncr/jstack
-/plugin install jstack
+/plugin install jstack@jstack
 ```
 
 claude code leaves auto-update off for third-party marketplaces, so jstack stays on the version you installed. to turn it on, run `/plugin`, open the **marketplaces** tab, select `jstack`, and choose **enable auto-update**. to update once by hand, run `claude plugin marketplace update jstack && claude plugin update jstack@jstack`.
+
+claude code prefixes plugin commands and agents, so `/vrub-mode` is `/jstack:vrub-mode`. to test a local checkout, run `claude --plugin-dir ~/path/to/jstack`.
+
+codex:
+
+```bash
+codex plugin marketplace add jensoncr/jstack
+codex plugin add jstack@jstack
+```
+
+to update, run `codex plugin marketplace upgrade jstack`.
+
+cursor, from a clone of this repo:
+
+```bash
+scripts/install-cursor-local.sh
+```
+
+it copies the checkout to `~/.cursor/plugins/local/jstack`. run it again after each update, then run **developer: reload window**.
 
 any harness that reads skills:
 
 ```bash
 npx skills add jensoncr/jstack
 ```
-
-claude code prefixes plugin commands and agents, so `/vrub-mode` is `/jstack:vrub-mode`.
 
 ## get started
 
@@ -293,11 +300,9 @@ models are configurable too. type [`/setup-jstack`](./skills/setup-jstack/SKILL.
 
 a rerun starts from your current config and drops lines for retired roles, such as `how critics`.
 
-## automations
+## maintaining
 
-jstack also ships a dormant [benny automation pack](./automations/benny/). benny triages slack issue reports, then reproduces and fixes confirmed bugs with real ui evidence. its files are not registered as slash skills.
-
-to set it up, point Cursor at [`FOR_AGENTS.md`](./automations/benny/FOR_AGENTS.md) (benny is Cursor only). setup copies the pack into the target repository at `.cursor/automations/benny/`, enables jstack there for shared skills, and keeps user configuration outside the copied pack.
+changing jstack itself, or syncing it from pstack? [maintaining jstack](./docs/maintaining.md) covers the repo layout, how jstack differs from pstack, the sync and release steps, and the checks.
 
 ## license
 

@@ -16,8 +16,8 @@ Now the agent has three checks it can run, not a mood to satisfy. When the reply
 
 Match the check to the change:
 
-- A CLI change runs the real command.
-- A UI change walks the changed flow in the running app. When it must match a reference pixel for pixel, the [Visual parity playbook](../../skills/vrub-mode/playbooks/visual-parity.md) diffs screenshots against a frozen baseline instead of judging by eye.
+- A CLI change runs the real command. For an interactive CLI or terminal UI, [`/control-cli`](../../skills/control-cli/SKILL.md) drives it through tmux and keeps the transcript.
+- A UI change walks the changed flow in the running app. When it must match a reference pixel for pixel, the [Visual parity playbook](../../skills/vrub-mode/playbooks/visual-parity.md) diffs screenshots against a frozen baseline instead of judging by eye. Until the project has its own verification skill, [`/control-ui`](../../skills/control-ui/SKILL.md) drives the app in a real browser.
 - A parser or migration replays a saved input.
 - A perf change compares before and after profiles.
 - A storage change reads back the written value.
@@ -145,7 +145,7 @@ Babysit watches the PR, with a bundled watcher on GitHub or the Origin CLI when 
 /vrub-mode check on pr 123. anything outstanding?
 ```
 
-Babysit stops at merge-ready. It never merges, even with everything green, because merging is a different decision.
+Babysit stops at merge-ready. It never merges, even with everything green, because merging is a different decision. [`/babysit`](../../skills/babysit/SKILL.md) runs the same playbook without `/vrub-mode`.
 
 ## Land the stack with Shipping
 
@@ -155,6 +155,6 @@ Green is not the same as safe. When you're ready to land, say so:
 /vrub-mode land the stack.
 ```
 
-The [Shipping playbook](../../skills/vrub-mode/playbooks/shipping.md) verifies each PR independently before it arms anything. One fresh agent per PR proves the behavior live, and the agent that judges a change is never the one that wrote it. Then Shipping lands only the contiguous verified run from the bottom, one PR at a time through GitHub by default or Origin when its CLI is available, and reports the first PR that breaks the chain. A verified PR sitting above an unverified one waits, because merging it would pull the gap in underneath.
+The [Shipping playbook](../../skills/vrub-mode/playbooks/shipping.md) verifies each PR independently before it arms anything. One fresh agent per PR proves the behavior live, and the agent that judges a change is never the one that wrote it. Then Shipping lands only the contiguous verified run from the bottom, one PR at a time through GitHub by default or Origin when its CLI is available, and reports the first PR that breaks the chain. A verified PR sitting above an unverified one waits, because merging it would pull the gap in underneath. [`/ship`](../../skills/ship/SKILL.md) runs the same playbook without `/vrub-mode`, and removes the merged branches and their worktrees afterward.
 
 Next: [Run work while you sleep](./07-overnight.md).
