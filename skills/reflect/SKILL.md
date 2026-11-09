@@ -47,7 +47,7 @@ Present the synthesizer's full Accepted / Rejected / Backlog output and wait for
 
 File each Backlog item to your team's devex or backlog tracker without waiting. Only the Accepted list waits for approval.
 
-Never edit a skill under `plugins/cache/`. Before approval, show its destination, `.cursor/skills/<skill>/` or `~/.cursor/skills/<skill>/`. After approval, copy the skill folder there and edit the copy. Never open a PR or push.
+Never edit a skill inside the harness's installed-plugin cache, such as `~/.cursor/plugins/cache/`, `~/.claude/plugins/cache/`, or `~/.codex/plugins/cache/`. Before approval, show its destination: the project skills dir (the `project skills dir` verb in your harness file) or the matching user-level folder in your home directory. After approval, copy the skill folder there and edit the copy. Never open a PR or push.
 
 Follow each approved row's Routing exactly:
 

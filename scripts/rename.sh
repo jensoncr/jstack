@@ -32,8 +32,12 @@ grep -rlIE "poteto|Poteto|pstack" . --exclude-dir=.git | while read -r f; do
     s/Poteto/Vrubzy/g;
     s/poteto/vrubzy/g;
     s/(?<![A-Za-z])pstack/jstack/g;
-    s#\@cursor-skill/vrub-mode-tools#\@jstack/vrub-mode-tools#g;
   ' "$f"
+done
+
+# Script packages ship under upstream's npm scope. jstack names them under its own.
+{ grep -rlI '@cursor-skill/' . --exclude-dir=.git || true; } | while read -r f; do
+  perl -pi -e 's#\@cursor-skill/#\@jstack/#g' "$f"
 done
 
 # Claude Code blocks routed invocation of flagged skills, so vrub-mode could

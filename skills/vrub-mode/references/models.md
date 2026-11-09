@@ -11,7 +11,7 @@ Every jstack delegation names a **role** and its **tier**. Read [the harness gui
 | `panel` | Independent reviewers or runners. One subagent per entry, so the list length sets the count. Repeats are allowed. | list |
 | `judge` | The one independent reviewer that grades or verifies another agent's work. | one model, or `differs-from-parent` |
 
-`differs-from-parent` means the first `panel` entry whose model differs from the parent chat's model. When every entry matches the parent, use the first entry and say so in the reply.
+`differs-from-parent` means the first `panel` entry from a model family other than the parent chat's, such as a `gpt-*` or `grok-*` entry under a Claude parent. With no entry from another family, it means the first entry whose model differs from the parent's. When every entry matches the parent, use the first entry and say so in the reply. A judge from the parent's own family is same-model, medium signal, as in the panel rules below.
 
 ## Roles
 
