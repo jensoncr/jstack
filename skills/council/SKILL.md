@@ -37,7 +37,7 @@ Wait for each report as the host delivers it. Don't poll.
 
 Read every report. Merge findings that share a cause, and note which members raised each one. Check each finding against the code yourself before you act on it, because a member's claim is not evidence. Then sort each finding into one bucket:
 
-- **Blocks.** It blocks under the blocking rule in the vrub-mode skill's `playbooks/autopilot-full.md` step 4, and you confirmed it: a bug a user would hit, a failed gate, or a doc line the work made wrong. A problem the base already has doesn't block unless the work copies it or newly reaches it, and a check the environment blocks is not a code finding. Fix it.
+- **Blocks.** It blocks under the blocking rule in the vrub-mode skill's `playbooks/autopilot-full.md` step 4, and you can show it with a failing run at the head or a doc line the work made wrong: a bug a user would hit, a failed gate, or a wrong doc. A problem the base already has doesn't block unless the work copies it or newly reaches it, and a check the environment blocks is not a code finding. Fix it.
 - **In scope.** Real and inside what the user asked for. Fix it when you agree.
 - **Follow-up.** Out of scope, or a matter of taste. List it with the members who raised it.
 - **Wrong.** Dismiss it with the reason.
