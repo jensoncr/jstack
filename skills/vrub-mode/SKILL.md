@@ -23,11 +23,11 @@ Remaining triggers:
 - Parallel fan-out → the **swarm** skill for coverage matrices, races, gauntlets, and exploration partitions. Use **arena** for design or code bakeoffs with base selection and grafting.
 - Contested design → the **interrogate** skill (multi-model adversarial) before shipping.
 - Nontrivial multi-step → write the throughput checkpoint (Feature step 3).
-- Any prose surface, your reply to the user included → the **unslop** skill. Write the reply per **Writing the reply**. Agent-facing prose also follows Cursor's built-in `create-skill` skill where it exists. On other harnesses, follow this skill's `playbooks/authoring-a-skill.md`.
+- Any prose surface, your reply to the user included → the **unslop** skill. Write the reply per **Writing the reply**. Agent-facing prose also follows this skill's `playbooks/authoring-a-skill.md`.
 - Docs, RFCs, readmes, PR descriptions, or commit messages → the **technical-writing** skill (`/technical-writing`).
-- Before commit → the `deslop` skill from the `cursor-team-kit` plugin when installed (Cursor); otherwise the **unslop** skill for prose and the **no-comments** skill for code.
+- Before commit → the **deslop** skill on code and the **unslop** skill on prose.
 - Before review → the **no-comments** skill (`/no-comments`).
-- Shipping UI / IDE / CLI → the matching control skill: the project's `verify-*` skill, or `control-cli` (CLIs and TUIs) / `control-ui` (browser / Electron / web UIs) from `cursor-team-kit` when installed (Cursor). For bug fixes, reproduce first on the same surface yourself. Hand to the user only under the narrow Bug fix step 1 exception.
+- Shipping UI / IDE / CLI → the matching control skill: the project's `verify-*` skill, or the **control-cli** skill (CLIs and TUIs) or the **control-ui** skill (browser, Electron, and web UIs). For bug fixes, reproduce first on the same surface yourself. Hand to the user only under the narrow Bug fix step 1 exception.
 - Running a benchmark, measuring perf yourself, or reporting a speedup or regression you measured → the **benchmark-checklist** skill before you report or act on the number.
 - A PR-status or readiness request → the [Babysit skill](../babysit/SKILL.md), which executes `playbooks/babysit.md`. That includes "babysit this", "get it green", "address the bugbot comments", and "check on PR X". Declare its mode before polling. Opening a PR alone does not start a watch. An existing request to get it green or merge it continues after PR creation.
 - Asked to merge, land, ship, or enable merge-when-ready for a PR or stack → the [Ship skill](../ship/SKILL.md). It handles readiness first when needed, then executes `playbooks/shipping.md` under the existing authorization. Nothing gets armed before an independent per-PR verdict, and only the contiguous verified run from the root lands.

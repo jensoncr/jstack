@@ -87,6 +87,9 @@ The default answer is `/vrub-mode`, which runs most of the others when its steps
 | Apply TypeScript rules to `.ts` or `.tsx` work | [`/typescript-best-practices`](../typescript-best-practices/SKILL.md) |
 | Strip comments before review, using a reviewer that didn't write them | [`/no-comments`](../no-comments/SKILL.md) |
 | Clean AI tells out of prose | [`/unslop`](../unslop/SKILL.md) |
+| Strip AI slop out of a branch's code: needless guards, type escapes, leftovers | [`/deslop`](../deslop/SKILL.md) |
+| Drive a web, IDE, or Electron UI with a browser to verify or reproduce something | [`/control-ui`](../control-ui/SKILL.md) |
+| Drive a CLI or TUI through tmux or a pseudo-terminal to verify or reproduce something | [`/control-cli`](../control-cli/SKILL.md) |
 | Write docs, an RFC, a README, a PR description, or a commit message to a standard | [`/technical-writing`](../technical-writing/SKILL.md) |
 | Hear the last reply again in plain words | [`/bro`](../bro/SKILL.md) |
 | Give agents a scripted way to drive the app and prove behavior | [`/create-verification-skill`](../create-verification-skill/SKILL.md) |
@@ -121,7 +124,6 @@ Close calls:
 
 Not in jstack:
 
-- `/deslop`, `control-cli`, and `control-ui` ship in Cursor's `cursor-team-kit` plugin. On other harnesses, a project `verify-*` skill from `/create-verification-skill` drives the app.
 - `/loop` is built into Cursor and Claude Code. The Codex CLI has none, so jstack falls back to the continuation steps in `../vrub-mode/references/harness/README.md`.
 - jstack has no `/orchestrate` skill. Orchestrate is a `/vrub-mode` playbook. If the command list shows `/orchestrate`, another plugin provides it.
 

@@ -52,9 +52,9 @@ Never edit a skill inside the harness's installed-plugin cache, such as `~/.curs
 Follow each approved row's Routing exactly:
 
 - Trivial existing-skill edit (a one-line bullet, a tightened sentence, a stale fact corrected): the parent does it directly.
-- Substantive existing-skill edit (a new section, a new pattern table, more than ~10 lines): hand to Cursor's built-in `create-skill` skill where it exists; on other harnesses follow `playbooks/authoring-a-skill.md` in the vrub-mode skill, and run its draft / test / iterate loop.
+- Substantive existing-skill edit (a new section, a new pattern table, more than ~10 lines): follow `playbooks/authoring-a-skill.md` in the vrub-mode skill, and run its draft / test / iterate loop.
 - `tune description: <skill path>` (the skill exists but didn't trigger when it should have): hand to the same authoring route and run its description-optimization loop.
-- `new skill via create-skill: <kebab-name>`: hand creation to the same authoring route. Do not invent the shape ad hoc.
+- `new skill: <kebab-name>`: hand creation to the same authoring route. Do not invent the shape ad hoc.
 
 If your environment ships a SKILL.md validator, run it on every touched skill before declaring done.
 
