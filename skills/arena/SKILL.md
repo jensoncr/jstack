@@ -13,7 +13,7 @@ Every candidate gets the same prompt, so the prompt is the contract.
 
 1. State the artifact each candidate is producing.
 2. Derive the rubric, 3-6 concrete gradeable criteria for what success looks like on *this* task. It is the picker's tool in Phase D. Candidates only see the task.
-3. Pick the runners. Resolve `arena runners` (tier `panel`) per the vrub-mode skill's `references/models.md`, one candidate per entry, and map the verbs below to tools per your harness file under its `references/harness/`. Spawn more runners when the arena covers multiple design directions. Use the same model N times when the work is generation-bound rather than judgment-sensitive. Give each repeat a distinct design constraint so candidates diverge structurally. Pick each subagent's reasoning level for the job, per the Subagents section of the **vrub-mode** skill.
+3. Pick the runners. Resolve `arena runners` (tier `panel`) per the vrub-mode skill's `references/models.md`, one candidate per entry, and map the verbs below to tools per your harness file under its `references/harness/`. When the host can't run an entry, follow step 4 of `references/models.md`, or drop the seat and say so when no model can run it. If dropped seats leave fewer than two runners, add runners until there are two, or one when the role has one entry, on a remaining runner's model or the parent model, and say so. Spawn more runners when the arena covers multiple design directions. Use the same model N times when the work is generation-bound rather than judgment-sensitive. Give each repeat a distinct design constraint so candidates diverge structurally. Pick each subagent's reasoning level for the job, per the Subagents section of the **vrub-mode** skill.
 4. Give each candidate its own output location (a git worktree where possible, otherwise `/tmp/arena-<slug>/candidate-<n>/`), per the **separate-before-serializing-shared-state** principle skill.
 
 ## Phase B: Fan out
@@ -24,11 +24,11 @@ If a candidate produces no output, proceed with N-1 and note the dropout.
 
 ## Phase C: Cross-judge
 
-After all Phase B candidates complete, resolve `arena cross-judge` (tier `judge`, which prefers a model that differs from the parent's) and spawn one read-only judge subagent on it. It sees the rubric and the candidates by path label, scores each criterion, and recommends a base with rationale. It runs in parallel with your reading in Phase D. Don't spawn it while candidates are still writing.
+After all Phase B candidates complete, resolve `arena cross-judge` (tier `judge`) and spawn one read-only judge subagent on it. The judge comes from a model family other than the parent's whenever the config has one, which `differs-from-parent` picks first. When it resolves to the parent's family, as on a single-family harness, it runs in a fresh context, and the synthesis note counts its agreement as same-model, medium signal, per `references/models.md`. An `inherit-parent` or `auto` value never judges. If no judge can run, skip it, pick the base alone in Phase D, and say so. The judge sees the rubric and the candidates by path label, scores each criterion, and recommends a base with rationale. It runs in parallel with your reading in Phase D. Don't spawn it while candidates are still writing.
 
 ## Phase D: Pick a base
 
-Read every candidate end to end before picking. Score each against the rubric criterion by criterion, not on holistic feel, and compare with the cross-judge. Agreement on the base confirms the pick. Disagreement means one of you is biased or the rubric was ambiguous. Read both rationales before deciding.
+Read every candidate end to end before picking. Score each against the rubric criterion by criterion, not on holistic feel, and compare with the cross-judge when Phase C ran one. Agreement on the base confirms the pick. Disagreement means one of you is biased or the rubric was ambiguous. Read both rationales before deciding.
 
 Pick the base a future maintainer can extend most easily without breaking invariants. When two feel tied, prefer the cleaner boundary or smaller API, per the Laziness Protocol.
 
@@ -44,4 +44,4 @@ Verify the synthesized artifact like any other output, per the **prove-it-works*
 
 ## Outputs
 
-One synthesized artifact, with a short synthesis note alongside naming the base and why, the cross-judge's verdict, each graft with its source candidate, what was rejected and why, any convergence or dropouts, and the verification result.
+One synthesized artifact, with a short synthesis note alongside naming the base and why, the cross-judge's verdict or that Phase C skipped the judge, each graft with its source candidate, what was rejected and why, any convergence or dropouts, and the verification result.

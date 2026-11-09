@@ -24,6 +24,8 @@ claude code, installed:
 /plugin install jstack
 ```
 
+claude code leaves auto-update off for third-party marketplaces, so jstack stays on the version you installed. to turn it on, run `/plugin`, open the **marketplaces** tab, select `jstack`, and choose **enable auto-update**. to update once by hand, run `claude plugin marketplace update jstack && claude plugin update jstack@jstack`.
+
 any harness that reads skills:
 
 ```bash
@@ -87,7 +89,7 @@ morning.
 | [autonomous run](./skills/vrub-mode/playbooks/autonomous-run.md) | drive a long task to completion without stopping. |
 | [orchestrate](./skills/vrub-mode/playbooks/orchestrate.md) | a standing project handed to one coordinator chat: multi-day, many stacked prs, fleets of subagents. |
 | [autopilot-full](./skills/vrub-mode/playbooks/autopilot-full.md) | run independent prs to merged with one owner per pr and one root swarm verdict at the code-ready head. |
-| [autopilot-stack](./skills/vrub-mode/playbooks/autopilot-stack.md) | build and verify one linear base-branch stack for the operator to review and land. |
+| [autopilot-stack](./skills/vrub-mode/playbooks/autopilot-stack.md) | autopilot-full without the merge. build and verify prs for the operator to review and land, stacking a pr only on a pr it builds on. |
 | [session pickup](./skills/vrub-mode/playbooks/session-pickup.md) | resume or take over a prior agent's in-flight work. |
 | [pause safely](./skills/vrub-mode/playbooks/pause-safely.md) | suspend in-flight work cleanly so it can be resumed later. |
 | [multi-phase plan](./skills/vrub-mode/playbooks/multi-phase-plan.md) | work that spans phases or stacked PRs. |
@@ -130,7 +132,7 @@ long-running work uses the host's available loop or scheduled continuation. the 
 | [`/vrub-mode`](./skills/vrub-mode/SKILL.md) | default entry point for any non-trivial task. |
 | [`/vrub-help`](./skills/vrub-help/SKILL.md) | you're new to jstack, or unsure which skill, playbook, or principle fits. finds out what you're trying to do, answers that part, and hands you a prompt to type. type `/vrub-help` with your question. |
 | [`/in-your-own-words`](./skills/in-your-own-words/SKILL.md) | you want the agent to play back your goal and the problem before it starts. |
-| [`/sharpen`](./skills/sharpen/SKILL.md) | you want a task approached the way a top expert would, aimed at what you're really after, without overspecifying it or deciding your choices for you. |
+| [`/sharpen`](./skills/sharpen/SKILL.md) | you want a prompt made deeper, not bigger, before you send it: what a top professional would do that you didn't ask for, the raw material they'd start from, their methods and tools, and an outside check that the result is right. hands back the rewritten prompt and leaves your choices open. doesn't do the task. |
 | [`babysit`](./skills/babysit/SKILL.md) | check a PR, fix CI, or address review feedback; stop at the requested readiness state. |
 | [`ship`](./skills/ship/SKILL.md) | carry an authorized merge request through readiness, independent verification, and merge, then remove the merged worktrees. |
 | [`pickup`](./skills/pickup/SKILL.md) | take over or resume a prior agent's in-flight work without redoing it. |
@@ -138,6 +140,7 @@ long-running work uses the host's available loop or scheduled continuation. the 
 | [`/why`](./skills/why/SKILL.md) | you want to know why something was built this way. discovers available MCPs at run time and queries each evidence category in parallel (source control, issue tracker, long-form docs, real-time chat, infra observability, error tracking, analytics warehouse). |
 | [`/recall`](./skills/recall/SKILL.md) | you're starting or resuming work and want your recent context on a topic rebuilt from your own chat history and the shared record, handed back as a tight current-state brief. |
 | [`/ketchup`](./skills/ketchup/SKILL.md) | you want what changed in this chat since your last message, in plain words and small visuals, with every item waiting on you listed and decidable from the reply alone, even when that makes the reply long. |
+| [`/ketchup-video`](./skills/ketchup-video/SKILL.md) | you want the `/ketchup` catch-up as a short subtitled video of slides, with the calls waiting on you as text under it. |
 | [`/blast-radius`](./skills/blast-radius/SKILL.md) | you have a small-looking change and want to know what else it could break, with the one fact it's safe because of proven by running code, not asserted. |
 | [`/grill-me`](./skills/grill-me/SKILL.md) | you want to be interviewed on a request or plan before any work starts. asks in rounds of numbered questions with a recommended answer each, looks up facts instead of asking you, and ends with an intent brief you confirm. adapted from [matt pocock's grilling skills](https://github.com/mattpocock/skills). |
 | [`/product`](./skills/product/SKILL.md) | you're starting a new product. runs design-system when there's none, interviews you into a validated spec, and writes a vrub-mode plan the autopilot playbooks build. explicit invoke only. |
@@ -145,7 +148,7 @@ long-running work uses the host's available loop or scheduled continuation. the 
 | [`/architect`](./skills/architect/SKILL.md) | you're about to write code that crosses a function boundary and want the caller's usage, types, and module shape settled first. |
 | [`/arena`](./skills/arena/SKILL.md) | you want N parallel attempts at the same thing, then to grab the best parts of each. |
 | [`/swarm`](./skills/swarm/SKILL.md) | you want N parallel workers across different slices or races, then one aggregated report. |
-| [`/interrogate`](./skills/interrogate/SKILL.md) | you have a diff and want a panel of reviewers to try to break it, including a strict code-quality lens. |
+| [`/interrogate`](./skills/interrogate/SKILL.md) | you have a diff and want a panel of adversaries to try to break it, keeping only findings a run proves. |
 | [`/automate-me`](./skills/automate-me/SKILL.md) | you want your own `-mode` skill, drafted from how you've actually worked. |
 | [`/make-bot-ui`](./skills/make-bot-ui/SKILL.md) | you want a page or dashboard whose buttons wake a Grok Bot over a webhook, including the sender-key handoff and Tailscale. |
 | [`/setup-jstack`](./skills/setup-jstack/SKILL.md) | you want to pick which models jstack uses per role. detects your harness and models and writes a config file. |
@@ -163,6 +166,7 @@ long-running work uses the host's available loop or scheduled continuation. the 
 | [`/maintain-verification-skill`](./skills/maintain-verification-skill/SKILL.md) | your verify skill's feature map has drifted from the app. source wave + one live pass, at most one PR of proven corrections. |
 | [`/create-formal-verification-skill`](./skills/create-formal-verification-skill/SKILL.md) | tests can't reach the case that breaks a race, retry, state machine, parser, or unsafe code. verifies one property with the tool that fits and generates a project-local skill to recheck it on every change. |
 | [`/maintain-formal-verification-skill`](./skills/maintain-formal-verification-skill/SKILL.md) | code your formal verification covers has changed since it was last checked. updates the model, harness, or properties to match the code, reruns, and says whether each failure is drift in the verification or a bug in the code. |
+| [`/statechart`](./skills/statechart/SKILL.md) | someone who owns the behavior needs to see it, not read a spec. checks a tla+ model, draws what the user sees as a mermaid statechart, marks each state that breaks a rule, and gives the shortest path to each one. |
 | [`/unslop`](./skills/unslop/SKILL.md) | you're cleaning up writing. removes AI tells. |
 | [`/bro`](./skills/bro/SKILL.md) | you want the last message restated in plain human language, no jargon. |
 | [`/technical-writing`](./skills/technical-writing/SKILL.md) | layered doc standard (Diátaxis + Google developer style + STE + Global English) for docs, RFCs, readmes, PR descriptions, commit messages. |
