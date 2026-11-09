@@ -1,12 +1,6 @@
 # jstack
 
-i'm [vrubzy](https://x.com/Vrubzy). jstack is my fork of [pstack](https://github.com/cursor/plugins/tree/main/pstack), lauren tan's engineering-rigor plugin for cursor. the skills, playbooks, and principles are hers; the harness-agnostic packaging and the changes on top are mine.
-
-there's a growing sense that ai writes too much slop code. i agree. i don't want to ship like a team of twenty slop artists. throughput without quality is not a goal i aspire to. if you want to go fast, go deep first. 
-
-**jstack gives you fearless parallelism.** when you can go deep on one agent and trust it to write good, verifiable code, you can truly parallelize with confidence. start multiple agents up with `vrub-mode` and trust that they'll apply rigorous engineering principles to their work.
-
-**a multi-vendor harness gives you the best of all worlds.** every frontier model has its strengths and weaknesses. use any model with jstack. in fact, many of my skills use multi-model workflows to take advantage of each model's unique strengths. on a single-vendor harness the panels still run, with split lenses instead of split vendors.
+i'm [vrubzy](https://x.com/Vrubzy). jstack is my fork of [pstack](https://github.com/cursor/plugins/tree/main/pstack), lauren tan's engineering-rigor plugin for cursor. much of the skills, playbooks, and principles are hers, but I've made some adaptions to be harness agnostic / fit my workflow. 
 
 
 ## install
@@ -284,10 +278,6 @@ twenty-four short skills, one principle each. `vrub-mode` indexes them inline an
 | [encode-lessons-in-structure](./skills/principle-encode-lessons-in-structure/SKILL.md) | meta | Encode the rule as a lint, metadata flag, runtime check, or script instead of more text. |
 
 </details>
-
-## why are there no planning skills?
-
-your harness's plan mode works great with jstack. but personally, i don't believe in planning. the best spec is code. if you do want to make a plan, [`/vrub-mode`](./skills/vrub-mode/SKILL.md) covers it, but it's not a default. 
 
 ## make it yours
 
