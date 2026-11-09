@@ -5,34 +5,41 @@ i'm [vrubzy](https://x.com/Vrubzy). jstack is my fork of [pstack](https://github
 
 ## install
 
-cursor:
+the repo is private, so each install needs github access to it.
 
-```bash
-/add-plugin jstack
-```
-
-claude code, for local testing:
-
-```bash
-claude --plugin-dir ~/path/to/jstack
-```
-
-claude code, installed:
+claude code:
 
 ```bash
 /plugin marketplace add jensoncr/jstack
-/plugin install jstack
+/plugin install jstack@jstack
 ```
 
 claude code leaves auto-update off for third-party marketplaces, so jstack stays on the version you installed. to turn it on, run `/plugin`, open the **marketplaces** tab, select `jstack`, and choose **enable auto-update**. to update once by hand, run `claude plugin marketplace update jstack && claude plugin update jstack@jstack`.
+
+claude code prefixes plugin commands and agents, so `/vrub-mode` is `/jstack:vrub-mode`. to test a local checkout, run `claude --plugin-dir ~/path/to/jstack`.
+
+codex:
+
+```bash
+codex plugin marketplace add jensoncr/jstack
+codex plugin add jstack@jstack
+```
+
+to update, run `codex plugin marketplace upgrade jstack`.
+
+cursor, from a clone of this repo:
+
+```bash
+scripts/install-cursor-local.sh
+```
+
+it copies the checkout to `~/.cursor/plugins/local/jstack`. run it again after each update, then run **developer: reload window**.
 
 any harness that reads skills:
 
 ```bash
 npx skills add jensoncr/jstack
 ```
-
-claude code prefixes plugin commands and agents, so `/vrub-mode` is `/jstack:vrub-mode`.
 
 ## get started
 
@@ -151,7 +158,6 @@ long-running work uses the host's available loop or scheduled continuation. the 
 | [`/interrogate`](./skills/interrogate/SKILL.md) | you have a diff and want a panel of adversaries to try to break it, keeping only findings a run proves. |
 | [`/council`](./skills/council/SKILL.md) | you want review or feedback from models from different providers, such as claude and gpt, fixed and re-reviewed until none of them has a blocking finding. needs a harness that can run other providers' models, such as t3 code. |
 | [`/automate-me`](./skills/automate-me/SKILL.md) | you want your own `-mode` skill, drafted from how you've actually worked. |
-| [`/make-bot-ui`](./skills/make-bot-ui/SKILL.md) | you want a page or dashboard whose buttons wake a Grok Bot over a webhook, including the sender-key handoff and Tailscale. |
 | [`/setup-jstack`](./skills/setup-jstack/SKILL.md) | you want to pick which models jstack uses per role. detects your harness and models and writes a config file. |
 | [`/reflect`](./skills/reflect/SKILL.md) | a long task landed and you want the recipe captured as a skill edit. |
 | [`/correct`](./skills/correct/SKILL.md) | you keep correcting agents for the same mistakes. mines history for mistake classes, fixes each at the highest level that works (architecture, then types, lint, and ci, then tests, with docs last), and keeps a table pairing each rule with what enforces it. |
@@ -282,6 +288,10 @@ type [`/automate-me`](./skills/automate-me/SKILL.md). it mines your recent trans
 models are configurable too. type [`/setup-jstack`](./skills/setup-jstack/SKILL.md). it detects your harness (cursor, claude code, or codex) and the models it can spawn, then writes a small always-loaded config mapping tiers to models and roles to tiers. every skill reads it and falls back to the harness defaults when a line is absent, so you override only what you want.
 
 a rerun starts from your current config and drops lines for retired roles, such as `how critics`.
+
+## maintaining
+
+changing jstack itself, or syncing it from pstack? [maintaining jstack](./docs/maintaining.md) covers the repo layout, how jstack differs from pstack, the sync and release steps, and the checks.
 
 ## license
 

@@ -4,22 +4,25 @@ In this page you install the plugin, pick which models jstack uses, and run your
 
 ## Install the plugin
 
-In a Cursor chat, run:
+The repo is private, so each install needs GitHub access to it.
 
-```text
-/add-plugin jstack
-```
-
-Cursor confirms the plugin is installed.
-
-In Claude Code, run `claude --plugin-dir ~/path/to/jstack` to test a local checkout, or install it:
+In Claude Code, run:
 
 ```text
 /plugin marketplace add jensoncr/jstack
-/plugin install jstack
+/plugin install jstack@jstack
 ```
 
-Claude Code prefixes plugin commands, so each command in this guide takes a `jstack:` prefix there, such as `/jstack:setup-jstack`.
+Claude Code prefixes plugin commands, so each command in this guide takes a `jstack:` prefix there, such as `/jstack:setup-jstack`. To test a local checkout instead, run `claude --plugin-dir ~/path/to/jstack`.
+
+In Codex, run:
+
+```text
+codex plugin marketplace add jensoncr/jstack
+codex plugin add jstack@jstack
+```
+
+In Cursor, clone the repo and run `scripts/install-cursor-local.sh` from it, then run **Developer: Reload Window**. The script copies the checkout into `~/.cursor/plugins/local/jstack`, so run it again after each update.
 
 On any harness that reads skills, run:
 
@@ -57,7 +60,7 @@ After setup, start a new chat. The model config applies to new sessions.
 
 jstack spends extra tokens on subagents and review panels. That's the price of the rigor. To spend fewer:
 
-- Rerun `/setup-jstack` and pick a smaller reasoning budget or cheaper models. A strong model in the main chat with cheaper, faster models in the code roles is a good split.
+- Rerun `/setup-jstack` and pick cheaper models. A strong model in the main chat with cheaper, faster models in the code roles is a good split.
 - Set a role to `auto` or `inherit-parent` so it runs on the chat's own model.
 - Shorten a panel list. Each entry runs one subagent.
 - Save `/vrub-mode` for work that needs rigor. A small, obvious edit doesn't.

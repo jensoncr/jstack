@@ -47,7 +47,7 @@ The panel is one family, so the rules in `../models.md` under "Panels on a singl
 
 ## Skill visibility
 
-Claude Code hard-blocks the Skill tool on any skill with `disable-model-invocation: true` and tells the model not to replicate it, and `skillOverrides` does not apply to plugin skills. So jstack ships that flag only on `make-bot-ui`, `automate-me`, `vrub-help`, and `product`. Every skill vrub-mode routes to stays model-invocable. Cursor still lists all skills in its `/` palette either way.
+Claude Code hard-blocks the Skill tool on any skill with `disable-model-invocation: true` and tells the model not to replicate it, and `skillOverrides` does not apply to plugin skills. So jstack ships that flag only on `automate-me`, `vrub-help`, and `product`. Every skill vrub-mode routes to stays model-invocable. Cursor still lists all skills in its `/` palette either way.
 
 ## Vocabulary
 

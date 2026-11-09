@@ -43,12 +43,15 @@ done
 # Claude Code blocks routed invocation of flagged skills, so vrub-mode could
 # not run them. These stay typed-only on purpose.
 for f in skills/*/SKILL.md; do
-  case "$f" in skills/automate-me/*|skills/make-bot-ui/*|skills/vrub-help/*) continue ;; esac
+  case "$f" in skills/automate-me/*|skills/vrub-help/*) continue ;; esac
   perl -ni -e 'print unless /^disable-model-invocation: true\s*$/' "$f"
 done
 
 # pstack's logo is its author's avatar. jstack ships none.
 rm -rf assets
+
+# The benny automation pack and the make-bot-ui skill run only on Cursor automations. jstack ships neither.
+rm -rf automations skills/make-bot-ui
 
 # jstack ships one manifest per harness and its own adapters under
 # skills/vrub-mode/references/harness/, so upstream's Agent Plugins manifest and

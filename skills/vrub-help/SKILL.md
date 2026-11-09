@@ -42,7 +42,7 @@ When the model config for this harness is missing and it matters, ask whether th
 2. Run [`/setup-jstack`](../setup-jstack/SKILL.md). It detects the harness, maps a model to each role, and writes the config above. The config applies to new sessions. Then it offers once each to generate a verification skill and a formal verification skill for the project, unless the project already has one.
 3. Start a real task with `/vrub-mode`, a goal, and a check that can pass or fail.
 
-The command syntax differs by harness: `/vrub-mode` on Cursor, `/jstack:vrub-mode` on Claude Code (or `/vrub-mode` when no other plugin claims the name), and `$vrub-mode` on Codex. Most jstack skills also load when the request matches their description. `/vrub-help`, `/automate-me`, and `/make-bot-ui` run only when typed. The [README](../../README.md) and [guide page 1](../../docs/guide/01-setup.md) have the details. Offer to word their first prompt with them, per [`references/prompting.md`](references/prompting.md).
+The command syntax differs by harness: `/vrub-mode` on Cursor, `/jstack:vrub-mode` on Claude Code (or `/vrub-mode` when no other plugin claims the name), and `$vrub-mode` on Codex. Most jstack skills also load when the request matches their description. `/vrub-help`, `/automate-me`, and `/product` run only when typed. The [README](../../README.md) and [guide page 1](../../docs/guide/01-setup.md) have the details. Offer to word their first prompt with them, per [`references/prompting.md`](references/prompting.md).
 
 To update, the plugin's version must change. Claude Code: `claude plugin marketplace update jstack`, then `claude plugin update jstack@jstack`, then restart. Codex: `codex plugin marketplace upgrade jstack`, then start a new session. Cursor: rerun the install script, or update from Customize, then reload the window.
 
@@ -107,7 +107,6 @@ The default answer is `/vrub-mode`, which runs most of the others when its steps
 | Turn their own working habits into a personal mode skill | [`/automate-me`](../automate-me/SKILL.md) |
 | Turn what a finished task taught into skill edits | [`/reflect`](../reflect/SKILL.md) |
 | Stop agents from repeating the same mistakes in this repo | [`/correct`](../correct/SKILL.md) |
-| Build a page whose buttons wake a Grok Bot over a webhook | [`/make-bot-ui`](../make-bot-ui/SKILL.md) |
 | Find their way around jstack | `/vrub-help` |
 
 If a skill directory next to this one is missing from the table, read its frontmatter and route by its description. The `principle-*` directories are covered under principles below.
