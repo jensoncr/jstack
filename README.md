@@ -265,20 +265,6 @@ twenty-four short skills, one principle each. `vrub-mode` indexes them inline an
 
 </details>
 
-## not shipped here
-
-a few things `vrub-mode` references but doesn't bundle:
-
-- `/deslop` and the `deslop` skill ship in the `cursor-team-kit` plugin (cursor). without it, `vrub-mode` falls back to the bundled `unslop` skill for prose and `no-comments` skill for code.
-- `control-cli` (for CLIs and TUIs) and `control-ui` (for browser, Electron, web) ship in `cursor-team-kit` too (cursor). without them, `vrub-mode` drives the app through the project's `verify-*` skill from [`/create-verification-skill`](./skills/create-verification-skill/SKILL.md).
-- `/create-skill` is a cursor built-in; on other harnesses the [authoring playbook](./skills/vrub-mode/playbooks/authoring-a-skill.md) covers it. cursor also ships a built-in `/autopilot` that watches a pr. inside `vrub-mode`, pr-status requests go to the [babysit playbook](./skills/vrub-mode/playbooks/babysit.md) instead.
-
-on cursor, install `cursor-team-kit` alongside jstack if you want the full set.
-
-## why are there no planning skills?
-
-your harness's plan mode works great with jstack. but personally, i don't believe in planning. the best spec is code. if you do want to make a plan, [`/vrub-mode`](./skills/vrub-mode/SKILL.md) covers it, but it's not a default. 
-
 ## make it yours
 
 `vrub-mode` is my style. you may not want exactly that.
