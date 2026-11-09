@@ -16,12 +16,12 @@ State the user's goal and the intent of the work with the **in-your-own-words** 
 ## Seat the council
 
 1. Seat the members the user names.
-2. Otherwise seat the `council` line in the jstack model config, which lists one `<provider>/<model>[@<effort>]` per seat, using the provider and model ids that the host's cross-provider tool reports.
-3. Otherwise seat the newest flagship model of each provider the host can run.
+2. Otherwise seat the `council` line in the jstack model config, one seat per provider, written in the form your harness file gives for `another provider's model`.
+3. Otherwise seat the newest flagship model of each provider the host can run. To leave a provider out, list the seats you want in the config line.
 
 Each seat is on a different provider, at high reasoning effort unless the config gives another. Two seats is the minimum. Never fill a seat with a second model from a provider that already has one, and never substitute for a member the user named or the config lists. Report each seat that can't run. If fewer than two providers can run, say so and stop.
 
-Reach the other providers through the host's cross-provider delegation (see the vrub-mode skill's `references/harness/README.md`). In T3 Code, call `orchestrator_capabilities` once, then start one `delegate_task` per seat, all in parallel. A host without cross-provider delegation can seat only its own provider, so the council can't meet there. Report that, and never launch another CLI to get around it.
+Start every seat with the `another provider's model` verb in your harness file under the vrub-mode skill's `references/harness/`, your own provider's seat included, so each seat runs the model and effort it was given. Start them all in parallel. A host without that verb can seat only its own provider, so the council can't meet there. Report that, and never launch another CLI to get around it.
 
 ## Brief the members
 
@@ -37,7 +37,7 @@ Wait for each report as the host delivers it. Don't poll.
 
 Read every report. Merge findings that share a cause, and note which members raised each one. Check each finding against the code yourself before you act on it, because a member's claim is not evidence. Then sort each finding into one bucket:
 
-- **Blocks.** A bug a user would hit, a failed check, or a doc line the work made wrong, and you confirmed it. Fix it.
+- **Blocks.** It blocks under the blocking rule in the vrub-mode skill's `playbooks/autopilot-full.md` step 4, and you confirmed it: a bug a user would hit, a failed gate, or a doc line the work made wrong. A problem the base already has doesn't block unless the work copies it or newly reaches it, and a check the environment blocks is not a code finding. Fix it.
 - **In scope.** Real and inside what the user asked for. Fix it when you agree.
 - **Follow-up.** Out of scope, or a matter of taste. List it with the members who raised it.
 - **Wrong.** Dismiss it with the reason.
@@ -59,7 +59,7 @@ Open the final reply with the user's goal. Then give:
 - the follow-ups, with the members who raised them,
 - any seat that couldn't run.
 
-If the work has a PR, put the scores in its description, just before the model and harness line at the end. Edit the description, and don't post a comment. For example:
+If the work has a PR, put the scores at the end of its description, before any attribution line. Edit the description, and don't post a comment. For example:
 
 ```markdown
 ## Council review
