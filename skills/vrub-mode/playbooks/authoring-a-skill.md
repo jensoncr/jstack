@@ -2,7 +2,7 @@
 
 **You own the skill's voice.**
 
-1. Use Cursor's built-in `create-skill` skill where it exists; on other harnesses author the SKILL.md by hand and let the steps below hold the bar.
+1. Author the SKILL.md by hand and let the steps below hold the bar.
 2. Validate the skill: frontmatter has `name` and `description`, referenced files exist, cross-skill links resolve.
 3. Test cases if structural. Skip if subjective.
 4. Run **Opening a PR**.

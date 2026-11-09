@@ -175,6 +175,9 @@ long-running work uses the host's available loop or scheduled continuation. the 
 | [`/maintain-formal-verification-skill`](./skills/maintain-formal-verification-skill/SKILL.md) | code your formal verification covers has changed since it was last checked. updates the model, harness, or properties to match the code, reruns, and says whether each failure is drift in the verification or a bug in the code. |
 | [`/statechart`](./skills/statechart/SKILL.md) | someone who owns the behavior needs to see it, not read a spec. checks a tla+ model, draws what the user sees as a mermaid statechart, marks each state that breaks a rule, and gives the shortest path to each one. |
 | [`/unslop`](./skills/unslop/SKILL.md) | you're cleaning up writing. removes AI tells. |
+| [`/deslop`](./skills/deslop/SKILL.md) | you're cleaning up code. strips guards the path doesn't need, type escapes, needless nesting, and leftovers from the branch's diff. |
+| [`/control-ui`](./skills/control-ui/SKILL.md) | you need to drive a web, IDE, or Electron UI in a real browser to verify or reproduce something, with screenshots and logs as evidence. |
+| [`/control-cli`](./skills/control-cli/SKILL.md) | you need to drive a CLI or TUI through tmux or a pseudo-terminal to verify or reproduce something, with the transcript as evidence. |
 | [`/bro`](./skills/bro/SKILL.md) | you want the last message restated in plain human language, no jargon. |
 | [`/technical-writing`](./skills/technical-writing/SKILL.md) | layered doc standard (Diátaxis + Google developer style + STE + Global English) for docs, RFCs, readmes, PR descriptions, commit messages. |
 
@@ -275,16 +278,6 @@ twenty-four short skills, one principle each. `vrub-mode` indexes them inline an
 | [encode-lessons-in-structure](./skills/principle-encode-lessons-in-structure/SKILL.md) | meta | Encode the rule as a lint, metadata flag, runtime check, or script instead of more text. |
 
 </details>
-
-## not shipped here
-
-a few things `vrub-mode` references but doesn't bundle:
-
-- `/deslop` and the `deslop` skill ship in the `cursor-team-kit` plugin (cursor). without it, `vrub-mode` falls back to the bundled `unslop` skill for prose and `no-comments` skill for code.
-- `control-cli` (for CLIs and TUIs) and `control-ui` (for browser, Electron, web) ship in `cursor-team-kit` too (cursor). without them, `vrub-mode` drives the app through the project's `verify-*` skill from [`/create-verification-skill`](./skills/create-verification-skill/SKILL.md).
-- `/create-skill` is a cursor built-in; on other harnesses the [authoring playbook](./skills/vrub-mode/playbooks/authoring-a-skill.md) covers it. cursor also ships a built-in `/autopilot` that watches a pr. inside `vrub-mode`, pr-status requests go to the [babysit playbook](./skills/vrub-mode/playbooks/babysit.md) instead.
-
-on cursor, install `cursor-team-kit` alongside jstack if you want the full set.
 
 ## why are there no planning skills?
 

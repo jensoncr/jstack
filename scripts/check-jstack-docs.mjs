@@ -16,7 +16,7 @@ const SETUP_FILES = [join(PSTACK, "skills", "setup-jstack", "SKILL.md"), ...read
 
 // Commands that ship with Cursor or Claude Code, not in this repository. Nothing here can verify them, so add a name
 // only after a public Cursor or Claude Code doc shows it.
-const EXTERNAL = new Set(["add-plugin", "autopilot", "create-skill", "in-cloud", "loop", "plugin"]);
+const EXTERNAL = new Set(["add-plugin", "in-cloud", "loop", "plugin"]);
 const RENAMED = new Map([["babysit", "autopilot"]]);
 
 const SMALL = "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen".split(" ");
@@ -40,8 +40,6 @@ const principles = skills.filter((name) => name.startsWith("principle-"));
 const commands = skills.filter((name) => !name.startsWith("principle-"));
 const playbooks = names(join(PSTACK, "skills", "vrub-mode", "playbooks"), isMarkdown).map((name) => name.slice(0, -3));
 const agents = names(join(PSTACK, "agents"), isMarkdown).map((name) => name.slice(0, -3));
-// jstack does not vendor cursor-team-kit, so its skills that the docs name are listed here.
-const teamKit = ["control-cli", "control-ui", "deslop"];
 const docs = ["README.md", ...names(join(PSTACK, GUIDE), isMarkdown).map((name) => `${GUIDE}/${name}`)];
 const text = new Map(docs.map((doc) => [doc, readFileSync(join(PSTACK, doc), "utf8")]));
 const setup = SETUP_FILES.map((path) => readFileSync(path, "utf8")).join("\n");
@@ -97,8 +95,8 @@ for (const [doc, body] of text) {
     slashes++;
     if (skills.includes(name)) named.get(doc).add(name);
     else if (RENAMED.has(name)) fail(doc, index, `names /${name}, which Cursor now ships as /${RENAMED.get(name)}`);
-    else if (!teamKit.includes(name) && !EXTERNAL.has(name)) {
-      fail(doc, index, `names /${name}, which no jstack skill, cursor-team-kit skill, or listed built-in provides`);
+    else if (!EXTERNAL.has(name)) {
+      fail(doc, index, `names /${name}, which no jstack skill or listed built-in provides`);
     }
   }
   for (const { 1: href, index } of body.matchAll(LINK)) {
@@ -134,6 +132,21 @@ for (const playbook of playbooks) {
 }
 for (const agent of agents) {
   if (!readme.includes(`(./agents/${agent}.md)`)) problems.push(`README.md does not link agent ${agent}`);
+}
+
+// jstack bundles every skill it routes to. pstack syncs bring back mentions of Cursor's cursor-team-kit plugin, so a
+// mention in the docs, skills, or agents is a reference to point at the bundled skill. Only the credit line may name it.
+const CREDIT = /^Adapted from the `[a-z-]+` skill in Cursor's `cursor-team-kit` \(MIT\)\.$/;
+const markdown = ["skills", "agents"].flatMap((dir) =>
+  readdirSync(join(PSTACK, dir), { recursive: true })
+    .filter((name) => name.endsWith(".md"))
+    .map((name) => posix.join(dir, name.split("\\").join("/"))));
+for (const file of [...docs, ...markdown]) {
+  readFileSync(join(PSTACK, file), "utf8").split("\n").forEach((line, i) => {
+    if (line.includes("cursor-team-kit") && !CREDIT.test(line)) {
+      problems.push(`${file}:${i + 1} names cursor-team-kit; point it at the bundled skill`);
+    }
+  });
 }
 
 const inDocs = new Set([...named.values()].flatMap((set) => [...set]));
