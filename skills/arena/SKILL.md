@@ -24,7 +24,7 @@ If a candidate produces no output, proceed with N-1 and note the dropout.
 
 ## Phase C: Cross-judge
 
-After all Phase B candidates complete, resolve `arena cross-judge` (tier `judge`) and spawn one read-only judge subagent on it. The judge never shares the parent's model family when the harness can run another one, and an `inherit-parent` or `auto` value never judges there. On a single-family harness, the judge runs on that family in a fresh context, and the synthesis note counts its agreement as same-model, medium signal, per `references/models.md`. If no judge can run, skip it, pick the base alone in Phase D, and say so. The judge sees the rubric and the candidates by path label, scores each criterion, and recommends a base with rationale. It runs in parallel with your reading in Phase D. Don't spawn it while candidates are still writing.
+After all Phase B candidates complete, resolve `arena cross-judge` (tier `judge`) and spawn one read-only judge subagent on it. The judge comes from a model family other than the parent's whenever the config has one, which `differs-from-parent` picks first. When it resolves to the parent's family, as on a single-family harness, it runs in a fresh context, and the synthesis note counts its agreement as same-model, medium signal, per `references/models.md`. An `inherit-parent` or `auto` value never judges. If no judge can run, skip it, pick the base alone in Phase D, and say so. The judge sees the rubric and the candidates by path label, scores each criterion, and recommends a base with rationale. It runs in parallel with your reading in Phase D. Don't spawn it while candidates are still writing.
 
 ## Phase D: Pick a base
 

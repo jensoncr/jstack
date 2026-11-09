@@ -11,7 +11,7 @@ Every jstack delegation names a **role** and its **tier**. Read [the harness gui
 | `panel` | Independent reviewers or runners. One subagent per entry, so the list length sets the count. Repeats are allowed. | list |
 | `judge` | The one independent reviewer that grades or verifies another agent's work. | one model, or `differs-from-parent` |
 
-`differs-from-parent` means the first `panel` entry from a model family other than the parent chat's, such as a `gpt-*` or `grok-*` entry under a Claude parent. With no entry from another family, it means the first entry whose model differs from the parent's. When every entry matches the parent, use the first entry and say so in the reply. A judge from the parent's own family is same-model, medium signal, as in the panel rules below.
+`differs-from-parent` means the first `panel` entry from a model family other than the parent chat's, such as another vendor's model. With no entry from another family, it means the first entry whose model differs from the parent's. When every entry matches the parent, use the first entry and say so in the reply. A judge from the parent's own family is same-model, medium signal, as in the panel rules below.
 
 ## Roles
 
@@ -54,7 +54,7 @@ One line per role in the config. A value is a tier name, a model token, a list o
 
 A panel exists to surface independent blind spots. On Cursor the entries are different vendors. On Claude Code or Codex the list repeats one family, so:
 
-- Give every repeated model a distinct lens taken from the skill's rubric (split the rubric's sections across the repeats). Do not assign personas.
+- Give every repeated model a distinct lens taken from the skill's rubric (split the rubric's sections across the repeats), or the split the skill names. Do not assign personas.
 - Agreement between distinct models is high-signal. Agreement between same-model lenses is medium-signal. Say which one the report is counting.
 - When the panel is generation-bound rather than judgment-bound (arena runners, architect runners), give each repeat a distinct design constraint instead of a lens so the candidates diverge structurally.
 - When the harness cannot run subagents in parallel, run the panel sequentially in fresh sessions and label the report `sequential, one model`.
