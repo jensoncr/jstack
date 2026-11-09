@@ -61,3 +61,4 @@ computer use: gpt-6.1-sol@high
 | skill invocation | `/<skill>` |
 | transcripts | `~/.cursor/projects/<slug>/agent-transcripts/<uuid>/<uuid>.jsonl`, named in the system prompt |
 | project skills dir | `.cursor/skills/` or `.agents/skills/` |
+| another provider's model | the `Task` tool's `model` field |

@@ -155,6 +155,7 @@ long-running work uses the host's available loop or scheduled continuation. the 
 | [`/arena`](./skills/arena/SKILL.md) | you want N parallel attempts at the same thing, then to grab the best parts of each. |
 | [`/swarm`](./skills/swarm/SKILL.md) | you want N parallel workers across different slices or races, then one aggregated report. |
 | [`/interrogate`](./skills/interrogate/SKILL.md) | you have a diff and want a panel of adversaries to try to break it, keeping only findings a run proves. |
+| [`/council`](./skills/council/SKILL.md) | you want review or feedback from models from different providers, such as claude and gpt, fixed and re-reviewed until none of them has a blocking finding. needs a harness that can run other providers' models, such as t3 code. |
 | [`/automate-me`](./skills/automate-me/SKILL.md) | you want your own `-mode` skill, drafted from how you've actually worked. |
 | [`/make-bot-ui`](./skills/make-bot-ui/SKILL.md) | you want a page or dashboard whose buttons wake a Grok Bot over a webhook, including the sender-key handoff and Tailscale. |
 | [`/setup-jstack`](./skills/setup-jstack/SKILL.md) | you want to pick which models jstack uses per role. detects your harness and models and writes a config file. |

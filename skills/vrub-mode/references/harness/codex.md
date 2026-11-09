@@ -63,6 +63,7 @@ One family and often one model, so the rules in `../models.md` under "Panels on 
 | skill invocation | Select the exposed plugin skill by name; CLI and IDE commonly support `$<skill-name>`. Use the host's actual namespacing. |
 | transcripts | Use the current task's supplied transcript location or read-task tool; CLI sessions commonly live under `~/.codex/sessions/`. |
 | project skills dir | `.agents/skills/` |
+| another provider's model | T3 Code's `delegate_task` when the session has it; none in plain Codex |
 
 ## Continuing a watch
 

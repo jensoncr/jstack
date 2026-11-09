@@ -67,3 +67,4 @@ Claude Code hard-blocks the Skill tool on any skill with `disable-model-invocati
 | skill invocation | `Skill` tool, or `/jstack:<skill>` when installed as a plugin |
 | transcripts | `~/.claude/projects/<slug>/*.jsonl` (slug is the project path with `/` replaced by `-`) |
 | project skills dir | `.claude/skills/` |
+| another provider's model | T3 Code's `delegate_task` when the session has it; none in plain Claude Code |

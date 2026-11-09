@@ -82,6 +82,7 @@ The default answer is `/vrub-mode`, which runs most of the others when its steps
 | Get several attempts at one brief, merged into the best one | [`/arena`](../arena/SKILL.md) |
 | Run parallel checks over slices, or race workers | [`/swarm`](../swarm/SKILL.md) |
 | Have a panel of reviewers try to break a diff | [`/interrogate`](../interrogate/SKILL.md) |
+| Get review from models from different providers, fixed and re-reviewed until none blocks | [`/council`](../council/SKILL.md) |
 | Fix a bug test-first when a cheap local test exists | [`/tdd`](../tdd/SKILL.md) |
 | Apply TypeScript rules to `.ts` or `.tsx` work | [`/typescript-best-practices`](../typescript-best-practices/SKILL.md) |
 | Strip comments before review, using a reviewer that didn't write them | [`/no-comments`](../no-comments/SKILL.md) |

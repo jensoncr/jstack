@@ -40,6 +40,9 @@ One line per role in the config. A value is a tier name, a model token, a list o
 | `orchestrate verifier` | `judge` | orchestrate |
 | `recall workers` | `fast` | recall |
 | `computer use` | Codex token | codex-computer-use |
+| `council` | none | council |
+
+`council` lists one seat per provider as `<provider>/<model>[@<effort>]`, using the ids the host's cross-provider tool reports. With no line, the council skill seats the newest flagship of each provider the host can run.
 
 `computer use` is always a Codex `<model>@<effort>` token, whatever the harness, because the run goes through the codex CLI that ships inside ChatGPT.app. Its default is `gpt-6.1-sol@high`.
 
