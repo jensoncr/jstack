@@ -149,6 +149,28 @@ for (const file of [...docs, ...markdown]) {
   });
 }
 
+// Asking skills carry identical paragraphs, so each shows the picker without vrub-mode loaded. Every copy of a
+// paragraph must match the reference skill's copy.
+const SHARED = [
+  { marker: "**Ask with the question tool.**", reference: "grill-me", skills: ["grill-me", "product", "automate-me", "vrub-help", "interrogate", "setup-jstack", "create-verification-skill", "create-formal-verification-skill", "vrub-mode"] },
+  { marker: "**Ask rarely.**", reference: "interrogate", skills: ["interrogate", "create-verification-skill", "create-formal-verification-skill"] },
+];
+for (const { marker, reference, skills: required } of SHARED) {
+  const copy = (file) => {
+    const body = readFileSync(join(PSTACK, file), "utf8");
+    const start = body.indexOf(marker);
+    return start < 0 ? undefined : body.slice(start).split("\n")[0];
+  };
+  const expectedCopy = copy(`skills/${reference}/SKILL.md`);
+  for (const skill of required) {
+    if (copy(`skills/${skill}/SKILL.md`) === undefined) problems.push(`skills/${skill}/SKILL.md lacks the "${marker}" paragraph`);
+  }
+  for (const file of markdown) {
+    const found = copy(file);
+    if (found !== undefined && found !== expectedCopy) problems.push(`${file} has a "${marker}" paragraph that differs from ${reference}'s`);
+  }
+}
+
 const inDocs = new Set([...named.values()].flatMap((set) => [...set]));
 const inGuide = new Set(docs.filter((doc) => doc !== "README.md").flatMap((doc) => [...named.get(doc)]));
 const unnamed = commands.filter((name) => !inGuide.has(name));

@@ -83,9 +83,10 @@ pick weakest coverage area → ask one round → record answers → re-score rub
 pursue follow-ups spawned by answers → next area → … → all areas pass → playback → sign-off
 ```
 
-- **Batched rounds by area.** Use the harness question tool, at most 4 questions per round, with
-  concrete options from Phase 1 research. Ask open-ended areas (core workflows, look and feel) as
-  plain conversation, since options would constrain the answer.
+- **Batched rounds by area.** Give each question concrete options from Phase 1 research. Ask
+  open-ended areas (core workflows, look and feel) as plain conversation, since options would
+  constrain the answer.
+- **Ask with the question tool.** A question in a normal message goes unseen, and the thread looks done. Put every question that has two or more real options through the harness question tool, so the thread shows that it is waiting: `AskUserQuestion` on Claude Code, `request_user_input` on Codex, `AskQuestion` on Cursor. Make each question stand alone, with what you found, what blocks you, and the options. Follow the tool's own schema for how many questions and options one call takes, and put the recommended option first, marked. When there are more questions than one call takes, make back-to-back calls and never drop to prose. Ask in prose only when a question has no real options, or when the tool is missing or its call fails. Then start your message with the question, use prose for the rest of the session, and say once how to get the picker: on Codex, Plan mode or the `default_mode_request_user_input` feature flag that `/setup-jstack` sets; on Cursor, a local chat on a model that has the tool.
 - **Only ask about gaps.** A well-researched user gets a short interview. A napkin sketch gets a
   long one.
 - **Pursue follow-ups.** Every answer that introduces a new noun, role, or interaction spawns

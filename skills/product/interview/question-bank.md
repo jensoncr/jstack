@@ -3,7 +3,7 @@
 Templates per coverage area. Adapt wording to the domain and inject Phase-1 research into the
 options ("Competitor X does A, Competitor Y does B — which is closer?"). Rules of engagement:
 
-- ≤4 questions per question-tool round, grouped by area.
+- Group each round by area, and ask it per the question-tool rule in `SKILL.md`.
 - Open-ended areas (2 Core workflows, 9 Look & feel) are asked conversationally, not as
   multiple choice — options would constrain the answer.
 - Every answer that introduces a new noun, role, or interaction spawns follow-ups (patterns

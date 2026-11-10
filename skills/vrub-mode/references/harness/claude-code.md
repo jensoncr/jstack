@@ -61,7 +61,7 @@ Claude Code hard-blocks the Skill tool on any skill with `disable-model-invocati
 | background | `run_in_background: true` |
 | own worktree | `isolation: "worktree"` |
 | cloud | no equivalent; run locally |
-| ask the user | `AskUserQuestion` |
+| ask the user | `AskUserQuestion`. One call takes up to 4 questions with 2 to 4 options each. |
 | todo list | `TodoWrite` |
 | loop | Use a native loop or scheduling tool only when exposed; otherwise follow the shared guide for foreground continuation. |
 | skill invocation | `Skill` tool, or `/jstack:<skill>` when installed as a plugin |

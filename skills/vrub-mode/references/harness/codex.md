@@ -57,7 +57,7 @@ One family and often one model, so the rules in `../models.md` under "Panels on 
 | background | Native spawning is generally asynchronous. Use the returned agent identifier with the available wait and messaging tools; names and parameters vary by host. |
 | own worktree | Create an isolated git worktree and put its absolute path and starting revision in the brief, unless native isolation is available. |
 | cloud | Use only an explicitly available remote subagent capability. A user-owned task-creation tool is not a substitute for a subagent. Otherwise work locally. |
-| ask the user | Use the current input tool, including an asynchronous variant when offered. Respect plan-mode-only restrictions. Use prose if no appropriate tool is available. |
+| ask the user | `request_user_input`, or the asynchronous variant when offered. One call takes up to 3 questions with 2 to 3 options each, from the root thread only. It works in Plan mode, and in Default mode only when the `default_mode_request_user_input` feature flag is on. Otherwise the call fails, so use prose. |
 | todo list | Use a plan tool if exposed; otherwise keep a concise checklist. |
 | loop | Follow the continuation procedure below. |
 | skill invocation | Select the exposed plugin skill by name; CLI and IDE commonly support `$<skill-name>`. Use the host's actual namespacing. |

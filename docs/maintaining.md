@@ -19,7 +19,7 @@ jstack is a fork of [pstack](https://github.com/cursor/plugins/tree/main/pstack)
 ## How jstack differs from pstack
 
 - **Names.** `poteto-mode` is `vrub-mode`, and `pstack` is `jstack`. `scripts/rename.sh` applies the renames, so never rename by hand.
-- **Three harnesses.** Skills name no models and no harness-specific tools. They name a role and a tier, which `skills/vrub-mode/references/models.md` resolves, and verbs such as "spawn a subagent", which the files in `skills/vrub-mode/references/harness/` map to each harness's tools. Model names and tool names belong only in those harness files.
+- **Three harnesses.** Skills name no models and no harness-specific tools. They name a role and a tier, which `skills/vrub-mode/references/models.md` resolves, and verbs such as "spawn a subagent", which the files in `skills/vrub-mode/references/harness/` map to each harness's tools. Model names and tool names belong only in those harness files, with one exception. Every skill that asks the user a question carries the same **Ask with the question tool** paragraph, which names the three question tools, so the skill shows the picker when it runs without `vrub-mode`. The skills that ask only when blocked also share an **Ask rarely** paragraph. Edit all copies together. The docs check fails when they differ.
 - **Its own rules.**
   - A PR opens only when the code is ready, and every push to an open PR passes the push gate in `playbooks/opening-a-pr.md`. pstack opens the PR early.
   - Everything jstack routes to is bundled. Nothing depends on Cursor's `cursor-team-kit` plugin or on Cursor's built-in `create-skill`.
@@ -44,7 +44,7 @@ node scripts/check-jstack-docs.mjs            # the docs match the tree
 cd skills/vrub-mode/scripts && bun test       # the watch-pr and check-plan scripts
 ```
 
-The docs check fails when the README or the guide names a skill that doesn't exist, misses one that does, links to a missing file, or when any doc, skill, or agent mentions `cursor-team-kit` outside a credit line.
+The docs check fails when the README or the guide names a skill that doesn't exist, misses one that does, links to a missing file, when any doc, skill, or agent mentions `cursor-team-kit` outside a credit line, or when an asking skill lacks the **Ask with the question tool** paragraph or carries a different copy of it.
 
 ## Release and install
 
