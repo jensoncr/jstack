@@ -149,22 +149,26 @@ for (const file of [...docs, ...markdown]) {
   });
 }
 
-// Every asking skill carries one identical paragraph that names the three harness question tools, so it shows the
-// picker without vrub-mode loaded. grill-me holds the reference copy.
-const ASK = "**Ask with the question tool.**";
-const ASKING = ["grill-me", "product", "automate-me", "vrub-help", "interrogate", "setup-jstack", "create-verification-skill", "create-formal-verification-skill", "vrub-mode"];
-const askCopy = (file) => {
-  const body = readFileSync(join(PSTACK, file), "utf8");
-  const start = body.indexOf(ASK);
-  return start < 0 ? undefined : body.slice(start).split("\n")[0];
-};
-const askReference = askCopy("skills/grill-me/SKILL.md");
-for (const skill of ASKING) {
-  if (askCopy(`skills/${skill}/SKILL.md`) === undefined) problems.push(`skills/${skill}/SKILL.md lacks the "${ASK}" paragraph`);
-}
-for (const file of markdown) {
-  const copy = askCopy(file);
-  if (copy !== undefined && copy !== askReference) problems.push(`${file} has an "${ASK}" paragraph that differs from grill-me's`);
+// Asking skills carry identical paragraphs, so each shows the picker without vrub-mode loaded. Every copy of a
+// paragraph must match the reference skill's copy.
+const SHARED = [
+  { marker: "**Ask with the question tool.**", reference: "grill-me", skills: ["grill-me", "product", "automate-me", "vrub-help", "interrogate", "setup-jstack", "create-verification-skill", "create-formal-verification-skill", "vrub-mode"] },
+  { marker: "**Ask rarely.**", reference: "interrogate", skills: ["interrogate", "create-verification-skill", "create-formal-verification-skill"] },
+];
+for (const { marker, reference, skills: required } of SHARED) {
+  const copy = (file) => {
+    const body = readFileSync(join(PSTACK, file), "utf8");
+    const start = body.indexOf(marker);
+    return start < 0 ? undefined : body.slice(start).split("\n")[0];
+  };
+  const expectedCopy = copy(`skills/${reference}/SKILL.md`);
+  for (const skill of required) {
+    if (copy(`skills/${skill}/SKILL.md`) === undefined) problems.push(`skills/${skill}/SKILL.md lacks the "${marker}" paragraph`);
+  }
+  for (const file of markdown) {
+    const found = copy(file);
+    if (found !== undefined && found !== expectedCopy) problems.push(`${file} has a "${marker}" paragraph that differs from ${reference}'s`);
+  }
 }
 
 const inDocs = new Set([...named.values()].flatMap((set) => [...set]));
