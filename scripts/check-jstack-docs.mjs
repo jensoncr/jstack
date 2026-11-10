@@ -149,6 +149,24 @@ for (const file of [...docs, ...markdown]) {
   });
 }
 
+// Every asking skill carries one identical paragraph that names the three harness question tools, so it shows the
+// picker without vrub-mode loaded. grill-me holds the reference copy.
+const ASK = "**Ask with the question tool.**";
+const ASKING = ["grill-me", "product", "automate-me", "vrub-help", "interrogate", "setup-jstack", "create-verification-skill", "create-formal-verification-skill", "vrub-mode"];
+const askCopy = (file) => {
+  const body = readFileSync(join(PSTACK, file), "utf8");
+  const start = body.indexOf(ASK);
+  return start < 0 ? undefined : body.slice(start).split("\n")[0];
+};
+const askReference = askCopy("skills/grill-me/SKILL.md");
+for (const skill of ASKING) {
+  if (askCopy(`skills/${skill}/SKILL.md`) === undefined) problems.push(`skills/${skill}/SKILL.md lacks the "${ASK}" paragraph`);
+}
+for (const file of markdown) {
+  const copy = askCopy(file);
+  if (copy !== undefined && copy !== askReference) problems.push(`${file} has an "${ASK}" paragraph that differs from grill-me's`);
+}
+
 const inDocs = new Set([...named.values()].flatMap((set) => [...set]));
 const inGuide = new Set(docs.filter((doc) => doc !== "README.md").flatMap((doc) => [...named.get(doc)]));
 const unnamed = commands.filter((name) => !inGuide.has(name));

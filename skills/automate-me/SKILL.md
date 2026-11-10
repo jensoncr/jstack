@@ -14,7 +14,7 @@ This skill orchestrates three others: an inline mining pass (see step 1), the au
 
 ### 0. Check for an existing skill
 
-Look recursively for `*-mode/SKILL.md` under the project skills directory (`project skills dir` verb) and the user skills directory for your harness, matching the user's handle. Mode skills can live in a personal category directory (`<project skills dir>/<handle>/`), not only at the top level. If one exists, confirm intent with the harness question tool (the `ask the user` verb) (unless they already said "update my skill" or similar):
+Look recursively for `*-mode/SKILL.md` under the project skills directory (`project skills dir` verb) and the user skills directory for your harness, matching the user's handle. Mode skills can live in a personal category directory (`<project skills dir>/<handle>/`), not only at the top level. If one exists, confirm intent (unless they already said "update my skill" or similar):
 
 - Update the existing skill (default for repeat runs)
 - Start fresh (rare, ask why before doing it)
@@ -41,9 +41,11 @@ Cross-check across slices before elevating a signal. Patterns seen in 2+ slices 
 
 ### 2. Ask the user directly
 
-Mining misses intent that hasn't come up yet. Use the harness question tool (the `ask the user` verb) for structured multi-choice rather than asking the user to type from scratch.
+Mining misses intent that hasn't come up yet. Offer structured choices rather than asking the user to type from scratch.
 
-Shape: one or two questions with 4-6 options each, multi-select enabled for category questions. Start broad ("Which areas matter most?"), then follow up on selected areas with specific options. After the structured rounds, one free-form chat question catches anything the options missed.
+**Ask with the question tool.** Put every question that has two or more real options through the harness question tool: `AskUserQuestion` on Claude Code, `request_user_input` on Codex, `AskQuestion` on Cursor. Follow the tool's own schema for how many questions and options one call takes, and put the recommended option first, marked. When there are more questions than one call takes, make back-to-back calls and never drop to prose. Ask in prose only when a question has no real options, or when the tool is missing or its call fails. Then use prose for the rest of the session and say once how to get the picker: on Codex, Plan mode or the `default_mode_request_user_input` feature flag that `/setup-jstack` sets; on Cursor, a local chat on a model that has the tool.
+
+Shape: one or two questions, each with as many options as the tool takes, and multi-select for category questions where the tool has it. Start broad ("Which areas matter most?"), then follow up on selected areas with specific options. After the structured rounds, one free-form chat question catches anything the options missed.
 
 Don't dump 20 questions.
 

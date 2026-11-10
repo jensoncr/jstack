@@ -55,7 +55,7 @@ computer use: gpt-6.1-sol@high
 | background | `run_in_background: true` |
 | own worktree | create it with `git worktree add` and name the path in the brief |
 | cloud | `environment: "cloud"`, with `cloud_base_branch` when starting from a pushed branch |
-| ask the user | `AskQuestion` |
+| ask the user | `AskQuestion`, in local Agent and Plan chats. Cloud Agents and some models (Grok 4.5) do not get the tool, so use prose there. |
 | todo list | the built-in todo list |
 | loop | Use `/loop` when available; otherwise follow the shared guide for scheduled or foreground continuation. |
 | skill invocation | `/<skill>` |
