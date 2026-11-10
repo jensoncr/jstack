@@ -57,13 +57,13 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 - [ ] Open the PR ready, never draft, per **Opening a PR**, at the code-ready head through its push gate. Use the run's built-in PR tool when it has one, else `origin pr create --status open --base <base-branch>` or `gh pr create --base <base-branch>` according to the resolved forge. A stack child targets its parent branch.
 - [ ] Push to the PR only through the push gate in **Opening a PR**. Push with hooks on.
 - [ ] Run the **deslop** skill on code and the **unslop** skill on prose before each commit. Run `/no-comments` before review.
-- [ ] Triage every Bugbot and security-reviewer comment per `../references/bugbot-triage.md`.
+- [ ] Triage every review comment per `../references/review-triage.md`.
 - [ ] Rebase onto current trunk before the code-ready report and babysit. Keep that merge base in fix rounds. In fix rounds, rebase again only on a `git merge-tree` conflict with trunk, a CI failure that comes from a change on trunk, or a known concurrent change to the same files landing on trunk. Run the full rebase test in `playbooks/shipping.md` step 4 only right before the merge.
 
 ### Verdict and merge, for every PR
 
 - [ ] A full swarm runs once, at the code-ready head. Another full swarm runs only for new behavior, a redesign, or a large new diff. A rebase, a merge-conflict resolution, or a minor fix gets a single verifier at the new head, and a wording-only change gets none. Run each full swarm per `jstack/skills/swarm/SKILL.md`. One gates lane. The ten live lanes from the PR's **Verify, live** block. The perf lane from its **Verify, perf** block. Two or more audit lanes, each with its own focus, that read the diff and the receipts and distrust the PR body. The root audits the owner's receipts for that SHA before the verdict.
-- [ ] Judge every finding by the execution playbook's blocking rule. The verdict is clean when none blocks. A failure on trunk behavior in a lane marked `Regression lane against trunk.` is recorded against trunk and does not block the PR. A new head gets a fresh verdict, except for results that stay valid under the patch-id rule in `playbooks/shipping.md`. Review continues until nothing blocks, and findings outside the PR's scope go on its follow-up list.
+- [ ] Judge every finding by the execution playbook's blocking rule. The verdict is clean when none blocks. A failure on trunk behavior in a lane marked `Regression lane against trunk.` is recorded against trunk and does not block the PR. A new head gets a fresh verdict, except for results that stay valid under the patch-id rule in `playbooks/shipping.md`. Review continues until nothing blocks, for at most three rounds as in `playbooks/autopilot-full.md` step 4, and findings outside the PR's scope go on its follow-up list.
 - [ ] <The merge or handoff rule from the execution playbook, with the patch-id rule from `playbooks/shipping.md`.>
 
 ### Boot recipe, for every live lane
@@ -127,7 +127,7 @@ Each live lane runs on its own cloud VM at the PR head. Drive through the projec
 
 - [ ] Root's clean verdict for the head's patch, per the patch-id rule in `playbooks/shipping.md`.
 - [ ] Green CI on the remote head that merges, per `playbooks/shipping.md` step 4.
-- [ ] Bugbot triage done.
+- [ ] Review comments triaged.
 - [ ] Rebase test from `playbooks/shipping.md` step 4 applied right before the merge, and patch-id unchanged by any rebase it called for.
 - [ ] <The owner squash-merges its own PR, or the root appends it to the base-branch stack and the operator lands it bottom-up.>
 

@@ -47,6 +47,14 @@ for f in skills/*/SKILL.md; do
   perl -ni -e 'print unless /^disable-model-invocation: true\s*$/' "$f"
 done
 
+# jstack reviews with its own local agents, not Cursor's Bugbot, so the triage rubric carries a neutral name.
+if [ -f skills/vrub-mode/references/bugbot-triage.md ]; then
+  mv skills/vrub-mode/references/bugbot-triage.md skills/vrub-mode/references/review-triage.md
+fi
+{ grep -rlI 'bugbot-triage\.md' . --exclude-dir=.git || true; } | while read -r f; do
+  perl -pi -e 's/bugbot-triage\.md/review-triage.md/g' "$f"
+done
+
 # pstack's logo is its author's avatar. jstack ships none.
 rm -rf assets
 

@@ -139,7 +139,7 @@ An open PR starts collecting blockers immediately. Checks fail, reviewers commen
 /vrub-mode babysit this pr. get it green.
 ```
 
-Babysit watches the PR, with a bundled watcher on GitHub or the Origin CLI when it's available, and takes blockers in order: conflicts, then review threads, then CI. Every known fix batches into one push that has passed the local checks, so CI runs once instead of after every fix. The comment triage is skeptical, because humans and bots file real catches and noise in the same list. A real finding gets a fix, and noise gets dismissed with the disproof posted on the thread. When all you want is status, ask smaller and Babysit answers without starting the loop:
+Babysit watches the PR, with a bundled watcher on GitHub or the Origin CLI when it's available, and takes blockers in order: conflicts, then review threads, then CI. Every known fix batches into one push that has passed the local checks, so CI runs once instead of after every fix. When nothing else reviews the PR, Babysit starts a local reviewer agent that leaves its findings as inline comments. The comment triage is skeptical, because humans and agents file real catches and noise in the same list. A real finding gets a fix, and noise gets dismissed with the disproof posted on the thread. After a fix, a new reviewer checks only the fix. If the third review still finds something to fix, Babysit stops and reports instead of pushing again. When all you want is status, ask smaller and Babysit answers without starting the loop:
 
 ```text
 /vrub-mode check on pr 123. anything outstanding?

@@ -46,7 +46,11 @@ Fight scope creep. A review always finds more to do, but the user's request sets
 
 ## Loop
 
-After the fixes, start a new round with a new delegation for each seat. Each new brief carries the previous round's findings and what you did about each one. Each full pass of the council is one round. Stop when no member has a blocking finding left. If members still disagree with a call you made, report the disagreement rather than looping on it.
+After the fixes, start a new round with a new delegation for each seat. Each new brief carries the previous round's findings, what you did about each one, and the diff of your fixes. Each full pass of the council is one round. Stop when no member has a blocking finding left. If members still disagree with a call you made, report the disagreement rather than looping on it.
+
+Round 1 reviews the whole work. From round 2, ask each member to check that the fixes close the findings and that their diff breaks nothing. Tell them not to review the unchanged work again, and not to repeat a finding you already answered. A problem a member can show elsewhere in the work still blocks.
+
+Stop after three rounds. If round 3 still has a blocking finding, don't start a fourth. Apply the **attack-the-premise** principle skill to what the failed fixes share. Then report to the user what still blocks, what you tried, and the approach you would take instead.
 
 ## Report
 
@@ -56,6 +60,7 @@ Open the final reply with the user's goal. Then give:
 - each round's scores,
 - what you fixed,
 - what you dismissed and why,
+- any blocking finding still open after round 3,
 - the follow-ups, with the members who raised them,
 - any seat that couldn't run.
 

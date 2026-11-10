@@ -74,7 +74,7 @@ Read the Dropped list too. You can override the verdict.
 /council review this branch
 ```
 
-[`/council`](../../skills/council/SKILL.md) seats one strong model from each provider your harness can reach, such as Claude and GPT, and gives each the same request, read-only. Each member returns its findings and a score out of 10. The lead agent checks every finding against the code, fixes what blocks, lists the rest as follow-ups, and asks for a fresh review until no member has a blocking finding.
+[`/council`](../../skills/council/SKILL.md) seats one strong model from each provider your harness can reach, such as Claude and GPT, and gives each the same request, read-only. Each member returns its findings and a score out of 10. The lead agent checks every finding against the code, fixes what blocks, lists the rest as follow-ups, and asks for a review of the fixes until no member has a blocking finding, for at most three rounds.
 
 The two reviews differ. `/interrogate` reports only the bugs a run proves, and fixes nothing. `/council` also covers approach and readability, and it makes the fixes. It needs a harness that can run other providers' models, such as T3 Code or Cursor. Set the seats with a `council` line in your model config.
 
