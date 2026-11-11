@@ -8,7 +8,18 @@
 set -euo pipefail
 unset CDPATH
 
-APP_CODEX=/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex
+# Any current codex CLI loads the Computer Use plugin. ChatGPT.app's own copy comes last because its
+# location inside the app moves between releases. Background services often lack the shell's PATH.
+find_codex() {
+  local c
+  for c in "${CODEX_BIN:-}" "$(command -v codex 2>/dev/null || true)" "$HOME/.npm-global/bin/codex" \
+    /opt/homebrew/bin/codex /usr/local/bin/codex \
+    /Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex \
+    /Applications/ChatGPT.app/Contents/Resources/codex; do
+    if [ -n "$c" ] && [ -x "$c" ]; then echo "$c"; return 0; fi
+  done
+}
+CODEX=$(find_codex || true)
 CODEX_HOME_DIR=${CODEX_HOME:-$HOME/.codex}
 HERE=$(cd "$(dirname "$0")" && pwd)
 APPROVALS="$HOME/Library/Group Containers/2DC432GLL2.com.openai.sky.CUAService/Library/Application Support/Software/ComputerUseAppApprovals.json"
@@ -68,11 +79,11 @@ if [ -z "$model" ]; then
   if [ "$token" != "$model" ]; then effort=${effort:-${token#*@}}; fi
 fi
 
-[ -x "$APP_CODEX" ] || die "ChatGPT.app's bundled codex CLI is missing at $APP_CODEX; install or update the ChatGPT desktop app"
+[ -n "$CODEX" ] || die "no codex CLI found; install it (npm i -g @openai/codex, or brew install --cask codex) or set CODEX_BIN"
 [ -d "$CODEX_HOME_DIR/computer-use/Codex Computer Use.app" ] || die "Codex Computer Use.app is not installed; enable Computer Use once in the Codex app"
 grep -A1 -F '[plugins."unified-computer-use@openai-bundled"]' "$CODEX_HOME_DIR/config.toml" 2>/dev/null | grep -q 'enabled = true' \
   || die "plugin unified-computer-use@openai-bundled is not enabled in $CODEX_HOME_DIR/config.toml; turn on Computer Use in the Codex app"
-"$APP_CODEX" login status >/dev/null 2>&1 || die "codex is not logged in; run: $APP_CODEX login"
+"$CODEX" login status >/dev/null 2>&1 || die "codex is not logged in; run: $CODEX login"
 
 mkdir -p "$out"
 out=$(cd "$out" && pwd)
@@ -85,7 +96,7 @@ if [ -n "$effort" ]; then args+=(-c "model_reasoning_effort=$effort"); fi
 echo "codex-computer-use: model=$model effort=${effort:-default} out=$out" >&2
 set +e
 printf '%s\n' "$prompt" \
-  | lockf -t "$wait" "$lock" "$APP_CODEX" "${args[@]}" - > "$out/events.jsonl" 2> "$out/stderr.log"
+  | lockf -t "$wait" "$lock" "$CODEX" "${args[@]}" - > "$out/events.jsonl" 2> "$out/stderr.log"
 status=$?
 set -e
 if [ $status -eq 75 ]; then die "another computer-use run holds the screen; retry later or pass --wait SECONDS" 75; fi
