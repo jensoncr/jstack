@@ -5,7 +5,7 @@ description: Run a task in a native macOS app (Excel, Finder, Preview, System Se
 
 # Codex Computer Use
 
-`scripts/run.sh` sends one task to the codex CLI bundled inside ChatGPT.app and waits for it. Codex controls the screen through the `cua_repl` server and `Codex Computer Use.app`, the same stack and per-app approvals as the desktop app. Any harness can call it: Claude Code, Codex, or Cursor.
+`scripts/run.sh` sends one task to the codex CLI (the one on `PATH`, a standard install location, or ChatGPT.app's own copy; `CODEX_BIN` overrides) and waits for it. Codex controls the screen through the `cua_repl` server and `Codex Computer Use.app`, the same stack and per-app approvals as the desktop app. Any harness can call it: Claude Code, Codex, or Cursor.
 
 ## Before you reach for it
 
