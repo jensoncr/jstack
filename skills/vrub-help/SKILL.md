@@ -28,14 +28,8 @@ The options:
 
 Answers differ by harness. Identify the one you are running in (Cursor, Claude Code, or Codex) and answer for it. Its adapter is `../vrub-mode/references/harness/<harness>.md`. Check the state that changes the answer, and mention it only when it does:
 
-- No model config for this harness means `/setup-jstack` hasn't run here, so every role uses the harness defaults in its adapter. The config is `~/.cursor/rules/jstack-models.mdc` on Cursor, `~/.claude/jstack-models.md` (imported by `~/.claude/CLAUDE.md`) on Claude Code, and `~/.codex/jstack-models.md` on Codex.
 - No `verify-*` skill or other app harness in the project means agents have no scripted way to drive the app. Mention `/create-verification-skill` when the question is about proving a change works.
 - No formal verification skill in the project means no property is checked past what tests reach. Mention `/create-formal-verification-skill` when the question is about a race, an invariant, or another case tests rarely hit. When one exists and the code it covers changed after the commit it records as last in sync, mention `/maintain-formal-verification-skill` if the question touches that code.
-
-When the model config for this harness is missing and it matters, ask whether the user wants to pick a model for each role now. It matters when the user is new, the question is about setup or cost, or the answer depends on which models run. Ask at most once per chat. If the need is also unclear, ask both questions together. Offer two choices:
-
-- Now: give them `/setup-jstack` to type, and answer their question too.
-- Later: answer their question, and add one line saying every role keeps its harness default until they run `/setup-jstack`.
 
 ## Get set up or updated
 
@@ -43,14 +37,14 @@ When the model config for this harness is missing and it matters, ask whether th
    - Cursor: `/add-plugin jstack`. From a local checkout, run `scripts/install-cursor-local.sh`, then Developer: Reload Window.
    - Claude Code: `/plugin marketplace add jensoncr/jstack`, then `/plugin install jstack`.
    - Codex: `codex plugin marketplace add jensoncr/jstack`, then `codex plugin add jstack@jstack`.
-2. Run [`/setup-jstack`](../setup-jstack/SKILL.md). It detects the harness, maps a model to each role, and writes the config above. The config applies to new sessions. Then it offers once each to generate a verification skill and a formal verification skill for the project, unless the project already has one.
+2. Run [`/setup-jstack`](../setup-jstack/SKILL.md). It turns on the Codex question picker and offers once each to generate a verification skill and a formal verification skill for the project, unless the project already has one.
 3. Start a real task with `/vrub-mode`, a goal, and a check that can pass or fail.
 
 The command syntax differs by harness: `/vrub-mode` on Cursor, `/jstack:vrub-mode` on Claude Code (or `/vrub-mode` when no other plugin claims the name), and `$vrub-mode` on Codex. Most jstack skills also load when the request matches their description. `/vrub-help`, `/automate-me`, and `/product` run only when typed. The [README](../../README.md) and [guide page 1](../../docs/guide/01-setup.md) have the details. Offer to word their first prompt with them, per [`references/prompting.md`](references/prompting.md).
 
 To update, the plugin's version must change. Claude Code: `claude plugin marketplace update jstack`, then `claude plugin update jstack@jstack`, then restart. Codex: `codex plugin marketplace upgrade jstack`, then start a new session. Cursor: rerun the install script, or update from Customize, then reload the window.
 
-If cost is the worry, say where the tokens go and how to spend fewer. jstack spends extra tokens on subagents and review panels. Rerun `/setup-jstack` and point the `fast` tier at a cheaper model, shorten the `panel` list (one subagent runs per entry), or set a role to `inherit-parent` so it runs on the chat's model. Save `/vrub-mode` for work that needs rigor.
+If cost is the worry, say where the tokens go and how to spend fewer. jstack spends extra tokens on subagents and review panels. Ask for fewer panel candidates per task. Model choices are fixed in the config in `../vrub-mode/references/models.md`; a user who wants different ones forks jstack and edits it. Save `/vrub-mode` for work that needs rigor.
 
 ## Start a task with `/vrub-mode`
 
@@ -107,7 +101,7 @@ The default answer is `/vrub-mode`, which runs most of the others when its steps
 | Check a PR's status, fix CI, or address review feedback | [`/babysit`](../babysit/SKILL.md) |
 | Merge a PR or land a stack, and clean up its worktrees | [`/ship`](../ship/SKILL.md) |
 | Take over or resume a prior session's branch | [`/pickup`](../pickup/SKILL.md) |
-| Pick a model for each role | [`/setup-jstack`](../setup-jstack/SKILL.md) |
+| Set up jstack on a machine | [`/setup-jstack`](../setup-jstack/SKILL.md) |
 | Turn their own working habits into a personal mode skill | [`/automate-me`](../automate-me/SKILL.md) |
 | Turn what a finished task taught into skill edits | [`/reflect`](../reflect/SKILL.md) |
 | Stop agents from repeating the same mistakes in this repo | [`/correct`](../correct/SKILL.md) |

@@ -42,7 +42,7 @@ flowchart LR
     H --> I[Verify]
 ```
 
-The panel comes from your [`/setup-jstack`](../../skills/setup-jstack/SKILL.md) configuration, and you can adjust it per task. Ask for more candidates when the decision matters, fewer when it doesn't:
+The panel comes from the `panel` tier in the [model config](../../skills/vrub-mode/references/models.md#config), and you can adjust it per task. Ask for more candidates when the decision matters, fewer when it doesn't:
 
 ```text
 /arena this, 5 candidates. the cache key format is expensive to change later.
@@ -64,7 +64,7 @@ Reach for it when parallelism buys coverage or lets independent checks race. `/a
 /interrogate the whole branch, but skeptically. no nitpicks unless it's an actual bug or regression.
 ```
 
-[`/interrogate`](../../skills/interrogate/SKILL.md) gives the change and its intent to adversaries on the `panel` tier, and each tries to break it with a run against the real code. On a single-family harness, each repeat attacks a different part of the intent first. Adversaries find different failures. A finding survives only when rerunning its command shows a failure that breaks the intent. The report lists every verified finding with the adversaries that found it, then what each adversary dropped and why, and applies nothing.
+[`/interrogate`](../../skills/interrogate/SKILL.md) gives the change and its intent to adversaries on the `panel` tier, and each tries to break it with a run against the real code. On a host that runs only one provider, each repeat attacks a different part of the intent first. Adversaries find different failures. A finding survives only when rerunning its command shows a failure that breaks the intent. The report lists every verified finding with the adversaries that found it, then what each adversary dropped and why, and applies nothing.
 
 Read the Dropped list too. You can override the verdict.
 
@@ -76,7 +76,7 @@ Read the Dropped list too. You can override the verdict.
 
 [`/council`](../../skills/council/SKILL.md) seats one strong model from each provider your harness can reach, such as Claude and GPT, and gives each the same request, read-only. Each member returns its findings and a score out of 10. The lead agent checks every finding against the code, fixes what blocks, lists the rest as follow-ups, and asks for a review of the fixes until no member has a blocking finding, for at most three rounds.
 
-The two reviews differ. `/interrogate` reports only the bugs a run proves, and fixes nothing. `/council` also covers approach and readability, and it makes the fixes. It needs a harness that can run other providers' models, such as T3 Code or Cursor. Set the seats with a `council` line in your model config.
+The two reviews differ. `/interrogate` reports only the bugs a run proves, and fixes nothing. `/council` also covers approach and readability, and it makes the fixes. It needs a harness that can run other providers' models, such as T3 Code or Cursor. Set the seats with a `council` line in the harness file's model config.
 
 ## Prototype instead of debating
 

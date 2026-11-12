@@ -4,7 +4,7 @@ jstack works best when you stop micromanaging the agent. You describe what you w
 
 Here's what you'll learn:
 
-1. [Set up jstack](./01-setup.md). Install the plugin and pick your models.
+1. [Set up jstack](./01-setup.md). Install the plugin and run setup.
 2. [Route work through `/vrub-mode`](./02-vrub-mode.md). Give it a goal and watch it pick a playbook.
 3. [Understand the code](./03-understand.md). A read-only investigation, then `/how`, `/why`, `/teach`, and `/recall` before you edit anything.
 4. [Design the change](./04-design.md). `/architect`, `/arena`, `/swarm`, `/interrogate`, `/council`, prototypes, and plans before code locks in a shape.

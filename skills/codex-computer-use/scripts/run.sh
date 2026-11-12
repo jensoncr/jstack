@@ -67,13 +67,9 @@ task=$1 out=$2
 [ -s "$task" ] || die "task file $task is missing or empty" 66
 prompt=$(cat "$HERE/preamble.md" && printf '\n## Task\n\n' && cat "$task") || die "cannot read the run rules in $HERE/preamble.md or the task file $task" 66
 
-# The `computer use` role line in the jstack model config, e.g. `computer use: gpt-6.1-sol@high`.
+# The `computer use` role line in the harness config, e.g. `computer use: gpt-6.1-sol@high`.
 if [ -z "$model" ]; then
-  for config in ./jstack-models.md "$HOME/.claude/jstack-models.md" "$CODEX_HOME_DIR/jstack-models.md" "$HOME/.cursor/rules/jstack-models.mdc"; do
-    [ -f "$config" ] || continue
-    token=$(sed -n 's/^computer use:[[:space:]]*\([^[:space:]]*\).*/\1/p' "$config" | head -1)
-    if [ -n "$token" ]; then break; fi
-  done
+  token=$(sed -n 's/^computer use:[[:space:]]*\([^[:space:]]*\).*/\1/p' "$HERE/../../vrub-mode/references/models.md" 2>/dev/null | head -1)
   token=${token:-gpt-6.1-sol@high}
   model=${token%@*}
   if [ "$token" != "$model" ]; then effort=${effort:-${token#*@}}; fi

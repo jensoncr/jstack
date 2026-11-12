@@ -2,48 +2,9 @@
 
 Use this adapter when the host identifies itself as Codex. Read [the shared capability guide](README.md) first. Desktop, CLI, and hosted sessions expose different tool schemas; absent optional tools do not mean this is a different host.
 
-## Model config
+## Model tokens
 
-User file: `~/.codex/jstack-models.md`, optionally referenced from `~/.codex/AGENTS.md`. Read it when present. Model configuration does not establish tool capabilities. `/setup-jstack` writes role choices; custom agent profiles are needed only on hosts that select configured profiles through `agent_type`.
-
-Model tokens are `<model>@<reasoning effort>`. The model is a Codex model id (`gpt-6.1-sol`, `gpt-6-luna`, or whatever `/model` lists), and the effort must be supported by that model in the current session. A token without `@` uses the model's default effort.
-
-Defaults when no config exists:
-
-```
-harness: codex
-
-## Tiers
-strong: gpt-6.1-sol@xhigh
-fast: gpt-6.1-sol@high
-panel: gpt-6.1-sol@xhigh, gpt-6.1-sol@high
-judge: gpt-6.1-sol@xhigh
-
-## Roles
-feature, refactoring: strong
-bug-fix: strong
-perf-issue: strong
-hillclimb: strong
-hardest tasks: strong
-judgment and prose: strong
-how explorer: fast
-how explainer: strong
-why investigators: fast
-why synthesizer: strong
-reflect tooling: fast
-reflect judgment, divergent, synthesizer: strong
-arena runners: panel
-arena cross-judge: judge
-swarm workers: fast
-architect runners: panel
-interrogate reviewers: panel
-trail reviewer: judge
-orchestrate verifier: judge
-recall workers: fast
-computer use: gpt-6.1-sol@high
-```
-
-One family and often one model, so the rules in `../models.md` under "Panels on a single-family harness" apply. `judge` is a fixed token here because `differs-from-parent` cannot be satisfied.
+The config is in [`../models.md`](../models.md#config). A `codex` seat runs natively on the spawn tool: pass the model id as its model and the effort as its reasoning field, or omit the effort to use the model's default. Any other provider's seat uses the `another provider's model` verb below.
 
 ## Vocabulary
 

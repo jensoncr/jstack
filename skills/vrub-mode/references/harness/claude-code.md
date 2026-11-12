@@ -2,48 +2,9 @@
 
 Use this adapter when the host identifies itself as Claude Code. Read [the shared capability guide](README.md) first. The mappings below are examples; tool names and optional arguments vary between versions.
 
-## Model config
+## Model tokens
 
-User file: `~/.claude/jstack-models.md`, imported into context by a `@~/.claude/jstack-models.md` line in `~/.claude/CLAUDE.md`. `/setup-jstack` writes both.
-
-Model tokens are the `Agent` tool's `model` aliases. jstack uses `opus` only; `fable`, `sonnet`, and `haiku` are never written by default. Single-model panels get split lenses per `../models.md`.
-
-Defaults when no config exists:
-
-```
-harness: claude-code
-
-## Tiers
-strong: opus
-fast: opus
-panel: opus, opus
-judge: opus
-
-## Roles
-feature, refactoring: strong
-bug-fix: strong
-perf-issue: strong
-hillclimb: strong
-hardest tasks: strong
-judgment and prose: strong
-how explorer: fast
-how explainer: strong
-why investigators: fast
-why synthesizer: strong
-reflect tooling: fast
-reflect judgment, divergent, synthesizer: strong
-arena runners: panel
-arena cross-judge: judge
-swarm workers: fast
-architect runners: panel
-interrogate reviewers: panel
-trail reviewer: judge
-orchestrate verifier: judge
-recall workers: fast
-computer use: gpt-6.1-sol@high
-```
-
-The panel is one family, so the rules in `../models.md` under "Panels on a single-family harness" apply. Lengthen the `panel` list to add reviewers; repeats get split lenses.
+The config is in [`../models.md`](../models.md#config). A `claudeAgent` seat runs natively on the `Agent` tool: pass the model's family as `model` (`claude-fable-5-2` is `fable`, `claude-opus-5-5` is `opus`) and the effort as `effort` when the tool takes it. Any other provider's seat uses the `another provider's model` verb below.
 
 ## Skill visibility
 
