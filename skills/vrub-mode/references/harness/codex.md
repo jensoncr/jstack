@@ -2,54 +2,15 @@
 
 Use this adapter when the host identifies itself as Codex. Read [the shared capability guide](README.md) first. Desktop, CLI, and hosted sessions expose different tool schemas; absent optional tools do not mean this is a different host.
 
-## Model config
+## Model tokens
 
-User file: `~/.codex/jstack-models.md`, optionally referenced from `~/.codex/AGENTS.md`. Read it when present. Model configuration does not establish tool capabilities. `/setup-jstack` writes role choices; custom agent profiles are needed only on hosts that select configured profiles through `agent_type`.
-
-Model tokens are `<model>@<reasoning effort>`. The model is a Codex model id (`gpt-6.1-sol`, `gpt-6-luna`, or whatever `/model` lists), and the effort must be supported by that model in the current session. A token without `@` uses the model's default effort.
-
-Defaults when no config exists:
-
-```
-harness: codex
-
-## Tiers
-strong: gpt-6.1-sol@xhigh
-fast: gpt-6.1-sol@high
-panel: gpt-6.1-sol@xhigh, gpt-6.1-sol@high
-judge: gpt-6.1-sol@xhigh
-
-## Roles
-feature, refactoring: strong
-bug-fix: strong
-perf-issue: strong
-hillclimb: strong
-hardest tasks: strong
-judgment and prose: strong
-how explorer: fast
-how explainer: strong
-why investigators: fast
-why synthesizer: strong
-reflect tooling: fast
-reflect judgment, divergent, synthesizer: strong
-arena runners: panel
-arena cross-judge: judge
-swarm workers: fast
-architect runners: panel
-interrogate reviewers: panel
-trail reviewer: judge
-orchestrate verifier: judge
-recall workers: fast
-computer use: gpt-6.1-sol@high
-```
-
-One family and often one model, so the rules in `../models.md` under "Panels on a single-family harness" apply. `judge` is a fixed token here because `differs-from-parent` cannot be satisfied.
+The config is in [`../models.md`](../models.md#config). A `codex` seat runs natively on `spawn_agent`: pass `model`, and `reasoning_effort` when the seat has `@<effort>`. Always pass `model`, because with neither field the child copies the parent's model and effort, or the `[agents]` defaults in the user's config. Start every seat without parent history (`fork_turns: "none"` in v2, no `fork_context` in v1) so a panel or judge seat stays independent. Don't pass `agent_type` with a seat's `model`, because a role that sets a model wins. A spawn error that lists available models means the seat can't run here. Confirm the served model from the child's rollout under `~/.codex/sessions/`. Codex runs at most 6 threads at once and nests one level deep, so a child can't spawn its own. Any other provider's seat uses the `another provider's model` verb below.
 
 ## Vocabulary
 
 | jstack says | Codex |
 |---|---|
-| spawn a subagent | Use the exposed native spawn tool, commonly `spawn_agent`, and its current schema. Do not require config edits when the tool is already available. |
+| spawn a subagent | Use the exposed native spawn tool, commonly `spawn_agent` (`multi_agent_v1.spawn_agent` on v1, where it may sit behind tool search, so load it first), and its current schema. Do not require config edits when the tool is already available. |
 | general-purpose subagent | Use the default role, or a supported `agent_type` if the schema offers it. |
 | named agent | Use a registered agent only when the host exposes it; otherwise give a general-purpose agent the named agent file as its brief. |
 | model | Prefer supported `model` and reasoning fields. On hosts that expose only `agent_type`, use a confirmed configured profile. Otherwise inherit the parent and disclose any unavailable requested override. Respect restrictions on model overrides when forking full history. |
@@ -63,7 +24,7 @@ One family and often one model, so the rules in `../models.md` under "Panels on 
 | skill invocation | Select the exposed plugin skill by name; CLI and IDE commonly support `$<skill-name>`. Use the host's actual namespacing. |
 | transcripts | Use the current task's supplied transcript location or read-task tool; CLI sessions commonly live under `~/.codex/sessions/`. |
 | project skills dir | `.agents/skills/` |
-| another provider's model | T3 Code's `delegate_task`, after `orchestrator_capabilities` lists the providers, when the session has them; none in plain Codex. A `council` seat is `<provider>/<model>[@<effort>]`, with the ids `orchestrator_capabilities` reports. |
+| another provider's model | T3 Code's `delegate_task`, after `orchestrator_capabilities` lists the providers, when the session has them; none in plain Codex. A `council` seat is `<provider>/<model>[@<effort>]`, where the provider is a `driverKind` from `orchestrator_capabilities` (see `../models.md`). |
 
 ## Continuing a watch
 

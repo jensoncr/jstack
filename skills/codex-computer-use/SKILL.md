@@ -55,7 +55,7 @@ Approving an app also lets Codex desktop sessions use it without asking. Change 
 
 ## Model
 
-The `computer use` role line in the jstack model config sets the Codex model token, for example `computer use: gpt-6.1-sol@high`. It is always a Codex token, whatever harness calls the script. Without a line, the script uses the default in [models](../vrub-mode/references/models.md). `--model` and `--effort` override both.
+The `computer use` role line in the jstack model config sets the Codex model token, for example `computer use: gpt-6.1-sol@high`. It is always a Codex token, whatever harness calls the script. The script reads it from [the model config](../vrub-mode/references/models.md#config). `--model` and `--effort` override it.
 
 ## Safety
 

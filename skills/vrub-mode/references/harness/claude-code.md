@@ -2,48 +2,9 @@
 
 Use this adapter when the host identifies itself as Claude Code. Read [the shared capability guide](README.md) first. The mappings below are examples; tool names and optional arguments vary between versions.
 
-## Model config
+## Model tokens
 
-User file: `~/.claude/jstack-models.md`, imported into context by a `@~/.claude/jstack-models.md` line in `~/.claude/CLAUDE.md`. `/setup-jstack` writes both.
-
-Model tokens are the `Agent` tool's `model` aliases. jstack uses `opus` only; `fable`, `sonnet`, and `haiku` are never written by default. Single-model panels get split lenses per `../models.md`.
-
-Defaults when no config exists:
-
-```
-harness: claude-code
-
-## Tiers
-strong: opus
-fast: opus
-panel: opus, opus
-judge: opus
-
-## Roles
-feature, refactoring: strong
-bug-fix: strong
-perf-issue: strong
-hillclimb: strong
-hardest tasks: strong
-judgment and prose: strong
-how explorer: fast
-how explainer: strong
-why investigators: fast
-why synthesizer: strong
-reflect tooling: fast
-reflect judgment, divergent, synthesizer: strong
-arena runners: panel
-arena cross-judge: judge
-swarm workers: fast
-architect runners: panel
-interrogate reviewers: panel
-trail reviewer: judge
-orchestrate verifier: judge
-recall workers: fast
-computer use: gpt-6.1-sol@high
-```
-
-The panel is one family, so the rules in `../models.md` under "Panels on a single-family harness" apply. Lengthen the `panel` list to add reviewers; repeats get split lenses.
+The config is in [`../models.md`](../models.md#config). A `claudeAgent` seat runs natively on the `Agent` tool: pass the seat's family alias as `model` (`fable`, `opus`). An alias runs the newest model in its family. Pass `effort` only when the tool schema lists it (Claude Code 2.1.292 or later). When the seat has `@<effort>` and the tool has no `effort`, use the `another provider's model` verb if the session has it; otherwise run natively and report the effort as not applied. A set `CLAUDE_CODE_EFFORT_LEVEL` overrides every subagent's effort, so report that too. A blocked model falls back without failing, so confirm the served model from the subagent's transcript, under `~/.claude/projects/<slug>/<session>/subagents/`. Any other provider's seat uses the `another provider's model` verb below.
 
 ## Skill visibility
 
@@ -55,7 +16,7 @@ Claude Code hard-blocks the Skill tool on any skill with `disable-model-invocati
 |---|---|
 | spawn a subagent | `Agent` tool |
 | general-purpose subagent | `subagent_type: "general-purpose"` |
-| named agent (`vrub-agent`, `comment-sicko`) | `subagent_type: "<name>"` from the plugin's `agents/` |
+| named agent (`vrub-agent`, `comment-sicko`) | `subagent_type: "jstack:<name>"` from the plugin's `agents/` |
 | model | `model: "<token>"`; omit for `inherit-parent` |
 | read-only | `subagent_type: "Explore"` (no Edit or Write, keeps MCP), or tell a general-purpose agent to write nothing |
 | background | `run_in_background: true` |
@@ -67,4 +28,4 @@ Claude Code hard-blocks the Skill tool on any skill with `disable-model-invocati
 | skill invocation | `Skill` tool, or `/jstack:<skill>` when installed as a plugin |
 | transcripts | `~/.claude/projects/<slug>/*.jsonl` (slug is the project path with `/` replaced by `-`) |
 | project skills dir | `.claude/skills/` |
-| another provider's model | T3 Code's `delegate_task`, after `orchestrator_capabilities` lists the providers, when the session has them; none in plain Claude Code. A `council` seat is `<provider>/<model>[@<effort>]`, with the ids `orchestrator_capabilities` reports. |
+| another provider's model | T3 Code's `delegate_task`, after `orchestrator_capabilities` lists the providers, when the session has them; none in plain Claude Code. A `council` seat is `<provider>/<model>[@<effort>]`, where the provider is a `driverKind` from `orchestrator_capabilities` (see `../models.md`). |

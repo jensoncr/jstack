@@ -2,46 +2,9 @@
 
 Use this adapter when the host identifies itself as Cursor. Read [the shared capability guide](README.md) first. The mappings below are examples; use only the tools and arguments advertised by the current session.
 
-## Model config
+## Model tokens
 
-User file: `~/.cursor/rules/jstack-models.mdc` with `alwaysApply: true`, so it is in context every session. `/setup-jstack` writes it.
-
-Model tokens are Cursor model picker slugs, exactly as the `Task` tool accepts them.
-
-Defaults when no config exists:
-
-```
-harness: cursor
-
-## Tiers
-strong: claude-opus-5-5-max
-fast: grok-4.7-xhigh-fast
-panel: claude-opus-5-5-max, gpt-6.1-sol-max, grok-4.7-xhigh-fast
-judge: differs-from-parent
-
-## Roles
-feature, refactoring: strong
-bug-fix: strong
-perf-issue: strong
-hillclimb: strong
-hardest tasks: strong
-judgment and prose: strong
-how explorer: fast
-how explainer: strong
-why investigators: fast
-why synthesizer: strong
-reflect tooling: gpt-6.1-sol-max
-reflect judgment, divergent, synthesizer: strong
-arena runners: panel
-arena cross-judge: judge
-swarm workers: fast
-architect runners: panel
-interrogate reviewers: panel
-trail reviewer: judge
-orchestrate verifier: judge
-recall workers: fast
-computer use: gpt-6.1-sol@high
-```
+The config is in [`../models.md`](../models.md#config). Cursor's `Task` tool runs every provider's models, so every seat runs natively: pass the model picker slug for that model and effort, such as `claude-opus-5-5-max` for `claudeAgent/opus@max` while Opus 5.5 is the newest Opus. With no effort, use the model's default slug. Inside T3 Code, the README's T3 route wins.
 
 ## Vocabulary
 

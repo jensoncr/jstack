@@ -45,12 +45,12 @@ npx skills add jensoncr/jstack
 
 two steps:
 
-1. run [`/setup-jstack`](./skills/setup-jstack/SKILL.md) and choose which models you want.
+1. run [`/setup-jstack`](./skills/setup-jstack/SKILL.md) once per machine.
 2. use [`/vrub-mode`](./skills/vrub-mode/SKILL.md) whenever you're doing anything that requires rigor.
 
 new here? the [jstack guide](./docs/guide/README.md) walks you through a first real task, from setup and prompting through verification and overnight runs. stuck, or unsure which skill fits? ask [`/vrub-help`](./skills/vrub-help/SKILL.md).
 
-that's it. the other skills are situational; the mode skill uses them for you as needed. out of the box the mode splits work by tier: `strong` for judgment, prose, and all delegated code, `fast` for exploration and verification fan-out, `panel` for reviewers, `judge` for the independent grader. each harness maps tiers to the models it can spawn: on cursor that is opus 5.5 / sol / grok 4.7, on claude code it is opus for every tier, on codex it is gpt-6.1 sol at two reasoning levels. [`/setup-jstack`](./skills/setup-jstack/SKILL.md) changes any of it.
+that's it. the other skills are situational; the mode skill uses them for you as needed. out of the box the mode splits work by tier: `strong` for judgment, prose, and all delegated code, `fast` for exploration and verification fan-out, `panel` for reviewers, `judge` for the independent grader. one [model config](./skills/vrub-mode/references/models.md#config) serves every harness: fable for `strong`, opus for `fast`, a panel of fable, opus, and gpt-6.1 sol, and a judge from a different provider than your chat. seats on another provider run through t3 code's cross-provider delegation; fork jstack to change any of it.
 
 ## usage
 
@@ -158,7 +158,7 @@ long-running work uses the host's available loop or scheduled continuation. the 
 | [`/interrogate`](./skills/interrogate/SKILL.md) | you have a diff and want a panel of adversaries to try to break it, keeping only findings a run proves. |
 | [`/council`](./skills/council/SKILL.md) | you want review or feedback from models from different providers, such as claude and gpt, fixed and re-reviewed until none of them has a blocking finding. needs a harness that can run other providers' models, such as t3 code. |
 | [`/automate-me`](./skills/automate-me/SKILL.md) | you want your own `-mode` skill, drafted from how you've actually worked. |
-| [`/setup-jstack`](./skills/setup-jstack/SKILL.md) | you want to pick which models jstack uses per role. detects your harness and models and writes a config file. |
+| [`/setup-jstack`](./skills/setup-jstack/SKILL.md) | you're setting up jstack on a machine. turns on the codex question picker and offers verification skills. |
 | [`/reflect`](./skills/reflect/SKILL.md) | a long task landed and you want the recipe captured as a skill edit. |
 | [`/correct`](./skills/correct/SKILL.md) | you keep correcting agents for the same mistakes. mines history for mistake classes, fixes each at the highest level that works (architecture, then types, lint, and ci, then tests, with docs last), and keeps a table pairing each rule with what enforces it. |
 | [`/teach`](./skills/teach/SKILL.md) | you want to actually understand a change or subsystem, not just have it summarized. runs how + why and weaves one plain explanation, built up diagram by diagram. |
@@ -285,9 +285,7 @@ twenty-four short skills, one principle each. `vrub-mode` indexes them inline an
 
 type [`/automate-me`](./skills/automate-me/SKILL.md). it mines your recent transcripts, drafts a `<your-name>-mode` skill from how you've actually worked, and routes through jstack underneath. you keep jstack as the base and end up with your own routing skill alongside `vrub-mode`.
 
-models are configurable too. type [`/setup-jstack`](./skills/setup-jstack/SKILL.md). it detects your harness (cursor, claude code, or codex) and the models it can spawn, then writes a small always-loaded config mapping tiers to models and roles to tiers. every skill reads it and falls back to the harness defaults when a line is absent, so you override only what you want.
-
-a rerun starts from your current config and drops lines for retired roles, such as `how critics`.
+models are set in one place: the [model config](./skills/vrub-mode/references/models.md#config), mapping tiers to `<provider>/<model>@<effort>` seats and roles to tiers. it serves every harness, and there is no per-user override, so every machine and session runs the same choices. to pick different models, fork jstack and edit that block.
 
 ## maintaining
 

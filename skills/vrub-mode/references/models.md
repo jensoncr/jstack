@@ -11,11 +11,11 @@ Every jstack delegation names a **role** and its **tier**. Read [the harness gui
 | `panel` | Independent reviewers or runners. One subagent per entry, so the list length sets the count. Repeats are allowed. | list |
 | `judge` | The one independent reviewer that grades or verifies another agent's work. | one model, or `differs-from-parent` |
 
-`differs-from-parent` means the first `panel` entry from a model family other than the parent chat's, such as another vendor's model. With no entry from another family, it means the first entry whose model differs from the parent's. When every entry matches the parent, use the first entry and say so in the reply. A judge from the parent's own family is same-model, medium signal, as in the panel rules below.
+`differs-from-parent` means the first `panel` entry whose provider is not the parent chat's. With no such entry that can run, it means the first entry whose model differs from the parent's. When every entry matches the parent, use the first entry and say so in the reply. A judge from the parent's own provider is medium signal, as in the panel rules below.
 
 ## Roles
 
-One line per role in the config. A value is a tier name, a model token, a list of model tokens, or the alias `inherit-parent` (`auto` means the same), which runs the role on the parent chat model by omitting the model field. Delete a line to fall back to the tier the skill names.
+One line per role in the config. A value is a tier name, a seat, a list of seats, or the alias `inherit-parent` (`auto` means the same), which runs the role on the parent chat model by omitting the model field. Delete a line to fall back to the tier the skill names.
 
 | Role | Tier | Consumer |
 |---|---|---|
@@ -42,20 +42,62 @@ One line per role in the config. A value is a tier name, a model token, a list o
 | `computer use` | Codex token | codex-computer-use |
 | `council` | none | council |
 
-`council` lists one seat per provider, in the form your harness file gives for `another provider's model`. Step 4 below never substitutes a council seat: one that can't run is reported. With no line, the council skill seats the newest flagship of each provider the host can run, so list the seats you want to leave a provider out.
+`council` lists one seat per provider. Step 4 below never substitutes a council seat: one that can't run is reported. With no line, the council skill seats the newest flagship of each provider the host can run, so list the seats you want to leave a provider out.
 
 `computer use` is always a Codex `<model>@<effort>` token, whatever the harness, because the run goes through the codex CLI that ships inside ChatGPT.app. Its default is `gpt-6.1-sol@high`.
 
+## Seats
+
+A model token is a seat: `<provider>/<model>[@<effort>]`, such as `claudeAgent/fable` or `codex/gpt-6.1-sol@high`. The provider is a T3 Code `driverKind` (`claudeAgent`, `codex`), never a provider instance id, because instance ids differ between machines and projects (`claudeAgent` on one, `claudeAgent_2` on another). Every seat in the config pins its effort with `@<effort>`, because without it the effort depends on the route and the host: the provider's catalog default (`low` for `gpt-6.1-sol`), a separate catalog default for subagents, the user's own config, or, for a T3 child on your own instance and model, your effort. Keep the pin on any seat you add. One config serves every harness, because each harness file says how to start a seat.
+
+A `claudeAgent` seat names a family alias (`fable`, `opus`), which runs the newest model in that family on every route: Claude Code's `Agent` tool takes the alias, and T3 resolves it through its model catalog. Codex has no family aliases, so a `codex` seat names an exact model id; update it here when a new model ships.
+
+## Config
+
+The one config every jstack skill reads, on every harness and machine. There is no per-user or per-repository override: change a model by editing this block.
+
+```
+## Tiers
+strong: claudeAgent/fable@high
+fast: claudeAgent/opus@medium
+panel: claudeAgent/fable@high, claudeAgent/opus@high, codex/gpt-6.1-sol@high
+judge: differs-from-parent
+
+## Roles
+feature, refactoring: strong
+bug-fix: strong
+perf-issue: strong
+hillclimb: strong
+hardest tasks: strong
+judgment and prose: strong
+how explorer: fast
+how explainer: strong
+why investigators: fast
+why synthesizer: strong
+reflect tooling: fast
+reflect judgment, divergent, synthesizer: strong
+arena runners: panel
+arena cross-judge: judge
+swarm workers: fast
+architect runners: panel
+interrogate reviewers: panel
+trail reviewer: judge
+orchestrate verifier: judge
+recall workers: fast
+computer use: gpt-6.1-sol@high
+council: claudeAgent/fable@high, codex/gpt-6.1-sol@high
+```
+
 ## Resolving a role
 
-1. Find the config. If a jstack model table is already in context (the always-applied rule on Cursor, the `CLAUDE.md` import on Claude Code, the `AGENTS.md` pointer on Codex), use it. Otherwise read the user file at the path your harness file names. A `jstack-models.md` at the repository root overrides the user file only when its `harness:` line matches the harness you are running in; a root file for another harness is ignored, since its tokens are not spawnable here. If neither exists, use the defaults in your harness file.
+1. Find the config. It is the block under [Config](#config).
 2. Look up the role line. A tier name resolves through the `Tiers` section of the same config. A model token or list is used as written. `inherit-parent` or `auto` omits the model field; never treat these aliases as broken tokens.
 3. A role with no line uses the tier the skill names, resolved through the config's `Tiers` section.
-4. Validate the token and effort against the current host's advertised options. If an optional configured token is unavailable, use an available model appropriate to the role or inherit the parent and disclose the substitution. If the user requires a particular model or independent model diversity, report that unmet requirement instead of substituting. Do not change global configuration or launch another CLI to evade host restrictions.
+4. Start the seat. Use the native subagent tool when the seat's provider is the host's and that tool can pass everything the seat names, as your harness file maps it. Otherwise use the `another provider's model` verb in your harness file. Validate the model and effort against what the route advertises. Before reporting a seat's model, confirm the model that served it, as your harness file says; report a seat you can't confirm as unconfirmed. If a seat can't run inside T3 Code, report it and don't substitute unless the user asked for a fallback. Elsewhere, use an available model appropriate to the role or inherit the parent and disclose the substitution. If the user requires a particular model or independent model diversity, report that unmet requirement instead of substituting. Do not change global configuration or launch another CLI to evade host restrictions.
 
-## Panels on a single-family harness
+## Panels with one provider
 
-A panel exists to surface independent blind spots. On Cursor the entries are different vendors. On Claude Code or Codex the list repeats one family, so:
+A panel exists to surface independent blind spots, so the config's panel spans providers. A host with no `another provider's model` verb, such as plain Claude Code or Codex, can run only its own provider's seats. The other seats fall back per step 4, the list repeats one provider, and:
 
 - Give every repeated model a distinct lens taken from the skill's rubric (split the rubric's sections across the repeats), or the split the skill names. Do not assign personas.
 - Agreement between distinct models is high-signal. Agreement between same-model lenses is medium-signal. Say which one the report is counting.

@@ -21,7 +21,7 @@ State the user's goal and the intent of the work with the **in-your-own-words** 
 
 Each seat is on a different provider, at high reasoning effort unless the config gives another. Two seats is the minimum. Never fill a seat with a second model from a provider that already has one, and never substitute for a member the user named or the config lists. Report each seat that can't run. If fewer than two providers can run, say so and stop.
 
-Start every seat with the `another provider's model` verb in your harness file under the vrub-mode skill's `references/harness/`, your own provider's seat included, so each seat runs the model and effort it was given. Start them all in parallel. A host without that verb can seat only its own provider, so the council can't meet there. Report that, and never launch another CLI to get around it.
+Start every seat with the `another provider's model` verb in your harness file under the vrub-mode skill's `references/harness/`, your own provider's seat included, so each seat runs the model and effort it was given. Start them all in parallel. A delegated child runs a council only when its brief tells it to start the seats, since T3 tells children to start no subagents otherwise. A host without that verb can seat only its own provider, so the council can't meet there. Report that, and never launch another CLI to get around it.
 
 ## Brief the members
 
@@ -56,7 +56,7 @@ Stop after three rounds. If round 3 still has a blocking finding, don't start a 
 
 Open the final reply with the user's goal. Then give:
 
-- the seats (provider and model),
+- the seats (provider and model), and whether each seat's model was confirmed or unconfirmed,
 - each round's scores,
 - what you fixed,
 - what you dismissed and why,

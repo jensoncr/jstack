@@ -11,8 +11,7 @@ import { fileURLToPath } from "node:url";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const PSTACK = ROOT;
 const GUIDE = "docs/guide";
-const HARNESS = join(PSTACK, "skills", "vrub-mode", "references", "harness");
-const SETUP_FILES = [join(PSTACK, "skills", "setup-jstack", "SKILL.md"), ...readdirSync(HARNESS).filter((name) => name.endsWith(".md")).map((name) => join(HARNESS, name))];
+const SETUP_FILES = [join(PSTACK, "skills", "vrub-mode", "references", "models.md")];
 
 // Commands that ship with Cursor or Claude Code, not in this repository. Nothing here can verify them, so add a name
 // only after a public Cursor or Claude Code doc shows it.
@@ -115,11 +114,11 @@ for (const [doc, body] of text) {
     if (!agents.includes(name)) fail(doc, index, `names subagent_type "${name}", which agents/ does not ship`);
   }
   for (const { 0: id, index } of body.matchAll(MODEL_ID)) {
-    if (!setup.includes(id)) fail(doc, index, `names model ${id}, which setup-jstack and the harness files do not use`);
+    if (!setup.includes(id)) fail(doc, index, `names model ${id}, which models.md does not use`);
   }
   for (const { 0: match, 1: family, 2: version, index } of body.matchAll(MODEL_PROSE)) {
     const prefix = family.toLowerCase() === "grok" ? `grok-${version}` : `claude-${family.toLowerCase()}-${version.replace(".", "-")}`;
-    if (!setup.includes(prefix)) fail(doc, index, `says "${match}", but setup-jstack and the harness files have no ${prefix} default`);
+    if (!setup.includes(prefix)) fail(doc, index, `says "${match}", but models.md has no ${prefix} default`);
   }
 }
 

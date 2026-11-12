@@ -27,7 +27,7 @@ Skip Phase A only when the work is genuinely greenfield with no surrounding syst
 
 Run the **arena** skill with the design-sketch task and the Phase A grounding artifacts. Pass `references/runner-prompt.md` as each runner's prompt.
 
-Runners resolve from `architect runners` (tier `panel`) per the vrub-mode skill's `references/models.md`, in place of `arena runners`. On a single-family harness, give each repeated entry a distinct design constraint.
+Runners resolve from `architect runners` (tier `panel`) per the vrub-mode skill's `references/models.md`, in place of `arena runners`. On a host that runs only one provider, give each repeated entry a distinct design constraint.
 
 Design it twice. Require at least two structurally distinct candidates before synthesis, even when the first looks sufficient. This is the **exhaust-the-design-space** principle skill made concrete. Whole-shape alternatives, not point fixes inside one shape.
 
