@@ -4,13 +4,13 @@ Use this adapter when the host identifies itself as Codex. Read [the shared capa
 
 ## Model tokens
 
-The config is in [`../models.md`](../models.md#config). A `codex` seat runs natively on the spawn tool: pass the model id as its model and the effort as its reasoning field, or omit the effort to use the model's default. Any other provider's seat uses the `another provider's model` verb below.
+The config is in [`../models.md`](../models.md#config). A `codex` seat runs natively on `spawn_agent`: pass `model`, and `reasoning_effort` when the seat has `@<effort>`. Always pass `model`, because with neither field the child copies the parent's model and effort, or the `[agents]` defaults in the user's config. Start every seat without parent history (`fork_turns: "none"` in v2, no `fork_context` in v1) so a panel or judge seat stays independent. Don't pass `agent_type` with a seat's `model`, because a role that sets a model wins. A spawn error that lists available models means the seat can't run here. Confirm the served model from the child's rollout under `~/.codex/sessions/`. Codex runs at most 6 threads at once and nests one level deep, so a child can't spawn its own. Any other provider's seat uses the `another provider's model` verb below.
 
 ## Vocabulary
 
 | jstack says | Codex |
 |---|---|
-| spawn a subagent | Use the exposed native spawn tool, commonly `spawn_agent`, and its current schema. Do not require config edits when the tool is already available. |
+| spawn a subagent | Use the exposed native spawn tool, commonly `spawn_agent` (`multi_agent_v1.spawn_agent` on v1, where it may sit behind tool search, so load it first), and its current schema. Do not require config edits when the tool is already available. |
 | general-purpose subagent | Use the default role, or a supported `agent_type` if the schema offers it. |
 | named agent | Use a registered agent only when the host exposes it; otherwise give a general-purpose agent the named agent file as its brief. |
 | model | Prefer supported `model` and reasoning fields. On hosts that expose only `agent_type`, use a confirmed configured profile. Otherwise inherit the parent and disclose any unavailable requested override. Respect restrictions on model overrides when forking full history. |

@@ -48,7 +48,7 @@ One line per role in the config. A value is a tier name, a seat, a list of seats
 
 ## Seats
 
-A model token is a seat: `<provider>/<model>[@<effort>]`, such as `claudeAgent/claude-fable-5-2` or `codex/gpt-6.1-sol@high`. The provider is a `driverKind` from T3 Code's `orchestrator_capabilities`, not a provider instance id, because instance ids differ between machines (`claudeAgent` on one, `claudeAgent_2` on another). Run the seat on an instance of that driver kind that can run child tasks. A seat without `@` uses the model's default effort. One config serves every harness, because each harness file says how to start a seat.
+A model token is a seat: `<provider>/<model>[@<effort>]`, such as `claudeAgent/claude-fable-5-2` or `codex/gpt-6.1-sol@high`. The provider is a T3 Code `driverKind` (`claudeAgent`, `codex`), never a provider instance id, because instance ids differ between machines and projects (`claudeAgent` on one, `claudeAgent_2` on another). Write `@<effort>` to pin a seat's effort. Without it, the effort depends on the route: a native spawn may use the model's default or a host-configured default, and a T3 child on your own instance and model inherits yours. One config serves every harness, because each harness file says how to start a seat.
 
 ## Config
 
@@ -91,7 +91,7 @@ council: claudeAgent/claude-fable-5-2@high, codex/gpt-6.1-sol@high
 1. Find the config. It is the block under [Config](#config).
 2. Look up the role line. A tier name resolves through the `Tiers` section of the same config. A model token or list is used as written. `inherit-parent` or `auto` omits the model field; never treat these aliases as broken tokens.
 3. A role with no line uses the tier the skill names, resolved through the config's `Tiers` section.
-4. Start the seat. When its provider is the host's, use the native subagent tool as your harness file maps it. Otherwise use the `another provider's model` verb in your harness file. Validate the model and effort against what that tool advertises. If a seat can't run, use an available model appropriate to the role or inherit the parent and disclose the substitution. If the user requires a particular model or independent model diversity, report that unmet requirement instead of substituting. Do not change global configuration or launch another CLI to evade host restrictions.
+4. Start the seat. Use the native subagent tool when the seat's provider is the host's and that tool can pass everything the seat names, as your harness file maps it. Otherwise use the `another provider's model` verb in your harness file. Validate the model and effort against what the route advertises. Before reporting a seat's model, confirm the model that served it, as your harness file says; report a seat you can't confirm as unconfirmed. If a seat can't run inside T3 Code, report it and don't substitute unless the user asked for a fallback. Elsewhere, use an available model appropriate to the role or inherit the parent and disclose the substitution. If the user requires a particular model or independent model diversity, report that unmet requirement instead of substituting. Do not change global configuration or launch another CLI to evade host restrictions.
 
 ## Panels with one provider
 

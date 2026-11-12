@@ -17,7 +17,7 @@ Read [the harness guide](../vrub-mode/references/harness/README.md), then the ad
 
 ### 2. Turn on the Codex question picker
 
-Codex only. Codex takes `request_user_input` outside Plan mode only when the `default_mode_request_user_input` feature flag is on. Run `codex features list` to read it. If the flag is listed and off, turn it on: add `default_mode_request_user_input = true` under `[features]` in `~/.codex/config.toml`, keeping every other line. If it is on, or `codex features list` does not list it, change nothing and say which.
+Codex only. Codex takes `request_user_input` outside Plan mode only when the `default_mode_request_user_input` feature flag is on. Run `codex features list` to read it. If the flag is listed and off, turn it on with `codex features enable default_mode_request_user_input`. Say that Codex marks the flag as under development and prints a warning in each session while it is on. If it is on, or `codex features list` does not list it, change nothing and say which.
 
 ### 3. Offer a verification skill (optional)
 

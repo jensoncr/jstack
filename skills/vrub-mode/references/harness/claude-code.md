@@ -4,7 +4,7 @@ Use this adapter when the host identifies itself as Claude Code. Read [the share
 
 ## Model tokens
 
-The config is in [`../models.md`](../models.md#config). A `claudeAgent` seat runs natively on the `Agent` tool: pass the model's family as `model` (`claude-fable-5-2` is `fable`, `claude-opus-5-5` is `opus`) and the effort as `effort` when the tool takes it. Any other provider's seat uses the `another provider's model` verb below.
+The config is in [`../models.md`](../models.md#config). A `claudeAgent` seat runs natively on the `Agent` tool: pass the model's family alias as `model` (`claude-fable-5-2` is `fable`, `claude-opus-5-5` is `opus`). An alias tracks the latest model in its family, so the seat's version is a label, not a pin. Pass `effort` only when the tool schema lists it (Claude Code 2.1.292 or later). When the seat has `@<effort>` and the tool has no `effort`, use the `another provider's model` verb if the session has it; otherwise run natively and report the effort as not applied. A set `CLAUDE_CODE_EFFORT_LEVEL` overrides every subagent's effort, so report that too. A blocked model falls back without failing, so confirm the served model from the subagent's transcript, under `~/.claude/projects/<slug>/<session>/subagents/`. Any other provider's seat uses the `another provider's model` verb below.
 
 ## Skill visibility
 
@@ -16,7 +16,7 @@ Claude Code hard-blocks the Skill tool on any skill with `disable-model-invocati
 |---|---|
 | spawn a subagent | `Agent` tool |
 | general-purpose subagent | `subagent_type: "general-purpose"` |
-| named agent (`vrub-agent`, `comment-sicko`) | `subagent_type: "<name>"` from the plugin's `agents/` |
+| named agent (`vrub-agent`, `comment-sicko`) | `subagent_type: "jstack:<name>"` from the plugin's `agents/` |
 | model | `model: "<token>"`; omit for `inherit-parent` |
 | read-only | `subagent_type: "Explore"` (no Edit or Write, keeps MCP), or tell a general-purpose agent to write nothing |
 | background | `run_in_background: true` |
