@@ -48,9 +48,9 @@ One line per role in the config. A value is a tier name, a seat, a list of seats
 
 ## Seats
 
-A model token is a seat: `<provider>/<model>[@<effort>]`, such as `claudeAgent/claude-fable-5-2` or `codex/gpt-6.1-sol@high`. The provider is a T3 Code `driverKind` (`claudeAgent`, `codex`), never a provider instance id, because instance ids differ between machines and projects (`claudeAgent` on one, `claudeAgent_2` on another). Every seat in the config pins its effort with `@<effort>`, because without it the effort depends on the route and the host: the provider's catalog default (`low` for `gpt-6.1-sol`), a separate catalog default for subagents, the user's own config, or, for a T3 child on your own instance and model, your effort. Keep the pin on any seat you add. One config serves every harness, because each harness file says how to start a seat.
+A model token is a seat: `<provider>/<model>[@<effort>]`, such as `claudeAgent/fable` or `codex/gpt-6.1-sol@high`. The provider is a T3 Code `driverKind` (`claudeAgent`, `codex`), never a provider instance id, because instance ids differ between machines and projects (`claudeAgent` on one, `claudeAgent_2` on another). Every seat in the config pins its effort with `@<effort>`, because without it the effort depends on the route and the host: the provider's catalog default (`low` for `gpt-6.1-sol`), a separate catalog default for subagents, the user's own config, or, for a T3 child on your own instance and model, your effort. Keep the pin on any seat you add. One config serves every harness, because each harness file says how to start a seat.
 
-A native Claude Code spawn takes only a family alias (`fable`, `opus`), which always runs the newest model in that family, so the version in the seat is a label there. A seat started through T3 passes the exact model id, so when a new model ships in a family, update its id here or T3-started seats (council, and Claude seats from a Codex chat) keep the old one.
+A `claudeAgent` seat names a family alias (`fable`, `opus`), which runs the newest model in that family on every route: Claude Code's `Agent` tool takes the alias, and T3 resolves it through its model catalog. Codex has no family aliases, so a `codex` seat names an exact model id; update it here when a new model ships.
 
 ## Config
 
@@ -58,9 +58,9 @@ The one config every jstack skill reads, on every harness and machine. There is 
 
 ```
 ## Tiers
-strong: claudeAgent/claude-fable-5-2@high
-fast: claudeAgent/claude-opus-5-5@medium
-panel: claudeAgent/claude-fable-5-2@high, claudeAgent/claude-opus-5-5@high, codex/gpt-6.1-sol@high
+strong: claudeAgent/fable@high
+fast: claudeAgent/opus@medium
+panel: claudeAgent/fable@high, claudeAgent/opus@high, codex/gpt-6.1-sol@high
 judge: differs-from-parent
 
 ## Roles
@@ -85,7 +85,7 @@ trail reviewer: judge
 orchestrate verifier: judge
 recall workers: fast
 computer use: gpt-6.1-sol@high
-council: claudeAgent/claude-fable-5-2@high, codex/gpt-6.1-sol@high
+council: claudeAgent/fable@high, codex/gpt-6.1-sol@high
 ```
 
 ## Resolving a role
