@@ -24,7 +24,7 @@ The config is in [`../models.md`](../models.md#config). A `codex` seat runs nati
 | skill invocation | Select the exposed plugin skill by name; CLI and IDE commonly support `$<skill-name>`. Use the host's actual namespacing. |
 | transcripts | Use the current task's supplied transcript location or read-task tool; CLI sessions commonly live under `~/.codex/sessions/`. |
 | project skills dir | `.agents/skills/` |
-| another provider's model | T3 Code's `delegate_task`, after `orchestrator_capabilities` lists the providers, when the session has them; none in plain Codex. A `council` seat is `<provider>/<model>[@<effort>]`, with the ids `orchestrator_capabilities` reports. |
+| another provider's model | T3 Code's `delegate_task`, after `orchestrator_capabilities` lists the providers, when the session has them; none in plain Codex. A `council` seat is `<provider>/<model>[@<effort>]`, where the provider is a `driverKind` from `orchestrator_capabilities` (see `../models.md`). |
 
 ## Continuing a watch
 

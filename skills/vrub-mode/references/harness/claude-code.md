@@ -28,4 +28,4 @@ Claude Code hard-blocks the Skill tool on any skill with `disable-model-invocati
 | skill invocation | `Skill` tool, or `/jstack:<skill>` when installed as a plugin |
 | transcripts | `~/.claude/projects/<slug>/*.jsonl` (slug is the project path with `/` replaced by `-`) |
 | project skills dir | `.claude/skills/` |
-| another provider's model | T3 Code's `delegate_task`, after `orchestrator_capabilities` lists the providers, when the session has them; none in plain Claude Code. A `council` seat is `<provider>/<model>[@<effort>]`, with the ids `orchestrator_capabilities` reports. |
+| another provider's model | T3 Code's `delegate_task`, after `orchestrator_capabilities` lists the providers, when the session has them; none in plain Claude Code. A `council` seat is `<provider>/<model>[@<effort>]`, where the provider is a `driverKind` from `orchestrator_capabilities` (see `../models.md`). |

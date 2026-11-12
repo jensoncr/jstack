@@ -48,7 +48,7 @@ One line per role in the config. A value is a tier name, a seat, a list of seats
 
 ## Seats
 
-A model token is a seat: `<provider>/<model>[@<effort>]`, with the provider and model ids that T3 Code's `orchestrator_capabilities` reports, such as `claudeAgent/claude-fable-5-2` or `codex/gpt-6.1-sol@high`. A seat without `@` uses the model's default effort. One config serves every harness, because each harness file says how to start a seat.
+A model token is a seat: `<provider>/<model>[@<effort>]`, such as `claudeAgent/claude-fable-5-2` or `codex/gpt-6.1-sol@high`. The provider is a `driverKind` from T3 Code's `orchestrator_capabilities`, not a provider instance id, because instance ids differ between machines (`claudeAgent` on one, `claudeAgent_2` on another). Run the seat on an instance of that driver kind that can run child tasks. A seat without `@` uses the model's default effort. One config serves every harness, because each harness file says how to start a seat.
 
 ## Config
 
