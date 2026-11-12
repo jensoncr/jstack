@@ -1,6 +1,6 @@
 # jstack
 
-i'm [vrubzy](https://x.com/Vrubzy). jstack is my fork of [pstack](https://github.com/cursor/plugins/tree/main/pstack), lauren tan's engineering-rigor plugin for cursor. much of the skills, playbooks, and principles are hers, but I've made some adaptions to be harness agnostic / fit my workflow. 
+i'm [vrubzy](https://x.com/Vrubzy). jstack is my fork of [pstack](https://github.com/cursor/plugins/tree/main/pstack), lauren tan's engineering-rigor plugin for cursor. much of the skills, playbooks, and principles are hers, but I've made some adaptions to fit my workflow in t3code. 
 
 
 ## install
