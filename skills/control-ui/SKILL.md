@@ -42,6 +42,18 @@ With none of these, say so and name what is missing. Don't add a browser depende
 5. Check that the state changed as expected.
 6. Keep the before-and-after artifacts when the user asked for proof.
 
+## Heap snapshots
+
+A heap snapshot lists every object in a JavaScript program's memory, with its size and what holds it. Use two of them to find a leak. `scripts/heap-snapshot.ts` (next to this file) takes and reads them with no DevTools window.
+
+1. Capture a baseline, repeat the suspected action a few times, then capture again:
+   - **Browser or Electron page:** `bun scripts/heap-snapshot.ts capture "$(agent-browser get cdp-url)" -o before.heapsnapshot`. Add `--target <url part>` when more than one page is open.
+   - **Node process:** start it with `--inspect=127.0.0.1:9229`, then `capture 9229 -o before.heapsnapshot`.
+   - **Bun process:** Bun's debugger does not speak CDP, so the program writes its own snapshot. For a script, put `await Bun.write("before.heapsnapshot", Bun.generateHeapSnapshot("v8"))` before the suspected code and the same line, saving `after.heapsnapshot`, after it. For a server, add `process.on("SIGUSR2", () => Bun.write(`heap-${Date.now()}.heapsnapshot`, Bun.generateHeapSnapshot("v8")))` and run `kill -USR2 <pid>` once per snapshot. This is debugging code: remove it when the diagnosis is done.
+2. Compare: `bun scripts/heap-snapshot.ts summary after.heapsnapshot --base before.heapsnapshot --times <N>`, where `<N>` is how many times the action ran. A leak usually grows by exactly a multiple of `<N>`, so those objects come first, ahead of the browser's own bookkeeping. Then add `--retainers <name>` for one of them. It prints the reference path from the root to the newest instance, and that path names the code that holds the leak. A path that runs only through engine internals (`blink::`, `system /`) and never reaches app code is the engine's bookkeeping, not a leak.
+
+Capture forces garbage collection first, so what remains is reachable. Growth that stays after more repetitions is a leak. Growth that levels off is a cache doing its job.
+
 ## Guardrails
 
 - Don't reuse an element reference after a navigation or a structural change.
