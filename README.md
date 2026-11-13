@@ -178,6 +178,7 @@ long-running work uses the host's available loop or scheduled continuation. the 
 | [`/deslop`](./skills/deslop/SKILL.md) | you're cleaning up code. strips guards the path doesn't need, type escapes, needless nesting, and leftovers from the branch's diff. |
 | [`/control-ui`](./skills/control-ui/SKILL.md) | you need to drive a web, IDE, or Electron UI in a real browser to verify or reproduce something, with screenshots and logs as evidence. |
 | [`/control-cli`](./skills/control-cli/SKILL.md) | you need to drive a CLI or TUI through tmux or a pseudo-terminal to verify or reproduce something, with the transcript as evidence. |
+| [`/explainer-video`](./skills/explainer-video/SKILL.md) | you want to really understand a concept, from caching to how a rocket reaches orbit. researches it, designs the explanation, and renders a narrated 2d diagram video or a 3d one, voiced by elevenlabs with word-synced subtitles. |
 | [`/bro`](./skills/bro/SKILL.md) | you want the last message restated in plain human language, no jargon. |
 | [`/technical-writing`](./skills/technical-writing/SKILL.md) | layered doc standard (Diátaxis + Google developer style + STE + Global English) for docs, RFCs, readmes, PR descriptions, commit messages. |
 
