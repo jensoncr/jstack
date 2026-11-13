@@ -1,6 +1,6 @@
 ---
 name: explainer-video
-description: "Teach a concept with a narrated explainer video, from caching to heaps to how a rocket reaches orbit. Researches the concept, designs the explanation, and renders it as a 2D diagram video (HyperFrames) or a 3D one (Remotion with three.js), voiced by ElevenLabs with word-synced subtitles. Use for /explainer-video, 'make me a video explaining X', or 'help me understand X'."
+description: "Teach a concept with a narrated explainer video, from caching to heaps to how a rocket reaches orbit. Researches the concept, designs the explanation, and builds the video in code with whatever renderer shows it best, voiced by ElevenLabs with word-synced subtitles. Use for /explainer-video, 'make me a video explaining X', or 'help me understand X'."
 ---
 
 # Explainer video
@@ -45,30 +45,47 @@ Length follows the concept: as long as it takes to reach real understanding, wit
 
 - Conversational and second person. Short sentences. One idea per sentence.
 - One idea per scene. A scene starts where the picture needs to change.
-- Write for what the chosen mode shows. A 2D video narrates its diagram, a 3D video its metaphor. Never name something the viewer can't see.
+- Write for what the picture will show: narrate the diagram, or the metaphor. Never name something the viewer can't see.
 - Let the key moments breathe: leave a beat after a reveal rather than talking over it.
 - Read it back as the viewer: if a sentence uses an idea not yet shown, reorder.
 
-## 4. Pick the mode
+## 4. Choose the tools
 
-| Mode | Renderer | Use when | Measured on one 73 s video |
-|---|---|---|---|
-| **2D** (default) | [HyperFrames](https://github.com/heygen-com/hyperframes): HTML, SVG, and GSAP | Mechanisms, systems, math, and code: nodes, arrows, tables, and code morph into each other. | 36 s render, 155 MB install, 6.7 MB output |
-| **3D** | [Remotion](https://www.remotion.dev) with React Three Fiber | Physical and engineering concepts, or when a physical metaphor carries the idea. | 46 s render, 1.2 GB install, 24 MB output |
+The video is code: you write the scenes and a renderer turns them into frames. Pick the tools that best show this concept, read their current docs or agent skills rather than working from memory, and add whatever imports the scenes need. Pin exact versions.
 
-Remotion is free for individuals and small companies; larger for-profit companies need its company license. HyperFrames is Apache-2.0. Learn each renderer from its own agent guidance, not from memory: HyperFrames' skills (its plugin, which `hyperframes init` also points to in the project's `AGENTS.md`) and [Remotion's skills](https://github.com/remotion-dev/skills).
+Starting points that worked:
 
-## 5. Build it
+| Tool | Good for | Measured on one 73 s video |
+|---|---|---|
+| [HyperFrames](https://github.com/heygen-com/hyperframes) (HTML, SVG, GSAP) | Diagrams that morph: mechanisms, systems, code, tables | 36 s render, 155 MB install |
+| [Remotion](https://www.remotion.dev) with React Three Fiber | 3D scenes with a moving camera: physical ideas and physical metaphors | 46 s render, 1.2 GB install |
+| [Manim](https://www.manim.community) | Math: equations and plots that transform | not measured |
+| Blender, driven by Python | Photoreal 3D, when hours of rendering are acceptable | not measured |
 
-Each video is its own project in `~/explainers/<slug>/`, outside every repository, because its installs run 155 MB to 1.2 GB. Put it inside a repository only when the user asks, and then in a gitignored folder. Scaffold with the renderer's own CLI (`bunx hyperframes init`, or Remotion's `create-video` plus `@remotion/three`, `@react-three/fiber`, `@react-three/drei`, and `three`), and pin exact versions. Use bun, and `ffmpeg` for frame checks.
+Combine them when it helps: a 3D scene with 2D panels over it, a real diagram inside a 3D world. Remotion needs a company license for larger for-profit companies; say so if it applies.
 
-- `script.json` in the project root: scenes as `[{ "id": "leak", "text": "A leak is..." }]`.
-- Narrate early: `bun <this skill>/scripts/narrate.ts <project>` voices each scene with ElevenLabs into the renderer's static folder (`public/` or `assets/`, or `--audio-dir`) and writes `narration.json`: per scene `{ id, audio, duration, words: [{ word, start, end }] }`, times in seconds from the scene's start. It skips scenes already narrated; `--redo <scene>` regenerates one after a script change, `--dry-run` prints the cost and the quota left, and `--voice` and `--model` override the defaults (Matilda, `eleven_v4`).
-- Scene length is its narration's duration plus a 0.6 s gap. Time every animation from these values, never from hand-typed seconds, so the picture follows the voice.
-- **One visual world.** One picture that evolves from scene to scene: the same objects move, grow, and change color, and the camera or layout moves between them. Never cut to an unrelated picture. A color means one thing for the whole video.
-- **Subtitles.** One sentence at a time near the bottom, each word lit as it is spoken from `words[].start`, 40 px on a translucent dark pill. Keep moving subjects out of the bottom 200 px.
+Each video is its own project in `~/explainers/<slug>/`, outside every repository, because its installs run to gigabytes. Put it inside a repository only when the user asks, and then in a gitignored folder.
 
-## 6. Review it as a teacher
+## 5. Make it look good
+
+- **One visual world.** One picture that evolves from scene to scene: the same objects move, grow, and change color, and the camera or layout moves between them. Never cut to an unrelated picture.
+- **A small palette with fixed meanings.** Three or four colors, each meaning one thing for the whole video (in use, done with, trouble), on a dark background with high contrast.
+- **Motion with intent.** Ease every move. Draw things on, grow them, morph one structure into the next; avoid fading between static slides. Move one thing at a time so the eye knows where to look.
+- **Depth and light in 3D.** Soft shadows, a key light and a rim light, rounded edges, slightly glossy materials. Ease the camera between positions; never cut.
+- **Readable at a glance.** Labels sit on or beside the thing they name, never floating loose. Text at least 28 px at 1080p. Comparisons and readouts go in flat panels over the scene.
+- **Build assets from code.** Shapes, geometry, and diagrams drawn in code stay crisp and change with the script. Use outside images or models only when the concept needs the real thing, and only with a license that allows it.
+- **1080p at 30 fps** unless the user wants otherwise.
+
+## 6. Sync it to the voice
+
+Narrate early, so the picture can follow the voice instead of guessing:
+
+- Write the scenes to `script.json` in the project root: `[{ "id": "leak", "text": "A leak is..." }]`.
+- `bun <this skill>/scripts/narrate.ts <project>` voices each scene with ElevenLabs and writes `narration.json`: per scene `{ id, audio, duration, words: [{ word, start, end }] }`, times in seconds from the scene's start. It puts the audio in `public/` or `assets/` if the project has one, or wherever `--audio-dir` says. It skips scenes already narrated; `--redo <scene>` regenerates one after a script change, `--dry-run` prints the cost and the quota left, and `--voice` and `--model` override the defaults (Matilda, `eleven_v4`).
+- Make each scene as long as its narration plus a short beat, and time every animation from the word timings: start a move on the word that names it. Never hand-type seconds.
+- Subtitles show one sentence at a time near the bottom, each word lit as it is spoken. Keep moving subjects clear of them.
+
+## 7. Review it as a teacher
 
 1. Render a still at the key moment of each scene and look at each: does it show the idea the narration is stating right then, and is anything cropped, overlapping, or unreadable? Fix and re-render.
 2. Render the final video, then look at one frame every 3.5 seconds: subtitles match the voice, nothing is broken. Check audio with `ffmpeg -i <video> -af volumedetect -vn -f null -` (peak near -1 dB, never silent). You cannot hear it, so say so.
@@ -84,16 +101,10 @@ Reply with the embedded video and its path, the mental model it builds, the one-
 
 `narrate.ts` reads `ELEVENLABS_API_KEY`, then `~/.config/jstack/elevenlabs.key`. If neither exists, get the key through the harness's secret prompt if it has one and pass it to the command as `ELEVENLABS_API_KEY`. Without a secret prompt, tell the user to set the variable or create the file with `chmod 600`. Never ask for the key in chat, and never write it into the project. A key starts with `sk_`; the ID shown next to it in the dashboard is not the key.
 
-## 2D pitfalls
+## Known traps
 
-- Cue animations on spoken words: a helper like `w("leak", "cache")` returns when "cache" is spoken in scene `leak`.
-- Draw shapes on with stroke animation and morph one structure into the next (the heap outline becomes the snapshot table) instead of fading between slides.
-- Keep text 28 px or larger. HyperFrames' `check` command flags text too small to read.
-
-## 3D pitfalls
-
-- Animate from `useCurrentFrame()` only, never from `useFrame` or timers, so every frame renders the same way every time.
-- Draw labels as text on a canvas texture mapped onto a plane, after the font has loaded (`FontFace.load()` behind a `delayRender`). drei's `Text` never finishes laying out glyphs in Remotion's headless render and stalls it.
-- No `@react-three/postprocessing`: its `EffectComposer` renders black under Remotion. Fake glow with a wide, faint copy of each bright line, and a CSS vignette.
-- Readouts and comparisons go in 2D panels over the canvas. Labels hanging in 3D overlap each other and sink into objects.
-- Move the camera between per-scene keyframes with easing. Never cut.
+- Remotion: animate from `useCurrentFrame()` only, never from `useFrame` or timers, or frames render differently each time.
+- Remotion with three.js: drei's `Text` never finishes laying out glyphs in the headless render and stalls it. Draw labels as text on a canvas texture after the font has loaded.
+- Remotion with three.js: `@react-three/postprocessing` renders black. Fake glow with a wide, faint copy of each bright line, and a CSS vignette.
+- 3D labels hanging in space overlap each other and sink into objects. Put readouts in 2D panels over the canvas.
+- HyperFrames: its `check` command flags text too small to read and stretches where nothing moves.
