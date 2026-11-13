@@ -42,7 +42,6 @@ jstack is a fork of [pstack](https://github.com/cursor/plugins/tree/main/pstack)
 ```bash
 node scripts/check-jstack-docs.mjs            # the docs match the tree
 cd skills/vrub-mode/scripts && bun test       # the watch-pr and check-plan scripts
-cd skills/control-ui/scripts && bun test      # the heap-snapshot script
 ```
 
 The docs check fails when the README or the guide names a skill that doesn't exist, misses one that does, links to a missing file, when any doc, skill, or agent mentions `cursor-team-kit` outside a credit line, or when an asking skill lacks the **Ask with the question tool** paragraph or carries a different copy of it.
