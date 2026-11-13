@@ -8,6 +8,8 @@ paths: ["**/*.ts", "**/*.tsx"]
 
 Apply the **type-system-discipline** principle skill first.
 
+When the project uses Effect, read `node_modules/effect/AGENTS.md` in full before writing Effect code, and follow its links when you need them. That guide ships with the installed package, so it matches the project's Effect version. Search `node_modules/effect/src` for anything it doesn't cover, and never write Effect APIs from memory: v3 and v4 differ.
+
 | Rule | Summary |
 |------|---------|
 | Discriminated unions | Model variants with a `kind` literal discriminant so impossible states can't be represented. No optional-field bags. |
