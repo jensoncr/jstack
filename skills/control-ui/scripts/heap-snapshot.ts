@@ -1,6 +1,6 @@
 #!/usr/bin/env bun
 // Capture and read V8 heap snapshots (.heapsnapshot) without DevTools.
-// capture: Chrome, Electron, or Node over CDP. summary: any V8-format snapshot, Bun's included.
+// capture: Chrome, Electron, Node, or a local Cloudflare Worker (wrangler dev) over CDP. summary: any V8-format snapshot, Bun's included.
 
 type Json = Record<string, unknown>;
 type Snapshot = {
@@ -45,7 +45,13 @@ class Cdp {
   send(method: string, params: Json = {}, sessionId?: string): Promise<Json> {
     const id = ++this.id;
     this.ws.send(JSON.stringify({ id, method, params, ...(sessionId ? { sessionId } : {}) }));
-    return new Promise((resolve, reject) => this.pending.set(id, { resolve, reject }));
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(() => reject(new Error(`${method} got no answer in 120 s`)), 120_000);
+      this.pending.set(id, {
+        resolve: (v) => (clearTimeout(timer), resolve(v)),
+        reject: (e) => (clearTimeout(timer), reject(e)),
+      });
+    });
   }
   on(l: (method: string, params: Json, sessionId?: string) => void) {
     this.listeners.push(l);
@@ -87,8 +93,8 @@ async function capture(args: string[]) {
   conn.on((method, params, sid) => {
     if (method === "HeapProfiler.addHeapSnapshotChunk" && sid === sessionId) chunks.push(params.chunk as string);
   });
+  // takeHeapSnapshot runs a full GC itself. A separate collectGarbage call never returns on workerd.
   await conn.send("HeapProfiler.enable", {}, sessionId);
-  await conn.send("HeapProfiler.collectGarbage", {}, sessionId);
   await conn.send("HeapProfiler.takeHeapSnapshot", { reportProgress: false }, sessionId);
   conn.close();
   const body = chunks.join("");
