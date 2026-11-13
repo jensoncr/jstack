@@ -10,6 +10,8 @@ Apply the **type-system-discipline** principle skill first.
 
 When the project uses Effect, read `node_modules/effect/AGENTS.md` in full before writing Effect code, and follow its links when you need them. That guide ships with the installed package, so it matches the project's Effect version. Search `node_modules/effect/src` for anything it doesn't cover, and never write Effect APIs from memory: v3 and v4 differ.
 
+When the project uses Drizzle, use the `drizzle` skill that `drizzle-kit skills` installs from the project's own Drizzle Kit. If it's missing and the project is on Drizzle 1.0 rc, follow `https://orm.drizzle.team/agent-setup/prompt.md` to install it. On Drizzle 0.x there is no bundled skill, so check the docs at orm.drizzle.team instead of writing Drizzle APIs from memory. With Effect v4, use `drizzle-orm/effect-postgres`, never `@effect/sql-drizzle`, which supports only Effect v3.
+
 | Rule | Summary |
 |------|---------|
 | Discriminated unions | Model variants with a `kind` literal discriminant so impossible states can't be represented. No optional-field bags. |
