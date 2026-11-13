@@ -10,7 +10,7 @@
 			"name": "jstack",
 			"source": "./",
 			"description": "if you want to go fast, go deep first. jstack helps you write less, but higher quality code.",
-			"version": "1.14.1",
+			"version": "1.14.2",
 			"author": {
 				"name": "Jenson Cripps"
 			},
