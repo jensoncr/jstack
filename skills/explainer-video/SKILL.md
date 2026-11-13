@@ -68,6 +68,12 @@ Each video is its own project in `~/explainers/<slug>/`, outside every repositor
 
 ## 5. Make it look good
 
+**Style: 3Blue1Brown-like, always,** unless the user asks for another look. Take the approach, not the brand: no pi creatures, logos, channel name, or intro music.
+
+- **Look.** A near-black background, thin clean vector strokes, and a calm palette of blue, teal, and yellow, with one red reserved for trouble. Plain sans-serif labels; math and code set like math and code. Nothing decorative: every mark on screen means something.
+- **Motion.** Things are drawn on stroke by stroke, then transform: a shape morphs into the next shape, an equation's terms slide into their new places, a list folds into a table. Moves are smooth and unhurried, one at a time, and the eye always knows where to look. 3D, when used, is the same look in space: a slowly orbiting camera over clean geometry.
+- **Teaching voice.** Curious and conversational, as if discovering it alongside the viewer. Pose the question before the answer, and pause after a reveal so it lands. Build intuition from a picture first; the formal name, formula, or code arrives last, as a label on something already understood.
+
 - **One visual world.** One picture that evolves from scene to scene: the same objects move, grow, and change color, and the camera or layout moves between them. Never cut to an unrelated picture.
 - **A small palette with fixed meanings.** Three or four colors, each meaning one thing for the whole video (in use, done with, trouble), on a dark background with high contrast.
 - **Motion with intent.** Ease every move. Draw things on, grow them, morph one structure into the next; avoid fading between static slides. Move one thing at a time so the eye knows where to look.
