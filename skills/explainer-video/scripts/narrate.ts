@@ -5,7 +5,7 @@ import { existsSync, readFileSync, unlinkSync } from "node:fs";
 import { homedir } from "node:os";
 import { join, resolve } from "node:path";
 
-const USAGE = "bun narrate.ts <project> [--voice <id>] [--model <id>] [--redo <scene-id>] [--dry-run]";
+const USAGE = "bun narrate.ts <project> [--audio-dir <dir>] [--voice <id>] [--model <id>] [--redo <scene-id>] [--dry-run]";
 const args = Bun.argv.slice(2);
 const flag = (name: string) => {
   const i = args.indexOf(name);
@@ -27,12 +27,15 @@ type Narrated = { id: string; audio: string; duration: number; words: Word[] };
 const script = (await Bun.file(join(project, "script.json")).json()) as { id: string; text: string }[];
 const narrationPath = join(project, "narration.json");
 let narration = (await Bun.file(narrationPath).json()) as Narrated[];
-const audioDir = existsSync(join(project, "proj")) ? join(project, "proj", "assets") : join(project, "public");
+// Audio goes where the renderer serves static files: Remotion's public/, HyperFrames' assets/.
+const audioDir = flag("--audio-dir")
+  ? resolve(project, flag("--audio-dir")!)
+  : (["public", "assets"].map((d) => join(project, d)).find((d) => existsSync(d)) ?? project);
 
 const kept = narration.filter((n) => n.id !== redo);
 const todo = script.filter((s) => !kept.some((n) => n.id === s.id));
 const chars = todo.reduce((t, s) => t + s.text.length, 0);
-console.log(`${todo.length} scene(s) to narrate, ${chars} characters`);
+console.log(`${todo.length} scene(s) to narrate, ${chars} characters, audio into ${audioDir}`);
 if (todo.length === 0) process.exit(0);
 
 function apiKey(): string {

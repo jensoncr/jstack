@@ -13,30 +13,30 @@ Teach one concept in a 60 to 90 second narrated video. The video is code: you wr
 
 | Mode | Renderer | Use when | Measured on a 73 s video |
 |---|---|---|---|
-| **2D** (default) | HyperFrames: HTML, SVG, and GSAP | The goal is understanding. Nodes, arrows, tables, and code morph into each other. | 36 s render, 155 MB install, 6.7 MB output |
-| **3D** | Remotion with React Three Fiber | A physical metaphor carries the idea, or the video should be memorable more than precise. | 46 s render, 1.2 GB install, 24 MB output |
+| **2D** (default) | [HyperFrames](https://github.com/heygen-com/hyperframes): HTML, SVG, and GSAP | The goal is understanding. Nodes, arrows, tables, and code morph into each other. | 36 s render, 155 MB install, 6.7 MB output |
+| **3D** | [Remotion](https://www.remotion.dev) with React Three Fiber | A physical metaphor carries the idea, or the video should be memorable more than precise. | 46 s render, 1.2 GB install, 24 MB output |
 
 Default to 2D. Use 3D when the user asks for it or the concept is a physical metaphor at heart. Remotion is free for individuals and small companies; larger for-profit companies need its company license. HyperFrames is Apache-2.0.
 
+Learn each renderer from its own agent guidance, not from memory: HyperFrames' skills (its plugin, which `hyperframes init` also points to in the project's `AGENTS.md`) and [Remotion's skills](https://github.com/remotion-dev/skills).
+
 ## Where it lives
 
-Each video is its own project in `~/explainers/<slug>/`, outside every repository, because its installs run 155 MB to 1.2 GB. Put it inside a repository only when the user asks, and then in a gitignored folder (`--dir`).
+Each video is its own project in `~/explainers/<slug>/`, outside every repository, because its installs run 155 MB to 1.2 GB. Put it inside a repository only when the user asks, and then in a gitignored folder. Scaffold with the renderer's own CLI (`bunx hyperframes init`, or Remotion's `create-video` plus `@remotion/three`, `@react-three/fiber`, `@react-three/drei`, and `three`), and pin exact versions. Use bun, and `ffmpeg` for frame checks.
 
-```bash
-bun <this skill>/scripts/new.ts 2d <slug>        # or 3d; prints the project path
-```
+## The data
 
-The script copies the template, installs its pinned dependencies with `bun install --frozen-lockfile`, and copies the fonts (and GSAP for 2D) into the project. Each template is a complete, working video about heap memory leaks. Read it before writing your own: it shows every pattern below. Then replace `script.json` and the scenes.
-
-Needs `bun` and `ffmpeg`. Each renderer downloads a headless Chrome on its first render.
+- `script.json` in the project root: 5 to 8 scenes as `[{ "id": "leak", "text": "A leak is..." }]`, one idea per scene, about 900 characters in all.
+- `narration.json`, written by `narrate.ts`: per scene `{ id, audio, duration, words: [{ word, start, end }] }`, times in seconds from the scene's start. Until it exists, estimate: 2.6 words per second, so the silent preview renders with the same code.
+- Scene length is its narration's duration plus a 0.6 s gap. Time every animation from these values, never from hand-typed seconds, so the picture follows the voice.
 
 ## Workflow
 
-1. **Script for the mode.** Write `script.json`: 5 to 8 scenes as `{ id, text }`, one idea per scene, about 900 characters in all. Write the narration for what the chosen mode shows. A 2D video narrates the diagram. A 3D video narrates the metaphor. Narration that names a robot the viewer never sees confuses them.
+1. **Script for the mode.** Write the narration for what the chosen mode shows. A 2D video narrates the diagram. A 3D video narrates the metaphor. Narration that names a robot the viewer never sees confuses them.
 2. **One visual world.** Build one picture that evolves from scene to scene: the same objects move, grow, and change color, and the camera or layout moves between them. Never cut to an unrelated picture. A color means one thing for the whole video.
 3. **Style frames.** Render a still at the key moment of each scene and look at every one yourself. Fix anything cropped, overlapping, unreadable, or off-message before the user sees it.
 4. **Silent preview, then ask.** Render a silent preview with estimated timing. It is free. Show it with the script and ask the user to approve, change the look, change the script, or pick another voice. Never spend narration before this approval.
-5. **Narrate.** `bun <this skill>/scripts/narrate.ts <project>` voices each scene with ElevenLabs and writes `narration.json` with per-word timings. Scene lengths then follow the voice. It skips scenes already narrated. `--redo <scene>` regenerates one, `--dry-run` prints the character cost and the quota left without changing anything, which also confirms the key works, `--voice` and `--model` override the defaults (Matilda, `eleven_v4`). It reports the quota left. Tell the user.
+5. **Narrate.** `bun <this skill>/scripts/narrate.ts <project>` voices each scene with ElevenLabs into the renderer's static folder (`public/` or `assets/`, or `--audio-dir`) and writes `narration.json`. It skips scenes already narrated. `--redo <scene>` regenerates one, `--dry-run` prints the character cost and the quota left without changing anything, which also confirms the key works, and `--voice` and `--model` override the defaults (Matilda, `eleven_v4`). Tell the user the quota left.
 6. **Render and check.** Render the final video, then extract one frame every 3.5 seconds and look at all of them: subtitles match the voice, every scene shows what is being said, nothing is cropped or broken. Check audio with `ffmpeg -i <video> -af volumedetect -vn -f null -` (peak near -1 dB, never silent). You cannot hear it, so say so.
 7. **Reply** with the embedded video, its path, what each scene shows, what you checked, and the weak spots you saw.
 
@@ -44,21 +44,24 @@ Needs `bun` and `ffmpeg`. Each renderer downloads a headless Chrome on its first
 ffmpeg -i <video> -vf "fps=1/3.5,scale=480:270,tile=4x6:padding=4" -frames:v 1 sheet.png
 ```
 
+## Subtitles
+
+Show one sentence at a time, near the bottom, and light up each word as it is spoken from `words[].start`. Keep 40 px text on a translucent dark pill. Keep moving subjects out of the bottom 200 px.
+
 ## The ElevenLabs key
 
 `narrate.ts` reads `ELEVENLABS_API_KEY`, then `~/.config/jstack/elevenlabs.key`. Neither in place: ask the user for the key through the harness's secret prompt if it has one, and pass it to the command as `ELEVENLABS_API_KEY`. Without a secret prompt, tell the user to set the variable or create the file with `chmod 600`. Never ask for the key in chat, and never write it into the project. A key starts with `sk_`; the ID shown next to it in the dashboard is not the key.
 
-## 2D mode
+## 2D pitfalls
 
-- `bun run build` writes `proj/index.html` from `scene.html`, `script.json`, and `narration.json`. `bun run render` builds and renders to `out/video.mp4`. `bun run check` runs HyperFrames' lint, runtime, and layout checks, which flag text too small to read.
-- Time animations to speech, not to fixed seconds: `w("leak", "cache")` is when the word "cache" is spoken in scene `leak`. Before narration exists, word times are estimated, so the same code renders the silent preview.
-- Draw shapes on with stroke animation, morph one structure into the next (the heap outline becomes the snapshot table), and keep text 28 px or larger.
+- Cue animations on spoken words: a helper like `w("leak", "cache")` returns when "cache" is spoken in scene `leak`. It reads the most precise timing the data has.
+- Draw shapes on with stroke animation and morph one structure into the next (the heap outline becomes the snapshot table) instead of fading between slides.
+- Keep text 28 px or larger. HyperFrames' `check` command flags text too small to read.
 
-## 3D mode
+## 3D pitfalls
 
-- `bun run still out/<name>.png --frame=<n>` renders one frame. `bun run preview` renders a silent half-resolution preview. `bun run render` renders `out/video.mp4`.
 - Animate from `useCurrentFrame()` only, never from `useFrame` or timers, so every frame renders the same way every time.
-- Labels are text drawn onto canvas textures (`Label` in `World.tsx`). drei's `Text` never finishes laying out glyphs in Remotion's headless render and stalls it.
-- No `@react-three/postprocessing`: its `EffectComposer` renders black under Remotion. Fake glow with a wide, faint line under each bright line (`Cable`), and a CSS vignette.
+- Draw labels as text on a canvas texture mapped onto a plane, after the font has loaded (`FontFace.load()` behind a `delayRender`). drei's `Text` never finishes laying out glyphs in Remotion's headless render and stalls it.
+- No `@react-three/postprocessing`: its `EffectComposer` renders black under Remotion. Fake glow with a wide, faint copy of each bright line, and a CSS vignette.
 - Readouts and comparisons go in 2D panels over the canvas. Labels hanging in 3D overlap each other and sink into objects.
-- Keep moving subjects out of the bottom 200 px, where the subtitles sit, and inside the frame for the whole scene.
+- Move the camera between per-scene keyframes with easing. Never cut.
