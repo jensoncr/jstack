@@ -115,11 +115,12 @@ pursue follow-ups spawned by answers → next area → … → all areas pass �
 
 Research deeply, scoped by the real requirements. Run searches in parallel.
 
-- **Stack (ADR-001).** If the user's instructions (their AGENTS.md or CLAUDE.md) or the interview
-  name a preferred stack, verify its fit against the requirements (NFRs, integrations, platform
+- **Stack (ADR-001).** Start from the preferred stack in the vrub-mode skill's `references/stack.md`.
+  If the user's instructions (their AGENTS.md or CLAUDE.md) or the interview name a different
+  stack, theirs wins. Verify the chosen stack's fit against the requirements (NFRs, integrations, platform
   reach, tenancy, compliance) instead of running an open-ended search. Where a layer genuinely
   doesn't fit, research alternatives for that layer only and get explicit user approval before
-  deviating. With no preference, research the options and put the choice to the user. ADR-001
+  deviating. ADR-001
   names framework, hosting, data store, auth, and package manager, because the walking-skeleton
   PR scaffolds exactly that.
 - **Buy versus build** per capability the interview surfaced (payments, email, observability),
