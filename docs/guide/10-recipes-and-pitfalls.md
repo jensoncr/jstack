@@ -158,7 +158,7 @@ That's the whole prompt. [`/bro`](../../skills/bro/SKILL.md) restates the last m
 
 To watch the catch-up instead, run [`/ketchup-video`](../../skills/ketchup-video/SKILL.md). It shows what happened in a short subtitled video of slides, and lists the calls waiting on you as text under it.
 
-To learn a concept from a video, run [`/explainer-video`](../../skills/explainer-video/SKILL.md). It makes a narrated 2D diagram video by default, or a 3D one when a physical metaphor carries the idea. It shows you a free silent preview before it spends ElevenLabs credits on the narration. Each video lives in `~/explainers/<slug>/`, outside your repositories.
+To learn a concept from a video, run [`/explainer-video`](../../skills/explainer-video/SKILL.md) with what you want to understand. It researches the concept, designs the explanation around one mental model, and renders a narrated 2D diagram video, or a 3D one for physical and engineering ideas. It runs to a finished video without stopping. Each video lives in `~/explainers/<slug>/`, outside your repositories.
 
 ## Do a task in a desktop app
 
