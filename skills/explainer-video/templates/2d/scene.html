@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="assets/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Inter"; font-weight: 600; src: url("assets/inter-600.woff") format("woff"); }
+      @font-face { font-family: "Inter"; font-weight: 800; src: url("assets/inter-800.woff") format("woff"); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #0c0f14; }
+      #root { position: relative; width: 1920px; height: 1080px; font-family: "Inter", sans-serif; font-weight: 600; }
+      #stage { position: absolute; inset: 0; }
+      #stage text { font-family: "Inter", sans-serif; font-weight: 600; }
+      #stage .mono { font-family: Menlo, monospace; font-weight: 400; }
+      .sub {
+        position: absolute; left: 210px; width: 1500px; bottom: 44px; text-align: center;
+        color: #ece9e1; font-size: 40px; line-height: 1.3; text-shadow: 0 2px 12px #000;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="__TOTAL__" data-width="1920" data-height="1080">
+      <svg id="stage" class="clip" data-start="0" data-duration="__TOTAL__" viewBox="0 0 1920 1080" width="1920" height="1080"></svg>
+      <!--CLIPS-->
+    </div>
+    <script>
+      /*SCENES*/
+      const C = { blue: "#58C4DD", teal: "#5CD0B3", yellow: "#F4D35E", red: "#FC6255", gray: "#6b7785", ink: "#ECE9E1", dim: "#2a3340" };
+      const S = Object.fromEntries(SCENES.map((s) => [s.id, s]));
+      const at = (id, off = 0) => S[id].start + off;
+      const w = (id, word, nth = 0) => {
+        const hit = S[id].words.filter(([x]) => x.toLowerCase().replace(/[^a-z']/g, "") === word)[nth];
+        if (!hit) throw new Error(`no word ${id}:${word}`);
+        return S[id].start + hit[1];
+      };
+
+      const NS = "http://www.w3.org/2000/svg";
+      const svg = document.getElementById("stage");
+      const el = (tag, attrs, parent = svg, text) => {
+        const e = document.createElementNS(NS, tag);
+        for (const k in attrs) e.setAttribute(k, attrs[k]);
+        if (text != null) e.textContent = text;
+        parent.appendChild(e);
+        return e;
+      };
+      const rect = (x, y, w, h, r) =>
+        `M${x + r},${y} H${x + w - r} A${r},${r} 0 0 1 ${x + w},${y + r} V${y + h - r} A${r},${r} 0 0 1 ${x + w - r},${y + h} H${x + r} A${r},${r} 0 0 1 ${x},${y + h - r} V${y + r} A${r},${r} 0 0 1 ${x + r},${y} Z`;
+      const T = (x, y, s = 1) => `translate(${x},${y}) scale(${s})`;
+      const label = (x, y, str, color, size = 30, extra = {}, parent = svg) =>
+        el("text", { x, y, "text-anchor": "middle", style: `fill:${color};font-size:${size}px;opacity:0`, ...extra }, parent, str);
+      const hidden = (color, width = 4) => `stroke:${color};fill:none;stroke-width:${width};stroke-dasharray:1 1;stroke-dashoffset:1;stroke-linecap:round`;
+
+      const tl = gsap.timeline({ paused: true });
+      const show = (els, t, d = 0.5, stagger = 0) => tl.to(els, { opacity: 1, duration: d, stagger }, t);
+      const hide = (els, t, d = 0.5) => tl.to(els, { opacity: 0, duration: d }, t);
+      const stroke = (els, color, t, d = 0.4) => tl.to(els, { stroke: color, duration: d }, t);
+
+      const world = el("g", { transform: "translate(0,0)" });
+      const cellsL = el("g", {}, world), arrowsL = el("g", {}, world), nodesL = el("g", {}, world);
+
+      function node(cx, cy, w, h, text, color, size = 30, parent = nodesL) {
+        const g = el("g", { transform: T(cx, cy) }, parent);
+        const shape = el("path", { d: rect(-w / 2, -h / 2, w, h, 14), pathLength: 1, style: `${hidden(color)};fill:${color};fill-opacity:0` }, g);
+        const txt = label(0, size * 0.36, text, color, size, {}, g);
+        return { g, shape, txt, cx, cy, w, h, color };
+      }
+      function draw(n, t, d = 0.9) {
+        tl.to(n.shape, { strokeDashoffset: 0, duration: d, ease: "power2.inOut" }, t);
+        tl.to(n.shape, { fillOpacity: 0.14, duration: 0.6 }, t + d * 0.6);
+        show(n.txt, t + d * 0.5);
+      }
+      function arrow(a, b, color, parent = arrowsL) {
+        const dx = b.cx - a.cx, dy = b.cy - a.cy, len = Math.hypot(dx, dy);
+        const exit = (n) => Math.min(n.w / 2 / Math.abs(dx || 1e-9), n.h / 2 / Math.abs(dy || 1e-9));
+        const ux = dx / len, uy = dy / len;
+        const x1 = a.cx + dx * exit(a) + ux * 10, y1 = a.cy + dy * exit(a) + uy * 10;
+        const ex = b.cx - dx * exit(b) - ux * 10, ey = b.cy - dy * exit(b) - uy * 10;
+        const line = el("path", { d: `M${x1},${y1} L${ex - ux * 16},${ey - uy * 16}`, pathLength: 1, style: hidden(color, 4) }, parent);
+        const head = el("path", { d: "M0,0 L-20,-10 L-20,10 Z", transform: `translate(${ex},${ey}) rotate(${(Math.atan2(dy, dx) * 180) / Math.PI})`, style: `fill:${color};stroke:${color};opacity:0` }, parent);
+        return { line, head, parts: [line, head] };
+      }
+      function drawArrow(ar, t, d = 0.7) {
+        tl.to(ar.line, { strokeDashoffset: 0, duration: d, ease: "power2.inOut" }, t);
+        show(ar.head, t + d * 0.85, 0.15);
+      }
+      const recolor = (ar, color, t, d = 0.35) => tl.to(ar.parts, { stroke: color, fill: color, duration: d }, t);
+      const recolorNode = (n, color, t, d = 0.35) => tl.to([n.shape, n.txt], { stroke: color, fill: color, duration: d }, t);
+      const flash = (els, base, t) => { stroke(els, C.yellow, t, 0.12); stroke(els, base, t + 0.3, 0.5); };
+
+      // Garbage collector: a vertical scan line that sweeps the heap.
+      const HX = 520, HY = 150, HW = 1180, HH = 640;
+      const sweep = el("g", { transform: `translate(${HX},0)`, style: "opacity:0" });
+      el("rect", { x: -40, y: HY, width: 40, height: HH, style: `fill:${C.yellow};opacity:0.10` }, sweep);
+      el("path", { d: `M0,${HY - 6} V${HY + HH + 6}`, style: `stroke:${C.yellow};stroke-width:3` }, sweep);
+      el("text", { x: 0, y: HY + HH + 44, "text-anchor": "middle", style: `fill:${C.yellow};font-size:30px` }, sweep, "garbage collector");
+      function runSweep(appear, go, dur) {
+        show(sweep, appear, 0.3);
+        tl.fromTo(sweep, { attr: { transform: `translate(${HX},0)` } }, { attr: { transform: `translate(${HX + HW},0)` }, duration: dur, ease: "none" }, go);
+        hide(sweep, go + dur, 0.3);
+        return (x) => go + ((x - HX) / HW) * dur;
+      }
+
+      // ── 1. warehouse: the heap ───────────────────────────────────────────
+      const heap = el("path", { d: rect(HX, HY, HW, HH, 24), pathLength: 1, style: hidden(C.blue, 3) }, world);
+      const heapLabel = label(HX, HY - 26, "the heap", C.yellow, 44, { "text-anchor": "start" });
+      const houseLabel = label(HX + 222, HY - 26, "≈ a warehouse", C.gray, 32, { "text-anchor": "start", "font-style": "italic" });
+      const slot = (i, j) => [620 + i * 140, 250 + j * 150];
+      const cells = [];
+      for (let j = 0; j < 4; j++)
+        for (let i = 0; i < 8; i++) {
+          const [cx, cy] = slot(i, j);
+          cells.push(el("rect", { x: cx - 60, y: cy - 60, width: 120, height: 120, rx: 14, style: `fill:none;stroke:${C.dim};stroke-width:2;stroke-dasharray:6 8;opacity:0` }, cellsL));
+        }
+      const code = node(250, 470, 220, 110, "your code", C.blue, 34);
+      draw(code, at("warehouse", 0.4), 1.0);
+      tl.to(heap, { strokeDashoffset: 0, duration: 1.6, ease: "power2.inOut" }, w("warehouse", "that"));
+      tl.fromTo(heapLabel, { opacity: 0, attr: { x: HX - 20 } }, { opacity: 1, attr: { x: HX }, duration: 0.6, ease: "power2.out" }, w("warehouse", "heap"));
+      show(cells, w("warehouse", "picture"), 0.4, 0.025);
+      show(houseLabel, w("warehouse", "warehouse"), 0.6);
+
+      // ── 2. boxes: objects and references ─────────────────────────────────
+      const user = node(...slot(1, 0), 120, 120, "user", C.teal);
+      const cart = node(...slot(2, 2), 120, 120, "cart", C.teal);
+      const photo = node(...slot(1, 3), 120, 120, "photo", C.teal);
+      draw(user, w("boxes", "user"), 0.8);
+      draw(cart, w("boxes", "cart"), 0.8);
+      draw(photo, w("boxes", "photo"), 0.8);
+      const toUser = arrow(code, user, C.blue), toCart = arrow(code, cart, C.blue), toPhoto = arrow(code, photo, C.blue);
+      [toUser, toCart, toPhoto].forEach((a, i) => drawArrow(a, w("boxes", "holds") + i * 0.25));
+      const refLabel = label(452, 318, "reference", C.blue, 28, { "font-style": "italic" });
+      show(refLabel, w("boxes", "cable"));
+
+      // ── 3. cleaner: the garbage collector ────────────────────────────────
+      hide([refLabel, houseLabel], w("cleaner", "lets"));
+      tl.to(toCart.head, { opacity: 0, duration: 0.15 }, w("cleaner", "lets"));
+      tl.to(toCart.line, { strokeDashoffset: 1, duration: 0.8, ease: "power2.in" }, w("cleaner", "lets"));
+      const cross1 = runSweep(w("cleaner", "garbage"), w("cleaner", "sees"), 2.0);
+      flash([user.shape, photo.shape], C.teal, cross1(760));
+      const noRefs = label(cart.cx, cart.cy + 98, "no references", C.gray, 26);
+      recolorNode(cart, C.gray, cross1(cart.cx));
+      show(noRefs, cross1(cart.cx));
+      tl.to(cart.g, { attr: { transform: T(cart.cx, cart.cy, 0.001) }, opacity: 0, duration: 0.8, ease: "power2.in" }, w("cleaner", "hauls"));
+      hide(noRefs, w("cleaner", "hauls"), 0.6);
+
+      // ── 4. leak: a cache keeps old pages alive ───────────────────────────
+      const leakTitle = label(HX + HW, HY - 26, "memory leak", C.red, 40, { "text-anchor": "end" });
+      show(leakTitle, w("leak", "leak"), 0.6);
+      const define = label(HX + HW / 2, HY + HH + 50, "leak = no longer needed, but still referenced", C.gray, 30);
+      show(define, w("leak", "done"), 0.5);
+      hide(define, w("leak", "here"), 0.4);
+      const cache = node(...slot(4, 1), 150, 120, "cache", C.teal);
+      draw(cache, w("leak", "cache"), 0.8);
+      const toCache = arrow(code, cache, C.blue);
+      drawArrow(toCache, w("leak", "cache") + 0.3);
+      const pages = [0, 1, 2].map((j) => node(...slot(6, j), 120, 120, `page ${j + 1}`, C.red, 28));
+      const toPages = pages.map((p) => arrow(cache, p, C.teal));
+      pages.forEach((p, i) => {
+        draw(p, w("leak", "every") + i * 0.3, 0.6);
+        drawArrow(toPages[i], w("leak", "every") + i * 0.3 + 0.2, 0.5);
+      });
+      const cross2 = runSweep(w("leak", "robot"), w("leak", "robot") + 0.2, 1.4);
+      toPages.forEach((a) => { recolor(a, C.yellow, cross2(1300), 0.15); recolor(a, C.teal, cross2(1300) + 0.6, 0.5); });
+      flash(pages.map((p) => p.shape), C.red, cross2(1400));
+      const stuck = [label(1460, 662, "still referenced:", C.red, 26), label(1460, 698, "can't be collected", C.red, 26)];
+      show(stuck, w("leak", "touch"), 0.5);
+
+      // ── 5. full: pages pile up, then the crash ───────────────────────────
+      const s5 = at("full");
+      hide(stuck, s5, 0.3);
+      const taken = new Set(["1,0", "1,3", "4,1", "6,0", "6,1", "6,2"]);
+      const free = [];
+      for (let j = 0; j < 4; j++) for (let i = 0; i < 8; i++) if (!taken.has(`${i},${j}`)) free.push([i, j]);
+      free.sort((a, b) => ((a[0] * 7 + a[1] * 5) % 11) - ((b[0] * 7 + b[1] * 5) % 11) || a[0] - b[0]);
+      const pile = free.map(([i, j], k) => {
+        const [cx, cy] = slot(i, j);
+        const p = node(cx, cy, 120, 120, "page", C.red, 26);
+        tl.set(p.shape, { strokeDashoffset: 0, fillOpacity: 0.14 }, 0);
+        tl.set(p.txt, { opacity: 1 }, 0);
+        tl.set(p.g, { attr: { transform: T(cx, cy, 0.001) } }, 0);
+        tl.to(p.g, { attr: { transform: T(cx, cy, 1) }, duration: 0.35, ease: "back.out(2)" }, s5 + 0.2 + k * (3.1 / free.length));
+        return p.g;
+      });
+      const BX = 1762, barTop = HY, barH = HH;
+      const bar = el("g", { style: "opacity:0" });
+      el("rect", { x: BX, y: barTop, width: 44, height: barH, rx: 8, style: `fill:none;stroke:${C.gray};stroke-width:2` }, bar);
+      const level = el("rect", { x: BX + 5, y: barTop + barH * 0.6, width: 34, height: barH * 0.4 - 5, rx: 5, style: `fill:${C.teal}` }, bar);
+      el("text", { x: BX + 22, y: barTop - 26, "text-anchor": "middle", style: `fill:${C.gray};font-size:24px` }, bar, "memory");
+      const pct = label(BX + 22, barTop + barH + 44, "100%", C.red, 30);
+      show(bar, s5, 0.5);
+      tl.to(level, { attr: { y: barTop + 5, height: barH - 10 }, duration: 3.3, ease: "power1.inOut" }, s5 + 0.2);
+      tl.to(level, { fill: C.yellow, duration: 1.4 }, s5 + 0.6).to(level, { fill: C.red, duration: 1.2 }, s5 + 2.2);
+      stroke(heap, C.red, w("full", "full"), 0.5);
+      show(pct, w("full", "full"));
+      tl.to([nodesL, arrowsL], { opacity: 0.45, duration: 1.2 }, w("full", "slows"));
+      const shake = [-18, 15, -11, 8, -5, 2, 0];
+      shake.forEach((x, i) => tl.to(world, { attr: { transform: `translate(${x},0)` }, duration: 0.07, ease: "none" }, w("full", "crashes") + i * 0.07));
+      const overlay = el("rect", { x: 0, y: 0, width: 1920, height: 1080, style: `fill:${C.red};opacity:0` });
+      const crash = el("g", { style: "opacity:0" });
+      el("rect", { x: 760, y: 400, width: 700, height: 140, rx: 18, style: `fill:#0c0f14;stroke:${C.red};stroke-width:3` }, crash);
+      el("text", { x: 1110, y: 495, "text-anchor": "middle", style: `fill:${C.red};font-size:72px;font-weight:800` }, crash, "out of memory");
+      tl.to(overlay, { opacity: 0.22, duration: 0.12 }, w("full", "crashes")).to(overlay, { opacity: 0.08, duration: 0.6 });
+      show(crash, w("full", "crashes") + 0.1, 0.25);
+
+      // ── 6. snapshot: the heap becomes a table ────────────────────────────
+      const s6 = at("snapshot");
+      hide([crash, bar, pct, leakTitle, ...pile], s6, 0.5);
+      tl.to(overlay, { opacity: 0, duration: 0.5 }, s6);
+      tl.to([nodesL, arrowsL], { opacity: 1, duration: 0.5 }, s6);
+      stroke(heap, C.blue, s6, 0.5);
+      const pad = 22, L = 70, x0 = HX - pad, y0 = HY - pad, x1 = HX + HW + pad, y1 = HY + HH + pad;
+      const corners = [
+        `M${x0},${y0 + L} V${y0} H${x0 + L}`, `M${x1 - L},${y0} H${x1} V${y0 + L}`,
+        `M${x1},${y1 - L} V${y1} H${x1 - L}`, `M${x0 + L},${y1} H${x0} V${y1 - L}`,
+      ].map((d) => el("path", { d, pathLength: 1, style: hidden(C.ink, 4) }));
+      tl.to(corners, { strokeDashoffset: 0, duration: 0.45, ease: "power2.out" }, w("snapshot", "photo") - 0.2);
+      tl.to(overlay, { fill: "#ffffff", duration: 0 }, w("snapshot", "photo") + 0.3);
+      tl.to(overlay, { opacity: 0.55, duration: 0.06 }, w("snapshot", "photo") + 0.3).to(overlay, { opacity: 0, duration: 0.6 });
+
+      // Table geometry, shared by both snapshots.
+      const TX = 540, TY = 220, TW = 880, TH = 520, ROWS = [340, 430, 520, 610], COL = { icon: 600, name: 650, size: 970, held: 1190 };
+      function table(rows, title) {
+        const g = el("g", { transform: T(0, 0), style: "opacity:0" });
+        const frame = el("path", { d: rect(TX, TY, TW, TH, 24), style: `fill:none;stroke:${C.blue};stroke-width:3` }, g);
+        const icons = rows.map((r, i) => {
+          const ig = el("g", { style: "opacity:0" }, g);
+          for (let k = r.stack - 1; k >= 0; k--) {
+            const o = (k - (r.stack - 1) / 2) * 7 * (r.stack > 1 ? 1 : 0);
+            el("path", { d: rect(COL.icon - 27 + o, ROWS[i] - 27 + o, 54, 54, 6), style: `stroke:${r.color};fill:#0c0f14;stroke-width:2` }, ig);
+            el("path", { d: rect(COL.icon - 27 + o, ROWS[i] - 27 + o, 54, 54, 6), style: `fill:${r.color};fill-opacity:0.14;stroke:none` }, ig);
+          }
+          return ig;
+        });
+        const head = { name: label(COL.name - 77, 284, "object", C.gray, 28, { "text-anchor": "start" }, g), size: label(COL.size, 284, "size", C.gray, 28, { "text-anchor": "start" }, g), held: label(COL.held, 284, "held by", C.gray, 28, { "text-anchor": "start" }, g) };
+        const rule = el("path", { d: `M${TX + 20},304 H${TX + TW - 20}`, style: `stroke:${C.dim};stroke-width:2;opacity:0` }, g);
+        const cell = (key, x) => rows.map((r, i) => label(x, ROWS[i] + 12, r[key], key === "name" ? r.color : C.ink, 40, { "text-anchor": "start" }, g));
+        const titleEl = title ? label(TX + TW / 2, 186, title, C.yellow, 44, {}, g) : null;
+        return { g, frame, icons, head, rule, names: cell("name", COL.name), sizes: cell("size", COL.size), helds: cell("held", COL.held), title: titleEl };
+      }
+      const rowsAt = (pagesN, pagesMB, cacheKB) => [
+        { name: `page ×${pagesN}`, size: pagesMB, held: "cache", color: C.red, stack: 3 },
+        { name: "cache", size: cacheKB, held: "your code", color: C.teal, stack: 1 },
+        { name: "photo", size: "1.1 MB", held: "your code", color: C.teal, stack: 1 },
+        { name: "user", size: "2 KB", held: "your code", color: C.teal, stack: 1 },
+      ];
+      const t1 = table(rowsAt(3, "2.4 MB", "12 KB"), "heap snapshot");
+      const t2 = table(rowsAt(6, "4.8 MB", "24 KB"));
+      // t1 content becomes visible piece by piece; its frame and icons stand in for the morphed shapes later.
+      tl.set(t1.g, { opacity: 1 }, 0);
+      [t1.frame].forEach((e) => tl.set(e, { opacity: 0 }, 0));
+      [t2.frame, ...t2.icons, t2.rule, ...Object.values(t2.head), ...t2.names, ...t2.sizes, ...t2.helds].forEach((e) => tl.set(e, { opacity: 1 }, 0));
+
+      const m = w("snapshot", "warehouse"), md = 1.2, ease = "power3.inOut";
+      hide([...corners, ...cells, code.g, heapLabel, ...[toUser, toPhoto, toCache, ...toPages].flatMap((a) => a.parts)], m, 0.4);
+      tl.to(heap, { attr: { d: rect(TX, TY, TW, TH, 24) }, duration: md, ease }, m);
+      const morph = [[pages[0], 0, -7], [pages[1], 0, 0], [pages[2], 0, 7], [cache, 1, 0], [photo, 2, 0], [user, 3, 0]];
+      morph.forEach(([n, row, o]) => {
+        hide(n.txt, m, 0.3);
+        tl.to(n.g, { attr: { transform: T(COL.icon + o, ROWS[row] + o, 0.45) }, duration: md, ease }, m);
+      });
+      show([t1.title, ...Object.values(t1.head), t1.rule], m + 0.8, 0.5);
+      show(t1.names, w("snapshot", "every"), 0.4, 0.15);
+      tl.to(t1.head.size, { fill: C.yellow, duration: 0.3 }, w("snapshot", "big") - 0.2);
+      show(t1.sizes, w("snapshot", "big"), 0.4, 0.12);
+      tl.to(t1.head.size, { fill: C.gray, duration: 0.4 }, w("snapshot", "and"));
+      tl.to(t1.head.held, { fill: C.yellow, duration: 0.3 }, w("snapshot", "what's") - 0.1);
+      show(t1.helds, w("snapshot", "holding"), 0.4, 0.12);
+      tl.to(t1.head.held, { fill: C.gray, duration: 0.4 }, at("snapshot") + 8.6);
+
+      // ── 7. compare: two snapshots, then follow the references back ───────
+      const s7 = at("compare");
+      tl.set([t1.frame, ...t1.icons], { opacity: 1 }, s7);
+      tl.set([heap, ...morph.map(([n]) => n.g)], { opacity: 0 }, s7);
+      const small = 0.66, cy = 480;
+      tl.to(t1.g, { attr: { transform: T(500 - small * 980, cy - small * cy, small) }, duration: 1.0, ease }, s7 + 0.05);
+      hide(t1.title, s7, 0.4);
+      tl.set(t2.g, { attr: { transform: T(1440 - small * 980, cy - small * cy, small) } }, 0);
+      const snap1 = label(500, 290, "snapshot 1", C.yellow, 36), snap2 = label(1440, 290, "snapshot 2", C.yellow, 36);
+      show(snap1, s7 + 0.6);
+      const loop = el("g", { style: "opacity:0" });
+      const loopArc = el("path", { d: "M1010,480 A40,40 0 1 1 990,445", pathLength: 1, style: hidden(C.ink, 4) }, loop);
+      el("path", { d: "M0,0 L-18,-9 L-18,9 Z", transform: "translate(994,447) rotate(-30)", style: `fill:${C.ink}` }, loop);
+      el("text", { x: 970, y: 572, "text-anchor": "middle", style: `fill:${C.gray};font-size:28px` }, loop, "repeat the action");
+      show(loop, w("compare", "repeat"), 0.2);
+      tl.to(loopArc, { strokeDashoffset: 0, duration: 0.6, ease: "power2.out" }, w("compare", "repeat"));
+      tl.fromTo(t2.g, { opacity: 0 }, { opacity: 1, duration: 0.5 }, w("compare", "another"));
+      show(snap2, w("compare", "another"));
+      tl.to(overlay, { opacity: 0.35, duration: 0.05 }, w("compare", "another")).to(overlay, { opacity: 0, duration: 0.5 });
+
+      const grow = w("compare", "whatever");
+      hide(loop, grow - 0.2, 0.3);
+      const marks = [t1, t2].map((t) => el("path", { d: rect(TX + 14, ROWS[0] - 38, TW - 28, 76, 12), pathLength: 1, style: hidden(C.yellow, 4) }, t.g));
+      tl.to(marks, { strokeDashoffset: 0, duration: 0.6, ease: "power2.inOut" }, grow);
+      tl.to([t1, t2].flatMap((t) => [...t.names.slice(1), ...t.sizes.slice(1), ...t.helds.slice(1), ...t.icons.slice(1)]), { opacity: 0.3, duration: 0.5 }, grow);
+      const delta = [label(970, 376, "+3 pages", C.yellow, 34), label(970, 420, "+2.4 MB", C.yellow, 34)];
+      show(delta, grow + 0.3, 0.5, 0.15);
+      const leakTag = label(970, 478, "= the leak", C.red, 34);
+      stroke(marks[1], C.red, w("compare", "leak"));
+      show(leakTag, w("compare", "leak"), 0.4);
+
+      const f = w("compare", "follow");
+      hide([t1.g, t2.g, snap1, snap2, ...delta, leakTag], f - 0.1, 0.4);
+      const chainL = el("g", {}), chainN = el("g", {});
+      const cCode = node(420, 470, 240, 120, "your code", C.blue, 34, chainN);
+      const cCache = node(960, 470, 170, 120, "cache", C.teal, 32, chainN);
+      const cPage = node(1500, 470, 140, 120, "page", C.red, 30, chainN);
+      const a1 = arrow(cCode, cCache, C.blue, chainL), a2 = arrow(cCache, cPage, C.teal, chainL);
+      [cCode, cCache, cPage].forEach((n, i) => draw(n, f + 0.2 + i * 0.12, 0.5));
+      drawArrow(a1, f + 0.4, 0.4);
+      drawArrow(a2, f + 0.5, 0.4);
+      const dot = el("circle", { cx: 1428, cy: 470, r: 11, style: `fill:${C.yellow};opacity:0` });
+      const c1 = w("compare", "cables"), c2 = w("compare", "find");
+      recolorNode(cPage, C.yellow, c1);
+      show(dot, c1, 0.15);
+      tl.to(dot, { attr: { cx: 542 }, duration: c2 - c1, ease: "power1.inOut" }, c1);
+      recolor(a2, C.yellow, c1 + 0.25);
+      recolorNode(cCache, C.yellow, c1 + (c2 - c1) * 0.5);
+      recolor(a1, C.yellow, c1 + (c2 - c1) * 0.6);
+      recolorNode(cCode, C.yellow, c2);
+      hide(dot, c2, 0.2);
+      const snippet = el("g", { style: "opacity:0" });
+      el("path", { d: `M420,532 V600`, style: `stroke:${C.yellow};stroke-width:3` }, snippet);
+      el("rect", { x: 120, y: 600, width: 760, height: 136, rx: 14, style: `fill:#141a22;stroke:${C.dim};stroke-width:2` }, snippet);
+      el("text", { x: 150, y: 655, class: "mono", style: `fill:${C.ink};font-size:30px` }, snippet, "const cache = new Map()");
+      el("text", { x: 150, y: 705, class: "mono", style: `fill:${C.ink};font-size:30px` }, snippet, "cache.set(url, page)");
+      el("text", { x: 530, y: 705, class: "mono", style: `fill:${C.gray};font-size:30px` }, snippet, "// never removed");
+      const underline = el("path", { d: "M150,718 H505", pathLength: 1, style: hidden(C.yellow, 4) }, snippet);
+      show(snippet, w("compare", "find"), 0.5);
+      tl.to(underline, { strokeDashoffset: 0, duration: 0.5, ease: "power2.out" }, w("compare", "holding"));
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

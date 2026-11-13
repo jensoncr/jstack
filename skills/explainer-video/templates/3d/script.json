@@ -1,0 +1,30 @@
+[
+  {
+    "id": "warehouse",
+    "text": "Every program you run needs somewhere to keep its stuff. That place is called the heap. Picture it as a warehouse."
+  },
+  {
+    "id": "boxes",
+    "text": "Each time your code creates something, like a user, a cart, or a photo, a box lands in the warehouse. Your code holds on to each box with a cable."
+  },
+  {
+    "id": "cleaner",
+    "text": "When your code lets go, the cable disappears. A cleaning robot, the garbage collector, sees that nothing is attached, and hauls the box away."
+  },
+  {
+    "id": "leak",
+    "text": "A leak is a box you're done with that's still tied to something. Here, a cache keeps a cable on every old page. The robot isn't allowed to touch them."
+  },
+  {
+    "id": "full",
+    "text": "So the old pages pile up, until the warehouse is full. Your app slows down, and eventually it crashes."
+  },
+  {
+    "id": "snapshot",
+    "text": "A heap snapshot is a photo of the whole warehouse. Every box, how big it is, and what's holding on to it."
+  },
+  {
+    "id": "compare",
+    "text": "Take one photo, repeat the action, and take another. Whatever grew is your leak. Follow its cables back, and you'll find the code that's holding it."
+  }
+]
