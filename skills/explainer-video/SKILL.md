@@ -5,13 +5,11 @@ description: "Make a narrated explainer video that teaches one concept: a quick 
 
 # Explainer video
 
-Teach one concept in a 60 to 90 second narrated video. The video is code: you write the scenes, a renderer turns them into an MP4. You direct and review every shot. The renderer draws the frames.
-
-**Ask with the question tool.** A question in a normal message goes unseen, and the thread looks done. Put every question that has two or more real options through the harness question tool, so the thread shows that it is waiting: `AskUserQuestion` on Claude Code, `request_user_input` on Codex, `AskQuestion` on Cursor. Make each question stand alone, with what you found, what blocks you, and the options. Follow the tool's own schema for how many questions and options one call takes, and put the recommended option first, marked. When there are more questions than one call takes, make back-to-back calls and never drop to prose. Ask in prose only when a question has no real options, or when the tool is missing or its call fails. Then start your message with the question, use prose for the rest of the session, and say once how to get the picker: on Codex, Plan mode or the `default_mode_request_user_input` feature flag that `/setup-jstack` sets; on Cursor, a local chat on a model that has the tool.
+Teach one concept in a narrated video, as long as the concept needs. The video is code: you write the scenes, a renderer turns them into an MP4. You direct and review every shot. The renderer draws the frames.
 
 ## Pick the mode
 
-| Mode | Renderer | Use when | Measured on a 73 s video |
+| Mode | Renderer | Use when | Measured on one 73 s video |
 |---|---|---|---|
 | **2D** (default) | [HyperFrames](https://github.com/heygen-com/hyperframes): HTML, SVG, and GSAP | The goal is understanding. Nodes, arrows, tables, and code morph into each other. | 36 s render, 155 MB install, 6.7 MB output |
 | **3D** | [Remotion](https://www.remotion.dev) with React Three Fiber | A physical metaphor carries the idea, or the video should be memorable more than precise. | 46 s render, 1.2 GB install, 24 MB output |
@@ -26,7 +24,7 @@ Each video is its own project in `~/explainers/<slug>/`, outside every repositor
 
 ## The data
 
-- `script.json` in the project root: 5 to 8 scenes as `[{ "id": "leak", "text": "A leak is..." }]`, one idea per scene, about 900 characters in all.
+- `script.json` in the project root: scenes as `[{ "id": "leak", "text": "A leak is..." }]`, one idea per scene.
 - `narration.json`, written by `narrate.ts`: per scene `{ id, audio, duration, words: [{ word, start, end }] }`, times in seconds from the scene's start. Until it exists, estimate: 2.6 words per second, so the silent preview renders with the same code.
 - Scene length is its narration's duration plus a 0.6 s gap. Time every animation from these values, never from hand-typed seconds, so the picture follows the voice.
 
@@ -35,7 +33,7 @@ Each video is its own project in `~/explainers/<slug>/`, outside every repositor
 1. **Script for the mode.** Write the narration for what the chosen mode shows. A 2D video narrates the diagram. A 3D video narrates the metaphor. Narration that names a robot the viewer never sees confuses them.
 2. **One visual world.** Build one picture that evolves from scene to scene: the same objects move, grow, and change color, and the camera or layout moves between them. Never cut to an unrelated picture. A color means one thing for the whole video.
 3. **Style frames.** Render a still at the key moment of each scene and look at every one yourself. Fix anything cropped, overlapping, unreadable, or off-message before the user sees it.
-4. **Silent preview, then ask.** Render a silent preview with estimated timing. It is free. Show it with the script and ask the user to approve, change the look, change the script, or pick another voice. Never spend narration before this approval.
+4. **Silent preview, then ask.** Render a silent preview with estimated timing. It is free. Show it with the script, and ask the user with the harness question tool to approve, change the look, change the script, or pick another voice. Never spend narration before this approval.
 5. **Narrate.** `bun <this skill>/scripts/narrate.ts <project>` voices each scene with ElevenLabs into the renderer's static folder (`public/` or `assets/`, or `--audio-dir`) and writes `narration.json`. It skips scenes already narrated. `--redo <scene>` regenerates one, `--dry-run` prints the character cost and the quota left without changing anything, which also confirms the key works, and `--voice` and `--model` override the defaults (Matilda, `eleven_v4`). Tell the user the quota left.
 6. **Render and check.** Render the final video, then extract one frame every 3.5 seconds and look at all of them: subtitles match the voice, every scene shows what is being said, nothing is cropped or broken. Check audio with `ffmpeg -i <video> -af volumedetect -vn -f null -` (peak near -1 dB, never silent). You cannot hear it, so say so.
 7. **Reply** with the embedded video, its path, what each scene shows, what you checked, and the weak spots you saw.
