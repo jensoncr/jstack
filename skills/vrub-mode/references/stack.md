@@ -5,7 +5,7 @@ Read this when you start a new project or app, or choose a new framework, librar
 | Layer | Choice |
 |---|---|
 | Language | TypeScript. Large data processing (document parsing, ML or numeric libraries, batch jobs) uses Python. |
-| Application logic | Effect v4: services, typed errors, Schema at boundaries, tracing with `Effect.fn` |
+| Application logic | Effect v4: services, typed errors, Schema at boundaries, tracing with `Effect.fn`. A new project's `AGENTS.md` tells agents to read `node_modules/effect/AGENTS.md` before writing Effect code. |
 | Local tools and package manager | Bun. Deployed code runs on Cloudflare's runtime, so Bun only runs installs, scripts, and the deploy. |
 | Tests | Vitest with `@effect/vitest` |
 | Python data processing | Python 3.12 or later, with uv (lockfile committed), Pydantic at boundaries, psycopg 3, pytest. FastAPI when it serves requests. Ruff lints and formats; Pyright in strict mode type-checks. |
