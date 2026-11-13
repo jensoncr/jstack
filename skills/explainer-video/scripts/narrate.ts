@@ -29,15 +29,11 @@ const narrationPath = join(project, "narration.json");
 let narration = (await Bun.file(narrationPath).json()) as Narrated[];
 const audioDir = existsSync(join(project, "proj")) ? join(project, "proj", "assets") : join(project, "public");
 
-if (redo) {
-  const old = narration.find((n) => n.id === redo);
-  if (old && existsSync(join(audioDir, old.audio))) unlinkSync(join(audioDir, old.audio));
-  narration = narration.filter((n) => n.id !== redo);
-}
-const todo = script.filter((s) => !narration.some((n) => n.id === s.id));
+const kept = narration.filter((n) => n.id !== redo);
+const todo = script.filter((s) => !kept.some((n) => n.id === s.id));
 const chars = todo.reduce((t, s) => t + s.text.length, 0);
 console.log(`${todo.length} scene(s) to narrate, ${chars} characters`);
-if (dryRun || todo.length === 0) process.exit(0);
+if (todo.length === 0) process.exit(0);
 
 function apiKey(): string {
   if (process.env.ELEVENLABS_API_KEY) return process.env.ELEVENLABS_API_KEY.trim();
@@ -47,6 +43,25 @@ function apiKey(): string {
   process.exit(2);
 }
 const key = apiKey();
+async function quotaLeft(): Promise<string> {
+  const res = await fetch("https://api.elevenlabs.io/v1/user/subscription", { headers: { "xi-api-key": key } });
+  if (!res.ok) {
+    console.error(`ElevenLabs rejected the key: ${res.status} ${(await res.text()).slice(0, 200)}`);
+    process.exit(2);
+  }
+  const q = (await res.json()) as { character_count: number; character_limit: number };
+  return `ElevenLabs quota: ${q.character_limit - q.character_count} of ${q.character_limit} characters left`;
+}
+if (dryRun) {
+  console.log(await quotaLeft());
+  process.exit(0);
+}
+
+if (redo) {
+  const old = narration.find((n) => n.id === redo);
+  if (old && existsSync(join(audioDir, old.audio))) unlinkSync(join(audioDir, old.audio));
+  narration = kept;
+}
 
 for (const s of todo) {
   const i = script.indexOf(s);
@@ -84,5 +99,4 @@ for (const s of todo) {
   console.log(`${s.id}: ${narration.find((n) => n.id === s.id)!.duration.toFixed(2)} s, ${words.length} words`);
 }
 
-const quota = await fetch("https://api.elevenlabs.io/v1/user/subscription", { headers: { "xi-api-key": key } }).then((r) => r.json() as Promise<{ character_count: number; character_limit: number }>);
-console.log(`ElevenLabs quota: ${quota.character_limit - quota.character_count} of ${quota.character_limit} characters left`);
+console.log(await quotaLeft());
