@@ -1,7 +1,7 @@
 #!/usr/bin/env bun
 // Narrate each scene of <project>/script.json with ElevenLabs and record per-word timings in narration.json.
 // Scenes already in narration.json are skipped, so a rerun only pays for new or deleted scenes.
-import { existsSync, readFileSync, unlinkSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, unlinkSync } from "node:fs";
 import { homedir } from "node:os";
 import { join, resolve } from "node:path";
 
@@ -26,17 +26,19 @@ type Word = { word: string; start: number; end: number };
 type Narrated = { id: string; audio: string; duration: number; words: Word[] };
 const script = (await Bun.file(join(project, "script.json")).json()) as { id: string; text: string }[];
 const narrationPath = join(project, "narration.json");
-let narration = (await Bun.file(narrationPath).json()) as Narrated[];
+let narration = (existsSync(narrationPath) ? await Bun.file(narrationPath).json() : []) as Narrated[];
 // Audio goes where the renderer serves static files: Remotion's public/, HyperFrames' assets/.
+// A fresh HyperFrames project has no assets/ yet, so its hyperframes.json decides.
 const audioDir = flag("--audio-dir")
   ? resolve(project, flag("--audio-dir")!)
-  : (["public", "assets"].map((d) => join(project, d)).find((d) => existsSync(d)) ?? project);
+  : (["public", "assets"].map((d) => join(project, d)).find((d) => existsSync(d)) ??
+    join(project, existsSync(join(project, "hyperframes.json")) ? "assets" : "public"));
 
 const kept = narration.filter((n) => n.id !== redo);
 const todo = script.filter((s) => !kept.some((n) => n.id === s.id));
 const chars = todo.reduce((t, s) => t + s.text.length, 0);
 console.log(`${todo.length} scene(s) to narrate, ${chars} characters, audio into ${audioDir}`);
-if (todo.length === 0) process.exit(0);
+if (todo.length === 0 && !dryRun) process.exit(0);
 
 function apiKey(): string {
   if (process.env.ELEVENLABS_API_KEY) return process.env.ELEVENLABS_API_KEY.trim();
@@ -60,6 +62,7 @@ if (dryRun) {
   process.exit(0);
 }
 
+mkdirSync(audioDir, { recursive: true });
 if (redo) {
   const old = narration.find((n) => n.id === redo);
   if (old && existsSync(join(audioDir, old.audio))) unlinkSync(join(audioDir, old.audio));
