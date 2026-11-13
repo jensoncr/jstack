@@ -48,18 +48,26 @@ function apiKey(): string {
   process.exit(2);
 }
 const key = apiKey();
-async function quotaLeft(): Promise<string> {
+async function quota(): Promise<{ left: number; limit: number }> {
   const res = await fetch("https://api.elevenlabs.io/v1/user/subscription", { headers: { "xi-api-key": key } });
   if (!res.ok) {
     console.error(`ElevenLabs rejected the key: ${res.status} ${(await res.text()).slice(0, 200)}`);
     process.exit(2);
   }
   const q = (await res.json()) as { character_count: number; character_limit: number };
-  return `ElevenLabs quota: ${q.character_limit - q.character_count} of ${q.character_limit} characters left`;
+  return { left: q.character_limit - q.character_count, limit: q.character_limit };
 }
+const before = await quota();
 if (dryRun) {
-  console.log(await quotaLeft());
+  console.log(`ElevenLabs quota: ${before.left} of ${before.limit} characters left`);
   process.exit(0);
+}
+
+// The real file length, so the renderer never schedules audio past its end.
+function audioSeconds(file: string): number | undefined {
+  const probe = Bun.spawnSync(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", file]);
+  const seconds = Number(probe.stdout.toString().trim());
+  return probe.exitCode === 0 && seconds > 0 ? seconds : undefined;
 }
 
 mkdirSync(audioDir, { recursive: true });
@@ -99,10 +107,11 @@ for (const s of todo) {
   });
   if (current) words.push({ word: current, start, end: a.character_end_times_seconds.at(-1)! });
 
-  narration.push({ id: s.id, audio, duration: a.character_end_times_seconds.at(-1)! + 0.15, words });
+  narration.push({ id: s.id, audio, duration: audioSeconds(join(audioDir, audio)) ?? a.character_end_times_seconds.at(-1)!, words });
   narration.sort((x, y) => script.findIndex((q) => q.id === x.id) - script.findIndex((q) => q.id === y.id));
   await Bun.write(narrationPath, `${JSON.stringify(narration, null, 1)}\n`);
   console.log(`${s.id}: ${narration.find((n) => n.id === s.id)!.duration.toFixed(2)} s, ${words.length} words`);
 }
 
-console.log(await quotaLeft());
+// ElevenLabs' own counter lags by a minute or more, so subtract what this run sent.
+console.log(`ElevenLabs quota: about ${before.left - chars} of ${before.limit} characters left`);

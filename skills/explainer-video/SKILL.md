@@ -13,7 +13,7 @@ You cannot teach what you only half know, and a confident wrong explanation is w
 
 - Research the concept from primary sources before writing a word: the spec, the official docs, the source code, a textbook, the original paper. For a software concept in the user's project, read the code that implements it there.
 - Write down, privately: the problem it solves, the core mechanism in one sentence, the one or two numbers that give it scale (a read from memory takes nanoseconds and a round trip across a network milliseconds; an orbital rocket is roughly 90% propellant by mass), the main tradeoff, and the most common misconception.
-- Verify every number and claim you will put on screen. Say where a figure is approximate.
+- Verify every number and claim you will put on screen. Say where a figure is approximate, and when sources disagree, put a small source note under the number on screen.
 
 ## 2. Design the explanation
 
@@ -26,7 +26,7 @@ Find the one mental model that makes the rest obvious, then order everything so 
 - **Cause and effect on screen.** Every change in the picture has a visible reason, and the narration says why while the picture shows what. With the sound off, the picture should still teach.
 - **Contrast.** Show with and without: cached vs uncached, a reference cut vs kept, a single stage vs staged.
 - **Name the misconception** and show why it's wrong.
-- **Earn every term.** Define each piece of jargon the first time, in plain words, and only once the viewer needs it.
+- **Earn every term.** Define each piece of jargon the first time, in plain words, and only once the viewer needs it. Before rendering, list every term and product name on screen or in the narration; each is explained the first time or cut.
 - **End on use.** A one-sentence summary, then a short "so now you can predict" moment: pose a case and show the answer.
 
 Shape it to the kind of concept:
@@ -51,7 +51,7 @@ Length follows the concept: as long as it takes to reach real understanding, wit
 
 ## 4. Choose the tools
 
-The video is code: you write the scenes and a renderer turns them into frames. Pick the tools that best show this concept, read their current docs or agent skills rather than working from memory, and add whatever imports the scenes need. Pin exact versions. Use a renderer's own skill for how the tool works; where its workflow conflicts with this skill (asking you to pick a storyline, waiting for approval, a usage beacon), this skill wins: decide, keep going, and send no telemetry.
+The video is code: you write the scenes and a renderer turns them into frames. Pick the tools that best show this concept, read their current docs or agent skills rather than working from memory, and add whatever imports the scenes need. Pin the exact latest stable version at the time you start. Use a renderer's own skill for how the tool works and how to structure a project (HyperFrames wants one sub-composition per scene; keep the objects continuous across them). Where its workflow conflicts with this skill (asking you to pick a storyline, waiting for approval, a usage beacon), this skill wins: decide, keep going, and turn off telemetry (HyperFrames: `HYPERFRAMES_NO_TELEMETRY=1`). Check that the renderer kept your fonts; some swap them. Render one video at a time on a machine; a second local render queues behind the first.
 
 Starting points that worked:
 
@@ -76,9 +76,10 @@ Each video is its own project in `~/explainers/<slug>/`, outside every repositor
 
 - **One visual world.** One picture that evolves from scene to scene: the same objects move, grow, and change color, and the camera or layout moves between them. Never cut to an unrelated picture.
 - **A small palette with fixed meanings.** Three or four colors, each meaning one thing for the whole video (in use, done with, trouble), on a dark background with high contrast.
-- **Motion with intent.** Ease every move. Draw things on, grow them, morph one structure into the next; avoid fading between static slides. Move one thing at a time so the eye knows where to look.
+- **Motion with intent.** Ease every move. Draw things on, grow them, morph one structure into the next. When something changes state, the shape itself transforms; don't just fade it or recolor it. Move one thing at a time so the eye knows where to look.
+- **Fewer things, bigger.** A screen full of panels and small text is a dashboard, not this style. Show only what the current sentence is about, and reveal code a line or two at a time, highlighted as it is spoken.
 - **Depth and light in 3D.** Soft shadows, a key light and a rim light, rounded edges, slightly glossy materials. Ease the camera between positions; never cut.
-- **Readable at a glance.** Labels sit on or beside the thing they name, never floating loose. Text at least 28 px at 1080p as it appears on screen, after any camera zoom. Comparisons and readouts go in flat panels over the scene.
+- **Readable at a glance.** Labels sit on or beside the thing they name, never floating loose. Text at least 28 px at 1080p as it appears on screen, after any camera zoom. Comparisons and readouts go in flat panels over the scene (in HyperFrames, mark intended overlaps with `data-layout-allow-overlap` so `check` doesn't flag them).
 - **Build assets from code.** Shapes, geometry, and diagrams drawn in code stay crisp and change with the script. Use outside images or models only when the concept needs the real thing, and only with a license that allows it.
 - **1080p at 30 fps** unless the user wants otherwise.
 
@@ -86,20 +87,20 @@ Each video is its own project in `~/explainers/<slug>/`, outside every repositor
 
 Narrate early, so the picture can follow the voice instead of guessing:
 
-- Write the scenes to `script.json` in the project root: `[{ "id": "leak", "text": "A leak is..." }]`.
+- Write the scenes to `script.json`: `[{ "id": "leak", "text": "A leak is...", "pause": 1.5 }]`. `pause` (optional, seconds) holds silence after a scene, for a question to sink in before its answer. The folder that holds `script.json` is the project you pass to `narrate.ts`; if the renderer keeps static files in a subfolder, point `--audio-dir` at it.
 - `bun <this skill>/scripts/narrate.ts <project>` voices each scene with ElevenLabs and writes `narration.json`: per scene `{ id, audio, duration, words: [{ word, start, end }] }`, times in seconds from the scene's start. It puts the audio in `public/` or `assets/` if the project has one, or wherever `--audio-dir` says. It skips scenes already narrated; `--redo <scene>` regenerates one after a script change, `--dry-run` prints the cost and the quota left, and `--voice` and `--model` override the defaults (Matilda, `eleven_v4`).
-- Make each scene as long as its narration plus a short beat, and time every animation from the word timings: start a move on the word that names it. Never hand-type seconds. A small build script that reads `narration.json` and writes the scene starts, audio clips, and subtitle cues into the composition keeps this exact after every `--redo`.
+- Make each scene as long as its narration plus a short beat plus its `pause`, and time every animation from the word timings: start a move on the word that names it. Never hand-type seconds. A small build script that reads `narration.json` and writes the scene starts, audio clips, and subtitle cues into the composition keeps this exact after every `--redo`. Make it fail when an animation waits for a word the narration doesn't contain, or the cue silently never fires.
 - Subtitles show one sentence at a time near the bottom, or one phrase when a sentence runs past two lines, each word lit as it is spoken. Keep moving subjects clear of them.
 
 ## 7. Review it as a teacher
 
-1. Render a still at the key moment of each scene and look at each: does it show the idea the narration is stating right then, and is anything cropped, overlapping, or unreadable? Fix and re-render.
+1. Render a still at the key moment of each scene (HyperFrames: `snapshot --at`) and look at each: does it show the idea the narration is stating right then, and is anything cropped, overlapping, or unreadable? Fix and re-render.
 2. Render the final video, then look at one frame every 3.5 seconds: subtitles match the voice, nothing is broken. Check audio with `ffmpeg -i <video> -af volumedetect -vn -f null -` (peak near -1 dB, never silent). You cannot hear it, so say so.
 3. Watch it as someone new to the concept, from the frames and the script: where would they get lost, which term arrives unexplained, which step is skipped? Fix those and render again.
 
 ```bash
-# rows = video seconds / 3.5 / 6, rounded up
-ffmpeg -i <video> -vf "fps=1/3.5,scale=480:270,tile=6x<rows>:padding=4" -frames:v 1 sheet.png
+# one sheet per 84 seconds keeps subtitles readable: 24 frames, one every 3.5 s
+ffmpeg -ss <start> -t 84 -i <video> -vf "fps=1/3.5,scale=480:270,tile=4x6:padding=4" -frames:v 1 sheet-<n>.png
 ```
 
 Reply with the embedded video and its path, the mental model it builds, the one-sentence takeaway, the sources you checked, what you checked in the render, the ElevenLabs quota left, and what you'd improve.
