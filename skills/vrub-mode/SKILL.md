@@ -92,7 +92,7 @@ Read [the harness guide](references/harness/README.md) before using host-specifi
 
 **Defaults for every spawn.** Background, agent mode (read-only strips MCP on some harnesses), file pointers not inlined context, and a model per role resolved through `references/models.md` when the host supports that override. Inherited-context restrictions take precedence, so omit a conflicting model field and report the effective choice. The config there sets every role and overrides the model choices in the routed skills (`arena`, `swarm`, `interrogate`). A role with no line keeps the tier below. A line of `inherit-parent` or `auto` runs the role on the parent model, so omit the model field. Each code playbook reads its own line (`feature, refactoring`, `bug-fix`, `perf-issue`, or `hillclimb`), and prose and judgment read `judgment and prose`.
 
-- Code, prose, and judgment: tier `strong`. Every code delegate is `strong`, mechanical edits included.
+- Code, prose, and judgment: tier `strong`. Every code delegate is `strong`.
 - Exploration and verification: tier `fast`.
 - Diverse review and design panels: tier `panel`, one runner per entry.
 - The independent grader of another agent's work: tier `judge`.
