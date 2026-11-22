@@ -44,13 +44,13 @@ One line per role in the config. A value is a tier name, a seat, a list of seats
 
 `council` lists one seat per provider. Step 4 below never substitutes a council seat: one that can't run is reported. With no line, the council skill seats the newest flagship of each provider the host can run, so list the seats you want to leave a provider out.
 
-`computer use` is always a Codex `<model>@<effort>` token, whatever the harness, because the run goes through the codex CLI that ships inside ChatGPT.app. Its default is `gpt-6.1-sol@high`.
+`computer use` is always a Codex `<model>@<effort>` token, whatever the harness, because the run goes through the codex CLI that ships inside ChatGPT.app. Its default is `gpt-6.2-sol@high`.
 
 ## Seats
 
-A model token is a seat: `<provider>/<model>[@<effort>]`, such as `claudeAgent/fable` or `codex/gpt-6.1-sol@high`. The provider is a T3 Code `driverKind` (`claudeAgent`, `codex`), never a provider instance id, because instance ids differ between machines and projects (`claudeAgent` on one, `claudeAgent_2` on another). Every seat in the config pins its effort with `@<effort>`, because without it the effort depends on the route and the host: the provider's catalog default (`low` for `gpt-6.1-sol`), a separate catalog default for subagents, the user's own config, or, for a T3 child on your own instance and model, your effort. Keep the pin on any seat you add. One config serves every harness, because each harness file says how to start a seat.
+A model token is a seat: `<provider>/<model>[@<effort>]`, such as `claudeAgent/fable` or `codex/gpt-6.2-sol@high`. The provider is a T3 Code `driverKind` (`claudeAgent`, `codex`, `antigravity`), never a provider instance id, because instance ids differ between machines and projects (`claudeAgent` on one, `claudeAgent_2` on another). Every seat in the config pins its effort with `@<effort>`, because without it the effort depends on the route and the host: the provider's catalog default (`low` for `gpt-6.2-sol`), a separate catalog default for subagents, the user's own config, or, for a T3 child on your own instance and model, your effort. Keep the pin on any seat you add. One config serves every harness, because each harness file says how to start a seat.
 
-A `claudeAgent` seat names a family alias (`fable`, `opus`), which runs the newest model in that family on every route: Claude Code's `Agent` tool takes the alias, and T3 resolves it through its model catalog. Codex has no family aliases, so a `codex` seat names an exact model id; update it here when a new model ships.
+A `claudeAgent` seat names a family alias (`fable`, `opus`), which runs the newest model in that family on every route: Claude Code's `Agent` tool takes the alias, and T3 resolves it through its model catalog. Codex and Antigravity have no family aliases, so a `codex` or `antigravity` seat names an exact model id; update it here when a new model ships.
 
 ## Config
 
@@ -60,7 +60,7 @@ The one config every jstack skill reads, on every harness and machine. There is 
 ## Tiers
 strong: claudeAgent/fable@high
 fast: claudeAgent/opus@medium
-panel: claudeAgent/fable@high, claudeAgent/opus@high, codex/gpt-6.1-sol@high
+panel: claudeAgent/fable@high, claudeAgent/opus@high, codex/gpt-6.2-sol@high
 judge: differs-from-parent
 
 ## Roles
@@ -84,8 +84,8 @@ interrogate reviewers: panel
 trail reviewer: judge
 orchestrate verifier: judge
 recall workers: fast
-computer use: gpt-6.1-sol@high
-council: claudeAgent/fable@high, codex/gpt-6.1-sol@high
+computer use: gpt-6.2-sol@high
+council: claudeAgent/fable@high, codex/gpt-6.2-sol@high, antigravity/gemini-4-neon@high
 ```
 
 ## Resolving a role
