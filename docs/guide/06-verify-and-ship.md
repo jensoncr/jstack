@@ -129,7 +129,7 @@ A counterexample in model terms convinces you. The PM or designer who owns the b
 /vrub-mode open the pr. small ordered commits, evidence in the description.
 ```
 
-The [Opening a PR playbook](../../skills/vrub-mode/playbooks/opening-a-pr.md) works from a worktree, rebases the work into small ordered commits, cleans the diff, unslops the prose, runs the repo's fast local checks before the push (its own changed-files check when it has one) and leaves the full suites to CI, and returns the PR link. Five narrow PRs beat one fat one, and stacked follow-ups beat a growing branch.
+The [Opening a PR playbook](../../skills/vrub-mode/playbooks/opening-a-pr.md) works from a worktree, rebases the work into small landable commits, cleans the diff, runs the repo's fast local checks before the push and leaves the full suites to CI, writes a one-minute briefing as the body, and opens the PR ready. Stacked follow-ups beat a growing branch.
 
 ## Drive the PR to merge-ready with Babysit
 
@@ -139,7 +139,7 @@ An open PR starts collecting blockers immediately. Checks fail, reviewers commen
 /vrub-mode babysit this pr. get it green.
 ```
 
-Babysit watches the PR, with a bundled watcher on GitHub or the Origin CLI when it's available, and takes blockers in order: conflicts, then review threads, then CI. Every known fix batches into one push that has passed the local checks, so CI runs once instead of after every fix. When nothing else reviews the PR, Babysit starts a local reviewer agent that leaves its findings as inline comments. The comment triage is skeptical, because humans and agents file real catches and noise in the same list. A real finding gets a fix, and noise gets dismissed with the disproof posted on the thread. After a fix, a new reviewer checks only the fix. If the third review still finds something to fix, Babysit stops and reports instead of pushing again. When all you want is status, ask smaller and Babysit answers without starting the loop:
+Babysit watches the PR, with a bundled watcher on GitHub or the Origin CLI when it's available, and takes blockers in order: conflicts, then review threads, then CI. It never rebases or force-pushes. A conflict or a stale base comes back to you with the branch that needs the rebase. Every known fix batches into one push that has passed the local checks, so CI runs once instead of after every fix. When nothing else reviews the PR, Babysit starts a local reviewer agent that leaves its findings as inline comments. The comment triage is skeptical, because humans and agents file real catches and noise in the same list. A real finding gets a fix, and noise gets dismissed with the disproof posted on the thread. After a fix, a new reviewer checks only the fix. If the third review still finds something to fix, Babysit stops and reports instead of pushing again. When all you want is status, ask smaller and Babysit answers without starting the loop:
 
 ```text
 /vrub-mode check on pr 123. anything outstanding?

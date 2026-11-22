@@ -62,7 +62,7 @@ for PR work, select [`babysit`](./skills/babysit/SKILL.md) to check status, fix 
 
 ### just use [`/vrub-mode`](./skills/vrub-mode/SKILL.md)
 
-this skill is the main shortcut. i use it whenever i need the agent to do rigorous engineering work. it comes with twenty-three playbooks:
+this skill is the main shortcut. i use it whenever i need the agent to do rigorous engineering work. it comes with twenty-two playbooks:
 
 ```
 /vrub-mode this pr has a subtle bug where the scroll drifts every 750ms even when idle. repro
@@ -75,7 +75,7 @@ morning.
 ```
 
 <details>
-<summary>the twenty-three playbooks</summary>
+<summary>the twenty-two playbooks</summary>
 
 | playbook | for |
 |---|---|
@@ -94,7 +94,6 @@ morning.
 | [babysit](./skills/vrub-mode/playbooks/babysit.md) | drive a pr or a stack to merge-ready: conflicts, review threads, ci. |
 | [shipping](./skills/vrub-mode/playbooks/shipping.md) | independently verify a green stack, then land the contiguous verified run bottom-up through github by default or origin when available. |
 | [autonomous run](./skills/vrub-mode/playbooks/autonomous-run.md) | drive a long task to completion without stopping. |
-| [orchestrate](./skills/vrub-mode/playbooks/orchestrate.md) | a standing project handed to one coordinator chat: multi-day, many stacked prs, fleets of subagents. |
 | [autopilot-full](./skills/vrub-mode/playbooks/autopilot-full.md) | run independent prs to merged with one owner per pr and one root swarm verdict at the code-ready head. |
 | [autopilot-stack](./skills/vrub-mode/playbooks/autopilot-stack.md) | autopilot-full without the merge. build and verify prs for the operator to review and land, stacking a pr only on a pr it builds on. |
 | [session pickup](./skills/vrub-mode/playbooks/session-pickup.md) | resume or take over a prior agent's in-flight work. |
@@ -121,7 +120,7 @@ long-running work uses the host's available loop or scheduled continuation. the 
 
 ## skills
 
-[`/vrub-mode`](./skills/vrub-mode/SKILL.md) runs most of these for you when a step needs them (`how`, `why`, `architect`, `arena`, `swarm`, `interrogate`, `unslop`, `no-comments`, `technical-writing`, `tdd`, and the principles). the table below is for when you want one directly:
+[`/vrub-mode`](./skills/vrub-mode/SKILL.md) runs most of these for you when a step needs them (`why`, `architect`, `arena`, `swarm`, `interrogate`, `unslop`, `no-comments`, `technical-writing`, `tdd`, and the principles). the table below is for when you want one directly:
 
 ```
 /how do we cancel runs? do we have an n+1 when we look up every run to cancel?
@@ -139,12 +138,12 @@ long-running work uses the host's available loop or scheduled continuation. the 
 | [`/vrub-mode`](./skills/vrub-mode/SKILL.md) | default entry point for any non-trivial task. |
 | [`/vrub-help`](./skills/vrub-help/SKILL.md) | you're new to jstack, or unsure which skill, playbook, or principle fits. finds out what you're trying to do, answers that part, and hands you a prompt to type. type `/vrub-help` with your question. |
 | [`/in-your-own-words`](./skills/in-your-own-words/SKILL.md) | you want the agent to play back your goal and the problem before it starts. |
-| [`/sharpen`](./skills/sharpen/SKILL.md) | you want a prompt made deeper, not bigger, before you send it: what a top professional would do that you didn't ask for, the raw material they'd start from, their methods and tools, and an outside check that the result is right. hands back the rewritten prompt and leaves your choices open. doesn't do the task. |
+| [`/sharpen`](./skills/sharpen/SKILL.md) | you want a prompt made deeper, not bigger, before you send it: what a top professional would do that you didn't ask for, the raw material they'd start from, their methods and tools, and an outside check that the result is right. hands back the rewritten prompt, which asks the agent to prototype any choice an experiment can settle and leaves product and preference choices to you. doesn't do the task. |
 | [`babysit`](./skills/babysit/SKILL.md) | check a PR, fix CI, or address review feedback; stop at the requested readiness state. |
 | [`ship`](./skills/ship/SKILL.md) | carry an authorized merge request through readiness, independent verification, and merge, then remove the merged worktrees. |
 | [`pickup`](./skills/pickup/SKILL.md) | take over or resume a prior agent's in-flight work without redoing it. |
 | [`/how`](./skills/how/SKILL.md) | you want a walkthrough of how a subsystem works. |
-| [`/why`](./skills/why/SKILL.md) | you want to know why something was built this way. discovers available MCPs at run time and queries each evidence category in parallel (source control, issue tracker, long-form docs, real-time chat, infra observability, error tracking, analytics warehouse). |
+| [`/why`](./skills/why/SKILL.md) | you want to know why something was built this way. answers from the record, not the code: the commits and pr discussions that introduced it and each later change, and other sources when that trail is thin. cites what the authors wrote, marks its own inferences, and says what the record does not answer. |
 | [`/recall`](./skills/recall/SKILL.md) | you're starting or resuming work and want your recent context on a topic rebuilt from your own chat history and the shared record, handed back as a tight current-state brief. |
 | [`/ketchup`](./skills/ketchup/SKILL.md) | you want what changed in this chat since your last message, in plain words and small visuals, with every item waiting on you listed and decidable from the reply alone, even when that makes the reply long. |
 | [`/ketchup-video`](./skills/ketchup-video/SKILL.md) | you want the `/ketchup` catch-up as a short subtitled video of slides, with the calls waiting on you as text under it. |

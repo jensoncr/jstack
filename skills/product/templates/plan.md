@@ -9,8 +9,7 @@ plan plus the files it points at.
 ## Execution playbook
 
 Name `playbooks/autopilot-stack.md` in **How to read this** unless the user granted merge
-authority for independent PRs, in which case name `playbooks/autopilot-full.md`. A product the
-user steps away from for days takes `playbooks/orchestrate.md`.
+authority for independent PRs, in which case name `playbooks/autopilot-full.md`.
 
 ## PR order
 

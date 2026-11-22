@@ -11,8 +11,8 @@ The pipeline is **design system → spec → plan → build**.
 1. **Design.** The **design-system** skill (`../design-system/SKILL.md`) settles the visual system.
 2. **Spec.** This skill interviews, researches, drafts, and validates the spec.
 3. **Plan.** This skill writes `docs/spec/plan.md` as a vrub-mode multi-phase plan.
-4. **Build.** On the user's go, the plan's execution playbook builds it (`autopilot-stack`,
-   `autopilot-full`, or `orchestrate` under `../vrub-mode/playbooks/`). That playbook owns
+4. **Build.** On the user's go, the plan's execution playbook builds it (`autopilot-stack` or
+   `autopilot-full` under `../vrub-mode/playbooks/`). That playbook owns
    testing, verification, PRs, and merging. This skill never writes product code.
 
 Drafting transcribes an agreed definition. It never invents one. **Never silently fill a gap
