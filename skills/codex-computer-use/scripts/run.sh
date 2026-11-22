@@ -67,11 +67,11 @@ task=$1 out=$2
 [ -s "$task" ] || die "task file $task is missing or empty" 66
 prompt=$(cat "$HERE/preamble.md" && printf '\n## Task\n\n' && cat "$task") || die "cannot read the run rules in $HERE/preamble.md or the task file $task" 66
 
-# The `computer use` role line in the harness config, e.g. `computer use: gpt-6.1-sol@high`.
+# The `computer use` role line in the harness config, e.g. `computer use: gpt-6.2-sol@high`.
 if [ -z "$model" ]; then
   token=$(sed -n 's/^computer use:[[:space:]]*\([^[:space:]]*\).*/\1/p' "$HERE/../../vrub-mode/references/models.md" 2>/dev/null | head -1)
   token=${token#codex/}
-  token=${token:-gpt-6.1-sol@high}
+  token=${token:-gpt-6.2-sol@high}
   model=${token%@*}
   if [ "$token" != "$model" ]; then effort=${effort:-${token#*@}}; fi
 fi

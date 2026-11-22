@@ -50,7 +50,7 @@ two steps:
 
 new here? the [jstack guide](./docs/guide/README.md) walks you through a first real task, from setup and prompting through verification and overnight runs. stuck, or unsure which skill fits? ask [`/vrub-help`](./skills/vrub-help/SKILL.md).
 
-that's it. the other skills are situational; the mode skill uses them for you as needed. out of the box the mode splits work by tier: `strong` for judgment, prose, and all delegated code, `fast` for exploration and verification fan-out, `panel` for reviewers, `judge` for the independent grader. one [model config](./skills/vrub-mode/references/models.md#config) serves every harness: fable for `strong`, opus for `fast`, a panel of fable, opus, and gpt-6.1 sol, and a judge from a different provider than your chat. seats on another provider run through t3 code's cross-provider delegation; fork jstack to change any of it.
+that's it. the other skills are situational; the mode skill uses them for you as needed. out of the box the mode splits work by tier: `strong` for judgment, prose, and all delegated code, `fast` for exploration and verification fan-out, `panel` for reviewers, `judge` for the independent grader. one [model config](./skills/vrub-mode/references/models.md#config) serves every harness: fable for `strong`, opus for `fast`, a panel of fable, opus, and gpt-6.2 sol, and a judge from a different provider than your chat. seats on another provider run through t3 code's cross-provider delegation; fork jstack to change any of it.
 
 ## usage
 
@@ -156,7 +156,7 @@ long-running work uses the host's available loop or scheduled continuation. the 
 | [`/arena`](./skills/arena/SKILL.md) | you want N parallel attempts at the same thing, then to grab the best parts of each. |
 | [`/swarm`](./skills/swarm/SKILL.md) | you want N parallel workers across different slices or races, then one aggregated report. |
 | [`/interrogate`](./skills/interrogate/SKILL.md) | you have a diff and want a panel of adversaries to try to break it, keeping only findings a run proves. |
-| [`/council`](./skills/council/SKILL.md) | you want review or feedback from models from different providers, such as claude and gpt, fixed and re-reviewed until none of them has a blocking finding. needs a harness that can run other providers' models, such as t3 code. |
+| [`/council`](./skills/council/SKILL.md) | you want review or feedback from models from different providers, such as claude, gpt, and gemini, fixed and re-reviewed until none of them has a blocking finding. needs a harness that can run other providers' models, such as t3 code. |
 | [`/automate-me`](./skills/automate-me/SKILL.md) | you want your own `-mode` skill, drafted from how you've actually worked. |
 | [`/setup-jstack`](./skills/setup-jstack/SKILL.md) | you're setting up jstack on a machine. turns on the codex question picker and offers verification skills. |
 | [`/reflect`](./skills/reflect/SKILL.md) | a long task landed and you want the recipe captured as a skill edit. |
