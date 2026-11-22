@@ -156,7 +156,7 @@ long-running work uses the host's available loop or scheduled continuation. the 
 | [`/arena`](./skills/arena/SKILL.md) | you want N parallel attempts at the same thing, then to grab the best parts of each. |
 | [`/swarm`](./skills/swarm/SKILL.md) | you want N parallel workers across different slices or races, then one aggregated report. |
 | [`/interrogate`](./skills/interrogate/SKILL.md) | you have a diff and want a panel of adversaries to try to break it, keeping only findings a run proves. |
-| [`/council`](./skills/council/SKILL.md) | you want review or feedback from models from different providers, such as claude and gpt, fixed and re-reviewed until none of them has a blocking finding. needs a harness that can run other providers' models, such as t3 code. |
+| [`/council`](./skills/council/SKILL.md) | you want review or feedback from models from different providers, such as claude, gpt, and gemini, fixed and re-reviewed until none of them has a blocking finding. needs a harness that can run other providers' models, such as t3 code. |
 | [`/automate-me`](./skills/automate-me/SKILL.md) | you want your own `-mode` skill, drafted from how you've actually worked. |
 | [`/setup-jstack`](./skills/setup-jstack/SKILL.md) | you're setting up jstack on a machine. turns on the codex question picker and offers verification skills. |
 | [`/reflect`](./skills/reflect/SKILL.md) | a long task landed and you want the recipe captured as a skill edit. |
