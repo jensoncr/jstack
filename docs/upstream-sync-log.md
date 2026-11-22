@@ -32,7 +32,8 @@ Upstream range `c742dd6..0b46ec3`, 5 commits under `pstack/`. Merged on top of j
 | `bf0c7cd` `2f87c85` `e58dd04` `dd24b67`: new default models, Opus-first routing with Fable as an exception, the cap at `xhigh`, the `-fast` rule, and the setup budget ladder | jstack names roles and tiers, and one config in `references/models.md` maps them to seats for every harness. Skills, playbooks, and agents name no model. The Gemini 4 Neon seat was already in the council line. |
 | `2f87c85`: `model:` pinned in the `vrub-agent` agent file | A Cursor model slug in the agent file would reach other harnesses. The role's seat sets the model. |
 | `2f87c85`: the multi-phase plan cut to five steps, with `check-plan.mjs` and its test deleted | `/product` writes its plan from the skeleton, and `check-plan.mjs` enforces it. jstack keeps both, drops the explore and writing-style steps, and takes upstream's shorter prototype step. |
-| The benny automation pack, `make-bot-ui`, the generated Claude Code tree, and `docs/harness/claude-code.md` | Cursor automations and Cursor's adapter. `rename.sh` deletes them. |
+| The benny automation pack, `make-bot-ui`, and `docs/harness/claude-code.md` | Cursor automations and Cursor's adapter. `rename.sh` deletes them. |
+| The generated Claude Code tree | It lives outside `pstack/`, so the sync never copies it. |
 | Version bumps 0.15.37 to 0.15.46 | jstack versions itself. |
 
 ### jstack rules kept through the merge

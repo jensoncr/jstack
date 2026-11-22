@@ -110,7 +110,7 @@ when invoked it:
 
 1. matches your task to a [playbook](./skills/vrub-mode/playbooks/) and opens a todo list whose first items are its steps, copied in verbatim.
 2. routes to the other skills as the steps fire.
-3. writes unslopped replies framed for the consumer and the maintainer.
+3. writes short, unslopped replies that lead with what changes for you and label each claim as measured, inferred, or a guess.
 
 the full rules and playbooks live in [`skills/vrub-mode/SKILL.md`](./skills/vrub-mode/SKILL.md).
 

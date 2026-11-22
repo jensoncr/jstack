@@ -8,7 +8,7 @@ Prompts worth copying, then the mistakes everyone makes once. Swap in your own p
 use /how first to understand how this initialization works. then use /why to figure out why it broke recently.
 ```
 
-Mechanics first, history second. Each skill's report tells you which sources it searched, so you know what the answer is grounded in.
+Mechanics first, history second. `/why` cites what the authors wrote and says what the record does not answer, so you know what the answer is grounded in.
 
 ## Restate a noisy report before touching code
 
