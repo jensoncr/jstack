@@ -7,7 +7,7 @@ Every jstack delegation names a **role** and its **tier**. Read [the harness gui
 | Tier | Intent | Shape |
 |---|---|---|
 | `strong` | Judgment, prose, vague intent, hard code, and precisely specified steps that must be followed to the letter. | one model |
-| `fast` | Mechanical edits, exploration, verification lanes, any cheap fan-out. | one model |
+| `fast` | Exploration, verification lanes, and any cheap fan-out, a swarm's mechanical edits included. | one model |
 | `panel` | Independent reviewers or runners. One subagent per entry, so the list length sets the count. Repeats are allowed. | list |
 | `judge` | The one independent reviewer that grades or verifies another agent's work. | one model, or `differs-from-parent` |
 
@@ -26,7 +26,7 @@ One line per role in the config. A value is a tier name, a seat, a list of seats
 | `judgment and prose` | `strong` | vrub-mode delegate tiering, how |
 | `arena runners` | `panel` | arena, eval |
 | `arena cross-judge` | `judge` | arena, eval, figure-it-out |
-| `swarm workers` | `fast` | swarm, verification lanes in multi-phase plans |
+| `swarm workers` | `fast` | swarm, verification lanes in multi-phase plans, eval's dispatch-only agents, grill-me's bulk lookups |
 | `interrogate reviewers` | `panel` | interrogate |
 | `trail reviewer` | `judge` | show-me-your-work |
 | `recall workers` | `fast` | recall |
