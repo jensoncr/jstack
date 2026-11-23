@@ -20,7 +20,7 @@ The design isn't sacred once code starts. If the same workaround keeps coming ba
 /arena take my prompt to the arena verbatim. i want to compare their proposals with yours.
 ```
 
-[`/arena`](../../skills/arena/SKILL.md) is the general tool underneath. N subagents attempt the same design or code brief in parallel, each writing to its own worktree or directory. A read-only judge on the `judge` tier scores every candidate against a rubric. The judge comes from a different model family than the parent when your harness has one, and runs in a fresh context on the same family when it doesn't. When no judge can run, the coordinator skips it and picks the base itself. The coordinator reads each candidate end to end, picks a base, grafts in the best ideas from the losers, and verifies the result.
+[`/arena`](../../skills/arena/SKILL.md) is the general tool underneath. N subagents attempt the same design or code brief in parallel, each writing to its own worktree or directory. Read-only judges on the `judge` tier each score every candidate against a rubric, without seeing which model wrote which. By default two judges run, from two providers other than the parent's. Where your harness can reach only one other provider, one judge runs. On a single provider, one judge runs in a fresh context. Judges who pick different bases get one more round with each other's reasoning. When no judge can run, the coordinator skips them and picks the base itself. The coordinator reads each candidate end to end, picks a base, grafts in the best ideas from the losers, has the judges check the grafted result, and verifies it.
 
 ```mermaid
 flowchart LR
@@ -28,12 +28,13 @@ flowchart LR
     B --> C[Candidate 1]
     B --> D[Candidate 2]
     B --> E[Candidate N]
-    C --> F[Cross-judge]
+    C --> F[Cross-judges]
     D --> F
     E --> F
     F --> G[Pick a base]
     G --> H[Graft the best parts]
-    H --> I[Verify]
+    H --> J[Judges check any graft]
+    J --> I[Verify]
 ```
 
 The panel comes from the `panel` tier in the [model config](../../skills/vrub-mode/references/models.md#config), and you can adjust it per task. Ask for more candidates when the decision matters, fewer when it doesn't:

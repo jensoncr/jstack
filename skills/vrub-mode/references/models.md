@@ -9,9 +9,16 @@ Every jstack delegation names a **role** and its **tier**. Read [the harness gui
 | `strong` | Judgment, prose, vague intent, hard code, and precisely specified steps that must be followed to the letter. | one model |
 | `fast` | Exploration, verification lanes, and any cheap fan-out, a swarm's mechanical edits included. | one model |
 | `panel` | Independent reviewers or runners. One subagent per entry, so the list length sets the count. Repeats are allowed. | list |
-| `judge` | The one independent reviewer that grades or verifies another agent's work. | one model, or `differs-from-parent` |
+| `judge` | The independent reviewer that grades or verifies another agent's work. Arena seats two by default. | one model, or `differs-from-parent` |
 
-`differs-from-parent` means the first `panel` entry whose provider is not the parent chat's. With no such entry that can run, it means the first entry whose model differs from the parent's. When every entry matches the parent, use the first entry and say so in the reply. A judge from the parent's own provider is medium signal, as in the panel rules below.
+`differs-from-parent` picks judges from the `panel`. Arena seats two, and every other judge role seats one.
+
+- Take the `panel` entries the host can run, in config order.
+- Keep the entries from providers other than the parent chat's, at most one per provider. When any remain, seat them in order, up to the number the role seats.
+- When none remain, seat one judge from the entries the host can run: the first whose model differs from the parent's, or else the first. A judge from the parent's own provider is medium signal, as in the panel rules below.
+- When the host can run no entry, no judge can run.
+
+The reply says how many judges sat and why.
 
 ## Roles
 
@@ -51,7 +58,7 @@ The one config every jstack skill reads, on every harness and machine. There is 
 ## Tiers
 strong: claudeAgent/fable@high
 fast: claudeAgent/opus@medium
-panel: claudeAgent/fable@high, claudeAgent/opus@high, codex/gpt-6.2-sol@high
+panel: claudeAgent/fable@high, claudeAgent/opus@high, codex/gpt-6.2-sol@high, antigravity/gemini-4-neon@high
 judge: differs-from-parent
 
 ## Roles

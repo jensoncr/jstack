@@ -24,11 +24,15 @@ If a candidate produces no output, proceed with N-1 and note the dropout.
 
 ## Phase C: Cross-judge
 
-After all Phase B candidates complete, resolve `arena cross-judge` (tier `judge`) and spawn one read-only judge subagent on it. The judge comes from a model family other than the parent's whenever the config has one, which `differs-from-parent` picks first. When it resolves to the parent's family, as on a host that runs only one provider, it runs in a fresh context, and the synthesis note counts its agreement as same-model, medium signal, per `references/models.md`. An `inherit-parent` or `auto` value never judges. If no judge can run, skip it, pick the base alone in Phase D, and say so. The judge sees the rubric and the candidates by path label, scores each criterion, and recommends a base with rationale. It runs in parallel with your reading in Phase D. Don't spawn it while candidates are still writing.
+After all Phase B candidates complete, resolve `arena cross-judge` (tier `judge`) and spawn the judges as read-only subagents. A role line that names seats is used as written, one judge per seat. A line that resolves to `differs-from-parent` seats two judges, or one where fewer other providers can run, per the `differs-from-parent` steps in `references/models.md`. A judge on the parent's family, as on a host that runs only one provider, runs in a fresh context, and the synthesis note counts its agreement as same-model, medium signal, per `references/models.md`. An `inherit-parent` or `auto` value never judges. If no judge can run, skip Phase C, pick the base alone in Phase D, and say so. Say how many judges ran and why.
+
+Each judge works alone. It sees the rubric and the candidates by path label, never by model, scores each criterion, and recommends a base with rationale. The judges run in parallel with your reading in Phase D. Don't spawn them while candidates are still writing.
+
+When judges recommend different bases, run one more round. Give each judge the others' scores and rationales, unnamed, and ask it to hold or change its pick against the rubric. Don't run a third round.
 
 ## Phase D: Pick a base
 
-Read every candidate end to end before picking. Score each against the rubric criterion by criterion, not on holistic feel, and compare with the cross-judge when Phase C ran one. Agreement on the base confirms the pick. Disagreement means one of you is biased or the rubric was ambiguous. Read both rationales before deciding.
+Read every candidate end to end before picking. Score each against the rubric criterion by criterion, not on holistic feel, and compare with the cross-judges when Phase C ran them. Agreement on the base confirms the pick. Disagreement means one of you is biased or the rubric was ambiguous. Read every rationale before deciding, and name a judge who still disagrees in the synthesis note.
 
 Pick the base a future maintainer can extend most easily without breaking invariants. When two feel tied, prefer the cleaner boundary or smaller API, per the Laziness Protocol.
 
@@ -40,8 +44,10 @@ If the candidates converge on one shape, that is strong agreement. Note it and s
 
 ## Phase F: Verify
 
+After a graft, send the synthesized artifact back to the Phase C judges once. Each checks it against the rubric and names what a graft broke. Fix what you can show is wrong.
+
 Verify the synthesized artifact like any other output, per the **prove-it-works** principle skill. If verification finds a problem the arena missed, either Phase A was wrong (re-frame and re-run) or a candidate caught it and you missed the graft (go back to Phase E). Don't paper over it.
 
 ## Outputs
 
-One synthesized artifact, with a short synthesis note alongside naming the base and why, the cross-judge's verdict or that Phase C skipped the judge, each graft with its source candidate, what was rejected and why, any convergence or dropouts, and the verification result.
+One synthesized artifact, with a short synthesis note alongside naming the base and why, each cross-judge's verdict and whether they agreed, or that Phase C skipped them, each graft with its source candidate, what was rejected and why, any convergence or dropouts, and the verification result.
