@@ -38,7 +38,7 @@ The two compose naturally. `do why first then how` is a good prompt when you sus
 /research how do other inspection tools model a first article report? we're choosing a data model.
 ```
 
-[`/research`](../../skills/research/SKILL.md) answers from the web with sources. It sends a single fact to Exa, a multi-part question to a Parallel Task that runs while you keep working, and one page to Parallel's extractor, all through the Executor MCP. Without those tools it uses the harness's web search and says so. It asks you to name the decision the answer would change, and it tells you which sources it read and which it knows only through a summary. `/grill-me` and `/product` call it for their web lookups.
+[`/research`](../../skills/research/SKILL.md) answers from the web with sources. It sends a single fact to Exa, a multi-part question to a Parallel Task that runs while you keep working, and one page to Parallel's extractor, all through the Executor MCP. Without those tools it uses the harness's web search and says so. It names the decision the answer would change before it searches, and it tells you which sources it read and which it knows only through a summary. `/grill-me` and `/product` call it for their web lookups.
 
 ## Actually understand it with `/teach`
 

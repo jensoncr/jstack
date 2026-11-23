@@ -16,11 +16,11 @@ Name the decision each question would change before you search. A question that 
 | Read one page or PDF in full | Parallel extract | `tools.parallel.extract.v1ExtractPost` |
 | Several parts that need synthesis | Parallel Task, processor `pro` | `tools.parallel.tasks.runsPostV1TasksRunsPost` |
 
-Read each tool's input with the Executor `describe` tool before its first call. Never guess argument names. Every call takes the `accountId` from that signature, with the tool's own arguments under `input`, and Parallel's under `input.body`.
+Read each tool's input with the Executor `describe` tool before its first call. Never guess argument names. Every call takes the `accountId` from that signature, with the tool's own arguments under `input`. Parallel's extract and Task-creation tools take theirs under `input.body`. Its result tool takes `input.path.run_id` and `input.query.timeout`.
 
 - **Exa search.** Ask for `contents: { highlights: true }`, not full text. Ten searches at once draw 429s, so run five or fewer.
 - **Parallel extract.** Pass an `objective`. Full text goes under `advanced_settings.full_content`.
-- **Parallel Task.** Start it first, then keep working. It takes one to fifteen minutes. Say in `task_spec.output_schema`, as plain text, what the report must hold: primary sources, a URL for every claim, and measured evidence kept apart from opinion. Collect it with `tools.parallel.tasks.runsResultGetV1TasksRunsRunIdResultGet` and a `query.timeout` of 40 seconds or less, because the MCP client cuts longer calls. A timeout, or an error that names HTTP 408, means the run is still going, so call again. When you need the answer before it finishes, answer from the other tools and say the Task was unfinished.
+- **Parallel Task.** Start it first, then keep working. It takes one to fifteen minutes. Say in `task_spec.output_schema`, as plain text, what the report must hold: primary sources, a URL for every claim, and measured evidence kept apart from opinion. Collect it with `tools.parallel.tasks.runsResultGetV1TasksRunsRunIdResultGet` and a timeout of 40 seconds or less, because the MCP client cuts longer calls. A timeout, or an error that names HTTP 408, means the run is still going, so call again. When you need the answer before it finishes, answer from the other tools and say the Task was unfinished.
 
 When the Executor tools are missing, use the harness's web search and say so in the reply.
 
