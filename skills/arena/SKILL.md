@@ -24,11 +24,11 @@ If a candidate produces no output, proceed with N-1 and note the dropout.
 
 ## Phase C: Cross-judge
 
-After all Phase B candidates complete, resolve `arena cross-judge` (tier `judge`) and spawn two read-only judge subagents on it, one per provider, per the two-judge rule in `references/models.md`. Neither judge comes from the parent's model family whenever the config has two others. A judge that resolves to the parent's family, as on a host that runs only one provider, runs in a fresh context, and the synthesis note counts its agreement as same-model, medium signal, per `references/models.md`. An `inherit-parent` or `auto` value never judges. If only one judge can run, run one and say so. If none can run, skip Phase C, pick the base alone in Phase D, and say so.
+After all Phase B candidates complete, resolve `arena cross-judge` (tier `judge`) and spawn the judges as read-only subagents. A role line that names seats is used as written, one judge per seat. A line that resolves to `differs-from-parent` seats judges per the two-judge rule in `references/models.md`: two from providers other than the parent's when the config has two, and one when it has one. On a host that runs only one provider, that rule seats a single judge on the parent's family. It runs in a fresh context, and the synthesis note counts its agreement as same-model, medium signal, per `references/models.md`. An `inherit-parent` or `auto` value never judges. If no judge can run, skip Phase C, pick the base alone in Phase D, and say so. Say how many judges ran and why.
 
 Each judge works alone. It sees the rubric and the candidates by path label, never by model, scores each criterion, and recommends a base with rationale. The judges run in parallel with your reading in Phase D. Don't spawn them while candidates are still writing.
 
-When the judges recommend different bases, run one more round. Give each judge the other's scores and rationale, unnamed, and ask it to hold or change its pick against the rubric. Don't run a third round.
+When two judges recommend different bases, run one more round. Give each judge the other's scores and rationale, unnamed, and ask it to hold or change its pick against the rubric. Don't run a third round.
 
 ## Phase D: Pick a base
 

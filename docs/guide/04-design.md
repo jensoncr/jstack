@@ -20,7 +20,7 @@ The design isn't sacred once code starts. If the same workaround keeps coming ba
 /arena take my prompt to the arena verbatim. i want to compare their proposals with yours.
 ```
 
-[`/arena`](../../skills/arena/SKILL.md) is the general tool underneath. N subagents attempt the same design or code brief in parallel, each writing to its own worktree or directory. Two read-only judges on the `judge` tier each score every candidate against a rubric, without seeing which model wrote which. They come from two model families other than the parent's when your harness has them, and run in fresh contexts on the same family when it doesn't. When they pick different bases they get one more round with each other's reasoning. When no judge can run, the coordinator skips them and picks the base itself. The coordinator reads each candidate end to end, picks a base, grafts in the best ideas from the losers, has the judges check the grafted result, and verifies it.
+[`/arena`](../../skills/arena/SKILL.md) is the general tool underneath. N subagents attempt the same design or code brief in parallel, each writing to its own worktree or directory. Read-only judges on the `judge` tier each score every candidate against a rubric, without seeing which model wrote which. Two judges run, from two model families other than the parent's, when your harness has them. With one other family one judge runs, and with none a single judge runs in a fresh context on the parent's family. When two judges pick different bases they get one more round with each other's reasoning. When no judge can run, the coordinator skips them and picks the base itself. The coordinator reads each candidate end to end, picks a base, grafts in the best ideas from the losers, has the judges check the grafted result, and verifies it.
 
 ```mermaid
 flowchart LR
@@ -28,12 +28,12 @@ flowchart LR
     B --> C[Candidate 1]
     B --> D[Candidate 2]
     B --> E[Candidate N]
-    C --> F[Two cross-judges]
+    C --> F[Cross-judges]
     D --> F
     E --> F
     F --> G[Pick a base]
     G --> H[Graft the best parts]
-    H --> J[Judges check the graft]
+    H --> J[Judges check any graft]
     J --> I[Verify]
 ```
 
