@@ -50,7 +50,7 @@ two steps:
 
 new here? the [jstack guide](./docs/guide/README.md) walks you through a first real task, from setup and prompting through verification and overnight runs. stuck, or unsure which skill fits? ask [`/vrub-help`](./skills/vrub-help/SKILL.md).
 
-that's it. the other skills are situational; the mode skill uses them for you as needed. out of the box the mode splits work by tier: `strong` for judgment, prose, and the code a playbook delegates, `fast` for exploration, verification, and swarm fan-out, `panel` for reviewers, `judge` for the independent grader. one [model config](./skills/vrub-mode/references/models.md#config) serves every harness: fable for `strong`, opus for `fast`, a panel of fable, opus, gpt-6.2 sol, and gemini 4 neon, and judges from providers other than your chat's. seats on another provider run through t3 code's cross-provider delegation; fork jstack to change any of it.
+that's it. the other skills are situational; the mode skill uses them for you as needed. out of the box the mode splits work by tier: `strong` for judgment, prose, and the code a playbook delegates, `fast` for exploration, verification, and swarm fan-out, `panel` for reviewers, `judge` for the independent grader. one [model config](./skills/vrub-mode/references/models.md#config) serves every harness: fable for `strong`, opus for `fast`, a panel of fable, opus, gpt-6.2 sol, and gemini 4 neon, and one or two judges, from providers other than your chat's when your harness can reach them. seats on another provider run through t3 code's cross-provider delegation; fork jstack to change any of it.
 
 ## usage
 
