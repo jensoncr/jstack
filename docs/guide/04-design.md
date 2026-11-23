@@ -4,6 +4,14 @@ One attempt at a hard design locks in the first shape the model thought of. `/ar
 
 The two most common design mistakes are taking the agent's first design and polishing a plan that no code has tested. This page fixes both. You plan through code. Prototypes answer the open questions, a README or tutorial sets the target, and the written plan comes last.
 
+## Settle what to build with `/spec`
+
+```text
+/spec the estimators retype every RFQ email by hand. spec out an intake tool an agent can build.
+```
+
+[`/spec`](../../skills/spec/SKILL.md) turns a messy problem into a folder that stands alone. `spec.md` says what must be true, `checks/` holds the cases and rules the build is judged by, and `plan.md` lists the slices in order with the prompt that starts an agent. It writes and freezes the checks before any design, so the build has a score to climb from the first slice. When a choice is hard to reverse, such as the data model, it fans out full designs through `/arena` with a visual comparison diagram for you to keep, drop, or alter before the kept agents iterate in parallel and go to the judges, then puts the result in `contracts/` as real types. It finishes with a cold read by a fresh agent that has only the folder, and it stops before any code. A worked example ships with the skill.
+
 ## Settle the shape with `/architect`
 
 ```text

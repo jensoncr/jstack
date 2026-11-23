@@ -1,0 +1,109 @@
+# Golden cases for RFQ intake.
+#
+# Written during the spec, before any code exists. Each case is an input and
+# the result a person agreed is correct. A case names no function, file or
+# framework, so it survives any implementation.
+#
+# Slice 1 of plan.md adds the runner that feeds each `email` to the system and
+# compares the result with `expect`. Until then every case fails, which is the
+# starting point of the climb: 0 of 6.
+#
+# These six are visible to the builder. Four more live in checks/holdout/,
+# which the builder does not read. The reviewer runs them at the end.
+
+- id: C01
+  proves: [R1]
+  name: one part, everything stated
+  email:
+    from: buyer@acme-aero.example
+    subject: "RFQ: bracket 1042"
+    body: "Please quote 50 pcs of BRK-1042 rev C, need by March 14."
+    attachments: ["BRK-1042_revC.pdf"]
+  expect:
+    customer: acme-aero
+    due_date: "2027-03-14"
+    line_items:
+      - { part_number: BRK-1042, revision: C, quantity: 50 }
+    flags: []
+
+- id: C02
+  proves: [R1, R3]
+  name: two parts, drawings linked by filename
+  email:
+    from: buyer@acme-aero.example
+    subject: "Quote request"
+    body: "Qty 20 of HSG-2210 rev A and qty 200 of PIN-0031 rev B. Due 4/2."
+    attachments: ["HSG-2210_A.pdf", "PIN-0031_B.step"]
+  expect:
+    customer: acme-aero
+    due_date: "2027-04-02"
+    line_items:
+      - { part_number: HSG-2210, revision: A, quantity: 20, drawing: "HSG-2210_A.pdf" }
+      - { part_number: PIN-0031, revision: B, quantity: 200, drawing: "PIN-0031_B.step" }
+    flags: []
+
+- id: C03
+  proves: [R2]
+  name: quantity missing, must not be guessed
+  email:
+    from: purchasing@northfield.example
+    subject: "RFQ PLT-7700"
+    body: "Can you quote PLT-7700 rev D? Drawing attached."
+    attachments: ["PLT-7700_D.pdf"]
+  expect:
+    customer: northfield
+    due_date: null
+    line_items:
+      - { part_number: PLT-7700, revision: D, quantity: null }
+    flags: [QUANTITY_MISSING, DUE_DATE_MISSING]
+
+- id: C04
+  proves: [R3]
+  name: attachment with no matching part number
+  email:
+    from: buyer@acme-aero.example
+    subject: "RFQ: BRK-1042"
+    body: "10 pcs BRK-1042 rev C by May 1. General notes attached."
+    attachments: ["BRK-1042_revC.pdf", "supplier_quality_notes.pdf"]
+  expect:
+    customer: acme-aero
+    due_date: "2027-05-01"
+    line_items:
+      - { part_number: BRK-1042, revision: C, quantity: 10, drawing: "BRK-1042_revC.pdf" }
+    unlinked_attachments: ["supplier_quality_notes.pdf"]
+    flags: []
+
+- id: C05
+  proves: [R2, R5]
+  name: revision in email and filename disagree
+  email:
+    from: purchasing@northfield.example
+    subject: "RFQ"
+    body: "Quote 75 of PLT-7700 rev E, due June 9."
+    attachments: ["PLT-7700_D.pdf"]
+  expect:
+    customer: northfield
+    due_date: "2027-06-09"
+    line_items:
+      - { part_number: PLT-7700, revision: null, quantity: 75 }
+    flags: [REVISION_CONFLICT]
+    exportable: false
+
+- id: C06
+  proves: [R1]
+  name: forwarded email, request is in the quoted text
+  email:
+    from: sales@ourshop.example
+    subject: "Fwd: need pricing"
+    body: |
+      FYI, can someone pick this up?
+      ---------- Forwarded message ----------
+      From: buyer@acme-aero.example
+      We need 5 pcs of SPC-0900 rev A by Feb 20.
+    attachments: []
+  expect:
+    customer: acme-aero
+    due_date: "2027-02-20"
+    line_items:
+      - { part_number: SPC-0900, revision: A, quantity: 5 }
+    flags: [DRAWING_MISSING]
