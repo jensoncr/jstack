@@ -26,7 +26,7 @@ Each open node is one of three kinds. Only decisions reach the user.
 - **Empirical.** Running something would settle it: behavior, layout, timing, output. Sketch it per the vrub-mode skill's `playbooks/prototype.md` and let the result decide, or list it as a prototype step in the brief.
 - **Decision.** A product, preference, or priority call that no lookup or experiment settles. Ask it.
 
-Don't block on lookups. A running lookup is an unsettled prerequisite, so only the questions downstream of it wait. Ask the rest of the frontier now.
+Look up a fact on the web with the **research** skill. Don't block on lookups. A running lookup is an unsettled prerequisite, so only the questions downstream of it wait. Ask the rest of the frontier now.
 
 A lookup that contradicts the user is itself a decision. "You said partial refunds, but `refund.ts` only refunds whole orders. Which is right?" goes in the next round.
 

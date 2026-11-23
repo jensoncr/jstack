@@ -2,7 +2,7 @@
 
 Editing code you don't understand is how subtle regressions ship, and that's as true for the agent as for you. Agents usually fail in one of two ways. They misread what you want, or they don't have the context to do the work right. [What goes in a prompt](./02-vrub-mode.md#what-goes-in-a-prompt) handles the first. This page handles the second.
 
-jstack gives you four ways in. `/how` explains what the code does now. `/why` digs up the reasons it's shaped that way. `/teach` blends both into one explanation. `/recall` rebuilds your own recent context on a topic. Each one also makes the agent explain itself in words you can check. That's how you supervise an agent that may know the code better than you do.
+jstack gives you five ways in. `/how` explains what the code does now. `/why` digs up the reasons it's shaped that way. `/research` answers from the web when the repo can't. `/teach` blends how and why into one explanation. `/recall` rebuilds your own recent context on a topic. Each one also makes the agent explain itself in words you can check. That's how you supervise an agent that may know the code better than you do.
 
 ## Start with a read-only investigation
 
@@ -31,6 +31,14 @@ Ask the question you actually have. [`/how`](../../skills/how/SKILL.md) reads th
 [`/why`](../../skills/why/SKILL.md) answers from the record, not the code. It reads the commits and PR discussions that introduced the code and each later change, and looks at other sources when that trail is thin. The answer cites what the authors wrote, marks the agent's own inferences as inferences, and says what the record does not answer, because "nobody wrote down why" is itself an answer.
 
 The two compose naturally. `do why first then how` is a good prompt when you suspect the history explains the mess.
+
+## Look outside the repo with `/research`
+
+```text
+/research how do other inspection tools model a first article report? we're choosing a data model.
+```
+
+[`/research`](../../skills/research/SKILL.md) answers from the web with sources. It sends a single fact to Exa, a multi-part question to a Parallel Task that runs while you keep working, and one page to Parallel's extractor, all through the Executor MCP. Without those tools it uses the harness's web search and says so. It names the decision the answer would change before it searches, and it tells you which sources it read and which it knows only through a summary. `/grill-me` and `/product` call it for their web lookups.
 
 ## Actually understand it with `/teach`
 
