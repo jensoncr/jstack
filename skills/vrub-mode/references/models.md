@@ -11,7 +11,14 @@ Every jstack delegation names a **role** and its **tier**. Read [the harness gui
 | `panel` | Independent reviewers or runners. One subagent per entry, so the list length sets the count. Repeats are allowed. | list |
 | `judge` | The independent reviewer that grades or verifies another agent's work. Arena seats two by default. | one model, or `differs-from-parent` |
 
-`differs-from-parent` means the first `panel` entry whose provider is not the parent chat's. With no such entry that can run, it means the first entry that can run whose model differs from the parent's. When no entry that can run differs from the parent, use the first entry that can run and say so in the reply. A judge from the parent's own provider is medium signal, as in the panel rules below. A role that seats two judges and resolves to `differs-from-parent` takes the first two entries that can run whose providers differ from the parent's and from each other. When only one such provider can run, it seats one judge from it. When none can run, it seats one judge exactly as a one-judge role does. The reply says how many judges sat and why.
+`differs-from-parent` picks judges from the `panel`. Arena seats two, and every other judge role seats one.
+
+- Take the `panel` entries the host can run, in config order.
+- Keep the entries from providers other than the parent chat's, at most one per provider. When any remain, seat them in order, up to the number the role seats.
+- When none remain, seat one judge from the entries the host can run: the first whose model differs from the parent's, or else the first. A judge from the parent's own provider is medium signal, as in the panel rules below.
+- When the host can run no entry, no judge can run.
+
+The reply says how many judges sat and why.
 
 ## Roles
 
