@@ -66,7 +66,7 @@ progress.
 
 ## Phase 1. Reconnaissance research
 
-Before interviewing, run a light web-search pass so the questions are informed. Cover how
+Before interviewing, run a light pass with the **research** skill so the questions are informed. Cover how
 comparable products solve this, table-stakes versus differentiator features, and obvious
 landmines (compliance, platform policies). Write findings with source URLs to
 `docs/spec/working/research-notes.md`.
@@ -113,7 +113,7 @@ pursue follow-ups spawned by answers → next area → … → all areas pass �
 
 ## Phase 3. Targeted research
 
-Research deeply, scoped by the real requirements. Run searches in parallel.
+Research deeply with the **research** skill, scoped by the real requirements. Run searches in parallel.
 
 - **Stack (ADR-001).** Start from the preferred stack in the vrub-mode skill's `references/stack.md`.
   If the user's instructions (their AGENTS.md or CLAUDE.md) or the interview name a different

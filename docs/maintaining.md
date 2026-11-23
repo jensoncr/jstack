@@ -23,7 +23,7 @@ jstack is a fork of [pstack](https://github.com/cursor/plugins/tree/main/pstack)
 - **Its own rules.**
   - A PR opens only when the code is ready, and every push to an open PR passes the push gate in `playbooks/opening-a-pr.md`. pstack opens the PR early.
   - Everything jstack routes to is bundled. Nothing depends on Cursor's `cursor-team-kit` plugin or on Cursor's built-in `create-skill`.
-- **Its own skills.** `grill-me`, `product`, `design-system`, `council`, `codex-computer-use`, `deslop`, `control-ui`, and `control-cli`. `babysit`, `ship`, and `pickup` are short entry points to pstack's own Babysit, Shipping, and Session pickup playbooks, so those run without `/vrub-mode`. `setup-jstack` and `vrub-help` are rewritten for three harnesses.
+- **Its own skills.** `grill-me`, `product`, `research`, `design-system`, `council`, `codex-computer-use`, `deslop`, `control-ui`, and `control-cli`. `babysit`, `ship`, and `pickup` are short entry points to pstack's own Babysit, Shipping, and Session pickup playbooks, so those run without `/vrub-mode`. `setup-jstack` and `vrub-help` are rewritten for three harnesses.
 - **Left out.** pstack's benny automation pack, its `make-bot-ui` skill, its root `plugin.json`, its Claude Code adapter doc, and its logo. `rename.sh` deletes them on every sync.
 
 ## Sync from pstack
