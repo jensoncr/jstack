@@ -7,7 +7,7 @@ Every jstack delegation names a **role** and its **tier**. Read [the harness gui
 | Tier | Intent | Shape |
 |---|---|---|
 | `strong` | Judgment, prose, vague intent, hard code, and precisely specified steps that must be followed to the letter. | one model |
-| `fast` | Mechanical edits, exploration, verification lanes, any cheap fan-out. | one model |
+| `fast` | Exploration, verification lanes, and any cheap fan-out, a swarm's mechanical edits included. | one model |
 | `panel` | Independent reviewers or runners. One subagent per entry, so the list length sets the count. Repeats are allowed. | list |
 | `judge` | The one independent reviewer that grades or verifies another agent's work. | one model, or `differs-from-parent` |
 
@@ -23,21 +23,12 @@ One line per role in the config. A value is a tier name, a seat, a list of seats
 | `bug-fix` | `strong` | bug-fix playbook |
 | `perf-issue` | `strong` | perf-issue playbook |
 | `hillclimb` | `strong` | hillclimb playbook |
-| `hardest tasks` | `strong` | vrub-mode delegate tiering |
-| `judgment and prose` | `strong` | vrub-mode delegate tiering |
-| `how explorer` | `fast` | how |
-| `how explainer` | `strong` | how |
-| `why investigators` | `fast` | why |
-| `why synthesizer` | `strong` | why |
-| `reflect tooling` | `fast` | reflect |
-| `reflect judgment, divergent, synthesizer` | `strong` | reflect |
-| `arena runners` | `panel` | arena, architect, eval |
+| `judgment and prose` | `strong` | vrub-mode delegate tiering, how |
+| `arena runners` | `panel` | arena, eval |
 | `arena cross-judge` | `judge` | arena, eval, figure-it-out |
-| `swarm workers` | `fast` | swarm, verification lanes in multi-phase plans |
-| `architect runners` | `panel` | architect |
+| `swarm workers` | `fast` | swarm, verification lanes in multi-phase plans, eval's dispatch-only agents, grill-me's bulk lookups |
 | `interrogate reviewers` | `panel` | interrogate |
 | `trail reviewer` | `judge` | show-me-your-work |
-| `orchestrate verifier` | `judge` | orchestrate |
 | `recall workers` | `fast` | recall |
 | `computer use` | Codex token | codex-computer-use |
 | `council` | none | council |
@@ -68,21 +59,12 @@ feature, refactoring: strong
 bug-fix: strong
 perf-issue: strong
 hillclimb: strong
-hardest tasks: strong
 judgment and prose: strong
-how explorer: fast
-how explainer: strong
-why investigators: fast
-why synthesizer: strong
-reflect tooling: fast
-reflect judgment, divergent, synthesizer: strong
 arena runners: panel
 arena cross-judge: judge
 swarm workers: fast
-architect runners: panel
 interrogate reviewers: panel
 trail reviewer: judge
-orchestrate verifier: judge
 recall workers: fast
 computer use: gpt-6.2-sol@high
 council: claudeAgent/fable@high, codex/gpt-6.2-sol@high, antigravity/gemini-4-neon@high
@@ -101,5 +83,5 @@ A panel exists to surface independent blind spots, so the config's panel spans p
 
 - Give every repeated model a distinct lens taken from the skill's rubric (split the rubric's sections across the repeats), or the split the skill names. Do not assign personas.
 - Agreement between distinct models is high-signal. Agreement between same-model lenses is medium-signal. Say which one the report is counting.
-- When the panel is generation-bound rather than judgment-bound (arena runners, architect runners), give each repeat a distinct design constraint instead of a lens so the candidates diverge structurally.
+- When the panel is generation-bound rather than judgment-bound (arena runners), give each repeat a distinct design constraint instead of a lens so the candidates diverge structurally.
 - When the harness cannot run subagents in parallel, run the panel sequentially in fresh sessions and label the report `sequential, one model`.

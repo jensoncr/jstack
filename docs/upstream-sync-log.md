@@ -2,6 +2,52 @@
 
 One entry per pstack sync, newest first. Each entry lists the upstream commits pulled in and what jstack took, adapted, or left out. `UPSTREAM` holds the current upstream sha. `scripts/sync-upstream.sh` does the merge.
 
+## pstack 0.15.36 → 0.15.46 (2026-11-22, jstack 1.15.0)
+
+Upstream range `c742dd6..0b46ec3`, 5 commits under `pstack/`. Merged on top of jstack 1.14.4. 41 files conflicted. Upstream cut most skill texts to a fraction of their length, and jstack took the cuts.
+
+### Taken as is or adapted
+
+| Upstream | Change | In jstack |
+|---|---|---|
+| `bf0c7cd` `0b46ec3` | `/statechart` reports the line and column when SANY can't read a spec, enters a parent state through its border, and runs on native Windows | Taken unchanged. |
+| `bf0c7cd` | `/sharpen` asks the agent to prototype any choice an experiment can settle | Taken. |
+| `bf0c7cd` | `/why` is one short file with no investigators, synthesizer, or source playbooks | Taken. When the commit and PR trail is thin, it searches the other sources the session can reach. |
+| `bf0c7cd` | `/how` is one file with one read-only subagent, and vrub-mode no longer routes to it. The playbooks, `/architect`, `/no-comments`, and `comment-sicko` trace the code themselves | Taken. The subagent runs on role `judgment and prose`. |
+| `2f87c85` | `/reflect` is one file with no subagents | Taken, with the `project skills dir` verb in place of Cursor's folders. |
+| `2f87c85` | `/architect` is a short brief that routes a large or contested design to `/arena` | Taken, plus the pointer to `references/stack.md` for greenfield work. |
+| `2f87c85` | vrub-mode has a short trigger list, a one-paragraph reply rule, no Comments section, and a one-line playbook list | Taken, with jstack's own triggers (the question tool, grill-me, design-system, the preferred stack, Babysit and Ship) in the same short form. |
+| `2f87c85` | The Orchestrate playbook is deleted. Program-scale work routes to `/figure-it-out` | Taken. `/product` and its plan template name only the two autopilots. |
+| `2f87c85` | `worker.md` gives every started agent the operator's rules | Taken. The push gate stays the one standing gate, and a PR opens at the code-ready head. |
+| `2f87c85` | Opening a PR is three paragraphs | Taken, plus jstack's push gate and verify receipt. |
+| `2f87c85` | Babysit is six rules with three modes | Taken, plus jstack's push gate, local reproduction of a CI failure, the local reviewer, and the three-round limit, each as one rule. |
+| `2f87c85` | Shorter bodies for 14 principle skills, `/unslop`, and `/technical-writing` | Taken unchanged. |
+| `2f87c85` | Arena's runner and cross-judge steps are shorter | The runner step is shortened. The judge keeps `differs-from-parent`. |
+| `bf0c7cd` `2f87c85` | The how, why, reflect, architect, and hardest-tasks roles are retired | Removed from `references/models.md`, along with jstack's `orchestrate verifier`. |
+
+### Left out
+
+| Upstream | Why |
+|---|---|
+| `bf0c7cd` `2f87c85` `e58dd04` `dd24b67`: new default models, Opus-first routing with Fable as an exception, the cap at `xhigh`, the `-fast` rule, and the setup budget ladder | jstack names roles and tiers, and one config in `references/models.md` maps them to seats for every harness. Skills, playbooks, and agents name no model. The Gemini 4 Neon seat was already in the council line. |
+| `2f87c85`: `model:` pinned in the `vrub-agent` agent file | A Cursor model slug in the agent file would reach other harnesses. The role's seat sets the model. |
+| `2f87c85`: the multi-phase plan cut to five steps, with `check-plan.mjs` and its test deleted | `/product` writes its plan from the skeleton, and `check-plan.mjs` enforces it. jstack keeps both, drops the explore and writing-style steps, and takes upstream's shorter prototype step. |
+| The benny automation pack, `make-bot-ui`, and `docs/harness/claude-code.md` | Cursor automations and Cursor's adapter. `rename.sh` deletes them. |
+| The generated Claude Code tree | It lives outside `pstack/`, so the sync never copies it. |
+| Version bumps 0.15.37 to 0.15.46 | jstack versions itself. |
+
+### jstack rules kept through the merge
+
+- The push gate, opening the PR at the code-ready head, verdicts on the local commit, and the rebase test.
+- The three-round review limit in Babysit, Autopilot-full, the plan skeleton, and council.
+- The local reviewer in place of Bugbot.
+- Role and tier wording in place of model names, and harness verbs in place of Cursor-only tools.
+- The **Ask with the question tool** paragraph in vrub-mode.
+
+### Expect conflicts next sync in
+
+`skills/vrub-mode/SKILL.md` (triggers and the Subagents section), `skills/vrub-mode/playbooks/{babysit,opening-a-pr,multi-phase-plan}.md`, `skills/{arena,swarm,how,reflect,architect,setup-jstack,vrub-help}/SKILL.md`, `agents/vrub-agent.md` (the `model:` line), `README.md`, and guide pages 01, 06, and 07.
+
 ## pstack 0.15.28 → 0.15.36 (2026-11-09, jstack 1.8.0)
 
 Upstream range `d457567..c742dd6`, 24 commits under `pstack/`. Merged on top of jstack 1.7.0. 15 files conflicted.

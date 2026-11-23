@@ -69,7 +69,7 @@ Pick something real but small, and describe it the way you'd describe it to a co
 /vrub-mode add a --json flag to this command. text output stays byte-identical. verify both.
 ```
 
-Watch the todo list. Its first items are the matched playbook's steps copied in, the Feature playbook for this prompt. If `/vrub-mode` skips a step, the step stays in the list with `skip: <reason>`, so you can see what it chose not to do.
+Watch the todo list. Its first items are the matched playbook's steps copied in, the Feature playbook for this prompt.
 
 From here you can type normal follow-ups. How long `/vrub-mode` stays on depends on the harness. On Cursor, pick it from the `/` menu with Option+Enter (Mac) or Alt+Enter (Windows) instead of Enter. That makes it a [Custom Mode](https://cursor.com/docs/skills#using-a-skill-as-a-custom-mode), which stays in context on every turn until you exit it. Plain Enter attaches the skill to one message, and it fades as the chat moves on. On Claude Code and Codex, the skill stays in context while the task does, so invoke it again when you start a fresh task.
 

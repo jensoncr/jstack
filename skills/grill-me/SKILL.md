@@ -22,7 +22,7 @@ Attack the premise first. If the request looks like the wrong fix for the stated
 
 Each open node is one of three kinds. Only decisions reach the user.
 
-- **Fact.** The repo, git history, docs, or tools can answer it. Look it up. Run the **how** skill for how something works now and the **why** skill for why it's shaped that way. Send bulk lookups to subagents on the `how explorer` role, per the vrub-mode skill's `references/models.md`.
+- **Fact.** The repo, git history, docs, or tools can answer it. Look it up. Run the **how** skill for how something works now and the **why** skill for why it's shaped that way. Send bulk lookups to subagents on role `swarm workers` (tier `fast`), per the vrub-mode skill's `references/models.md`.
 - **Empirical.** Running something would settle it: behavior, layout, timing, output. Sketch it per the vrub-mode skill's `playbooks/prototype.md` and let the result decide, or list it as a prototype step in the brief.
 - **Decision.** A product, preference, or priority call that no lookup or experiment settles. Ask it.
 

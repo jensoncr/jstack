@@ -48,7 +48,7 @@ If cost is the worry, say where the tokens go and how to spend fewer. jstack spe
 
 ## Start a task with `/vrub-mode`
 
-`/vrub-mode` matches the task to a playbook, copies the playbook's steps into the todo list, and runs the other skills as the steps need them. A step it skips stays in the list as `skip: <reason>`. A good prompt states the goal and how to tell it's done. It doesn't list skills, because a hand-written sequence tends to drop or reorder steps the playbook would keep. Read [`references/prompting.md`](references/prompting.md) before you help word one. [Guide page 2](../../docs/guide/02-vrub-mode.md) has examples.
+`/vrub-mode` matches the task to a playbook, copies the playbook's steps into the todo list, and runs the other skills as the steps need them. A good prompt states the goal and how to tell it's done. It doesn't list skills, because a hand-written sequence tends to drop or reorder steps the playbook would keep. Read [`references/prompting.md`](references/prompting.md) before you help word one. [Guide page 2](../../docs/guide/02-vrub-mode.md) has examples.
 
 Whether `/vrub-mode` stays on depends on the harness:
 
@@ -113,16 +113,15 @@ Close calls:
 
 - `/how` explains what the code does. `/why` explains the reasons. `/teach` runs one or both and explains the result plainly.
 - `/arena` gives every worker the same brief and merges the best parts. `/swarm` splits work into slices or a race and returns one report.
-- `/architect` implements right after it settles the design. Add "with checkpoint" to review the design before it writes code.
 - `/interrogate` reviews the diff. `/blast-radius` looks for breakage outside the diff and proves the one fact that makes the change safe.
 - `/babysit` drives a PR to merge-ready and stops there. `/ship` merges, and only when the user asks to merge, land, or ship.
 - `/recall` rebuilds context across recent chats. `/ketchup` covers only this chat since the user's last message. Resuming one specific chat or branch is `/pickup`.
-- `/figure-it-out` designs one rigorous run. The Orchestrate playbook runs a program that spans days and many PRs. The Autonomous run playbook drives one task to a finish condition.
+- `/figure-it-out` designs one rigorous run. The Autonomous run playbook drives one task to a finish condition.
 
 Not in jstack:
 
 - `/loop` is built into Cursor and Claude Code. The Codex CLI has none, so jstack falls back to the continuation steps in `../vrub-mode/references/harness/README.md`.
-- jstack has no `/orchestrate` skill. Orchestrate is a `/vrub-mode` playbook. If the command list shows `/orchestrate`, another plugin provides it.
+- jstack has no `/orchestrate` skill. If the command list shows `/orchestrate`, another plugin provides it.
 
 ## Playbooks and principles
 
@@ -135,7 +134,7 @@ Playbooks are step lists inside `/vrub-mode`, not skills, so they have no comman
 - "full autopilot on this queue" runs Autopilot-full. "autopilot, don't merge" runs Autopilot-stack.
 - "run the eval playbook" runs Eval.
 
-Outside `/vrub-mode`, the `/babysit` and `/ship` skills reach the same playbooks. The Playbooks section of [`vrub-mode`](../vrub-mode/SKILL.md) lists every playbook and when it applies. [Guide page 6](../../docs/guide/06-verify-and-ship.md) covers opening, babysitting, and landing a PR.
+Outside `/vrub-mode`, the `/babysit` and `/ship` skills reach the same playbooks. The Playbooks section of [`vrub-mode`](../vrub-mode/SKILL.md) lists every playbook. [Guide page 6](../../docs/guide/06-verify-and-ship.md) covers opening, babysitting, and landing a PR.
 
 jstack has no planning skill. A harness plan mode works alongside it. For work that spans phases or stacked PRs, asking `/vrub-mode` for a plan runs the [Multi-phase plan playbook](../vrub-mode/playbooks/multi-phase-plan.md), which writes the plan and doesn't implement it. For a design question, the Prototype playbook or `/architect` settles it in code first.
 
