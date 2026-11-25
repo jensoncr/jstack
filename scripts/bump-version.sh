@@ -4,7 +4,7 @@
 # Usage: scripts/bump-version.sh major|minor|patch|<x.y.z>
 set -euo pipefail
 cd "$(dirname "$0")/.."
-manifests=(.claude-plugin/plugin.json .claude-plugin/marketplace.json .codex-plugin/plugin.json .cursor-plugin/plugin.json)
+manifests=(.claude-plugin/plugin.json .claude-plugin/marketplace.json .codex-plugin/plugin.json .cursor-plugin/plugin.json .antigravity-plugin/plugin.json)
 current="$(grep -oE '"version": *"[^"]+"' .claude-plugin/plugin.json | cut -d'"' -f4)"
 IFS=. read -r major minor patch <<<"$current"
 case "${1:?usage: bump-version.sh major|minor|patch|<x.y.z>}" in

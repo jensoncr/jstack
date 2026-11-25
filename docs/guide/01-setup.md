@@ -24,6 +24,8 @@ codex plugin add jstack@jstack
 
 In Cursor, clone the repo and run `scripts/install-cursor-local.sh` from it, then run **Developer: Reload Window**. The script copies the checkout into `~/.cursor/plugins/local/jstack`, so run it again after each update.
 
+In Antigravity, clone the repo and run `scripts/install-antigravity.sh` from it, then start a new session. The script copies the checkout into `~/.gemini/config/plugins/jstack` and into each T3 Code Antigravity profile, because T3 Code runs Antigravity from its own profile. Run it again after each update, and after adding an Antigravity provider in T3 Code. Antigravity prefixes plugin skills, so each command in this guide takes a `jstack:` prefix there too.
+
 On any harness that reads skills, run:
 
 ```text
@@ -71,6 +73,6 @@ Pick something real but small, and describe it the way you'd describe it to a co
 
 Watch the todo list. Its first items are the matched playbook's steps copied in, the Feature playbook for this prompt.
 
-From here you can type normal follow-ups. How long `/vrub-mode` stays on depends on the harness. On Cursor, pick it from the `/` menu with Option+Enter (Mac) or Alt+Enter (Windows) instead of Enter. That makes it a [Custom Mode](https://cursor.com/docs/skills#using-a-skill-as-a-custom-mode), which stays in context on every turn until you exit it. Plain Enter attaches the skill to one message, and it fades as the chat moves on. On Claude Code and Codex, the skill stays in context while the task does, so invoke it again when you start a fresh task.
+From here you can type normal follow-ups. How long `/vrub-mode` stays on depends on the harness. On Cursor, pick it from the `/` menu with Option+Enter (Mac) or Alt+Enter (Windows) instead of Enter. That makes it a [Custom Mode](https://cursor.com/docs/skills#using-a-skill-as-a-custom-mode), which stays in context on every turn until you exit it. Plain Enter attaches the skill to one message, and it fades as the chat moves on. On Claude Code, Codex, and Antigravity, the skill stays in context while the task does, so invoke it again when you start a fresh task.
 
 Next: [Route work through `/vrub-mode`](./02-vrub-mode.md).

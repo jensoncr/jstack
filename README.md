@@ -35,6 +35,14 @@ scripts/install-cursor-local.sh
 
 it copies the checkout to `~/.cursor/plugins/local/jstack`. run it again after each update, then run **developer: reload window**.
 
+antigravity, from a clone of this repo:
+
+```bash
+scripts/install-antigravity.sh
+```
+
+it copies the checkout to `~/.gemini/config/plugins/jstack`, where the `agy` cli finds it, and into each t3 code antigravity profile. t3 code runs antigravity from its own profile, which never reads the first folder. run it again after each update and after adding an antigravity provider in t3 code, then start a new session. without t3 code, `agy plugin install https://github.com/jensoncr/jstack` is enough, and running it again updates. antigravity prefixes plugin skills but not agents, so `/vrub-mode` is `/jstack:vrub-mode`.
+
 any harness that reads skills:
 
 ```bash
@@ -114,7 +122,7 @@ when invoked it:
 
 the full rules and playbooks live in [`skills/vrub-mode/SKILL.md`](./skills/vrub-mode/SKILL.md).
 
-on cursor, to keep [`/vrub-mode`](./skills/vrub-mode/SKILL.md) on across turns, pick it from the `/` menu and press option+enter (mac) or alt+enter (windows) instead of enter. that makes it a [custom mode](https://cursor.com/docs/skills#using-a-skill-as-a-custom-mode), which cursor offers in the agents window and the cli. it stays in context every turn until you exit the mode. plain enter attaches it to one message only. on claude code and codex, persistence and invocation syntax depend on the host, so select the skill for each new task instead of relying on cursor's mode metadata.
+on cursor, to keep [`/vrub-mode`](./skills/vrub-mode/SKILL.md) on across turns, pick it from the `/` menu and press option+enter (mac) or alt+enter (windows) instead of enter. that makes it a [custom mode](https://cursor.com/docs/skills#using-a-skill-as-a-custom-mode), which cursor offers in the agents window and the cli. it stays in context every turn until you exit the mode. plain enter attaches it to one message only. on claude code, codex, and antigravity, persistence and invocation syntax depend on the host, so select the skill for each new task instead of relying on cursor's mode metadata.
 
 long-running work uses the host's available loop or scheduled continuation. the [harness guide](./skills/vrub-mode/references/harness/README.md) defines capability detection, saved watch state, and the foreground fallback when no scheduler exists. a skill file alone does not keep an agent running after its session ends.
 

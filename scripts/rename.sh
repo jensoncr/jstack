@@ -47,6 +47,13 @@ for f in skills/*/SKILL.md; do
   perl -ni -e 'print unless /^disable-model-invocation: true\s*$/' "$f"
 done
 
+# Agents take their model from the role config. Antigravity also skips an agent
+# whose frontmatter model: is not one of its own tiers.
+for f in agents/*.md; do
+  [ -f "$f" ] || continue
+  perl -ni -e '$fm = $. == 1 if /^---\s*$/; print unless $fm && /^model:/' "$f"
+done
+
 # jstack reviews with its own local agents, not Cursor's Bugbot, so the triage rubric carries a neutral name.
 if [ -f skills/vrub-mode/references/bugbot-triage.md ]; then
   mv skills/vrub-mode/references/bugbot-triage.md skills/vrub-mode/references/review-triage.md

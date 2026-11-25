@@ -171,7 +171,7 @@ To learn a concept from a video, run [`/explainer-video`](../../skills/explainer
 ## The pitfalls
 
 - **Enumerating skills in the prompt.** "use /architect then /arena then /interrogate" reorders steps the playbook already sequences. State the goal and constraints. Name a skill only to override a default.
-- **A vague finish condition.** "make it better" gives `/loop` (the `loop` verb; Cursor and Claude Code have `/loop`, Codex has none in the CLI) nothing to check. Give a command or artifact that can pass or fail.
+- **A vague finish condition.** "make it better" gives `/loop` (the `loop` verb; Cursor and Claude Code have `/loop`, the Codex and Antigravity CLIs have none) nothing to check. Give a command or artifact that can pass or fail.
 - **Leading with your theory of the cause.** The agent searches wherever you pointed. Ask it to restate the problem first, then share your hunch.
 - **Taking the first design.** One attempt locks in the first shape the model thought of. Ask for prototypes or `/architect` and pick from evidence.
 - **Polishing an abstract plan.** Adversarial review of a plan with no code behind it invents risks that will never happen. Settle the open questions with prototypes, then review what got built.

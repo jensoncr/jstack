@@ -13,4 +13,4 @@ Keep a finding only if it will still hold in six months, would change what a fut
 
 Present Accepted (problem, proposal, skill), Rejected (reason) and Backlog, and wait for approval before editing any skill.
 
-Never edit a skill inside the harness's installed-plugin cache (a `plugins/cache/` folder). Before approval, show its destination: the project skills dir (the `project skills dir` verb in your harness file under the vrub-mode skill's `references/harness/`) or the matching user-level folder in your home directory. After approval, copy the skill folder there and edit the copy. Never open a PR or push.
+Never edit a skill inside the harness's installed-plugin cache (a `plugins/cache/` folder, or `config/plugins/` on Antigravity). Before approval, show its destination: the project skills dir (the `project skills dir` verb in your harness file under the vrub-mode skill's `references/harness/`) or the matching user-level folder in your home directory. After approval, copy the skill folder there and edit the copy. Never open a PR or push.

@@ -1,13 +1,13 @@
 ---
 name: setup-jstack
-description: One-time jstack setup on a machine for the current harness (Cursor, Claude Code, or Codex). Turns on the Codex question picker and offers verification skills for the project. Use for /setup-jstack or "set up jstack". Model choices are not configured here; they ship in the plugin's harness files.
+description: One-time jstack setup on a machine for the current harness (Cursor, Claude Code, Codex, or Antigravity). Turns on the Codex question picker and offers verification skills for the project. Use for /setup-jstack or "set up jstack". Model choices are not configured here; they ship in the plugin's harness files.
 ---
 
 # Setup jstack
 
 Prepare this machine and project for jstack. jstack's models are the one config in `../vrub-mode/references/models.md`, shipped with the plugin. There is no per-user model config, so this skill never writes one. To use different models, fork jstack and edit that block.
 
-**Ask with the question tool.** A question in a normal message goes unseen, and the thread looks done. Put every question that has two or more real options through the harness question tool, so the thread shows that it is waiting: `AskUserQuestion` on Claude Code, `request_user_input` on Codex, `AskQuestion` on Cursor. Make each question stand alone, with what you found, what blocks you, and the options. Follow the tool's own schema for how many questions and options one call takes, and put the recommended option first, marked. When there are more questions than one call takes, make back-to-back calls and never drop to prose. Ask in prose only when a question has no real options, or when the tool is missing or its call fails. Then start your message with the question, use prose for the rest of the session, and say once how to get the picker: on Codex, Plan mode or the `default_mode_request_user_input` feature flag that `/setup-jstack` sets; on Cursor, a local chat on a model that has the tool.
+**Ask with the question tool.** A question in a normal message goes unseen, and the thread looks done. Put every question that has two or more real options through the harness question tool, so the thread shows that it is waiting: `AskUserQuestion` on Claude Code, `request_user_input` on Codex, `AskQuestion` on Cursor, `ask_question` on Antigravity. Make each question stand alone, with what you found, what blocks you, and the options. Follow the tool's own schema for how many questions and options one call takes, and put the recommended option first, marked. When there are more questions than one call takes, make back-to-back calls and never drop to prose. Ask in prose only when a question has no real options, or when the tool is missing or its call fails. Then start your message with the question, use prose for the rest of the session, and say once how to get the picker: on Codex, Plan mode or the `default_mode_request_user_input` feature flag that `/setup-jstack` sets; on Cursor, a local chat on a model that has the tool.
 
 ## Steps
 
