@@ -2,7 +2,7 @@
 
 This page is for whoever changes this repo, person or agent. To learn how to use jstack, read the [guide](./guide/README.md) instead.
 
-jstack is a fork of [pstack](https://github.com/cursor/plugins/tree/main/pstack), Cursor's engineering-rigor plugin. It keeps pstack's skills, playbooks, and principles current, and changes four things: the names, support for Claude Code and Codex as well as Cursor, a few rules, and a few skills of its own.
+jstack is a fork of [pstack](https://github.com/cursor/plugins/tree/main/pstack), Cursor's engineering-rigor plugin. It keeps pstack's skills, playbooks, and principles current, and changes four things: the names, support for Claude Code, Codex, and Antigravity as well as Cursor, a few rules, and a few skills of its own.
 
 ## What is in the repo
 
@@ -13,18 +13,18 @@ jstack is a fork of [pstack](https://github.com/cursor/plugins/tree/main/pstack)
 | `docs/guide/` | The user guide, ten pages. |
 | `docs/upstream-sync-log.md` | One entry per pstack sync: what was taken, adapted, and left out, and why. |
 | `scripts/` | The sync, rename, release, install, and docs-check scripts. |
-| `.claude-plugin/`, `.codex-plugin/`, `.cursor-plugin/`, `.agents/plugins/` | One manifest per harness. They share one version number. |
+| `.claude-plugin/`, `.codex-plugin/`, `.cursor-plugin/`, `.antigravity-plugin/`, `.agents/plugins/` | One manifest per harness. They share one version number. |
 | `UPSTREAM` | The pstack commit and version this tree was last synced to. |
 
 ## How jstack differs from pstack
 
 - **Names.** `poteto-mode` is `vrub-mode`, and `pstack` is `jstack`. `scripts/rename.sh` applies the renames, so never rename by hand.
-- **Three harnesses.** Skills name no models and no harness-specific tools. They name a role and a tier, which `skills/vrub-mode/references/models.md` resolves, and verbs such as "spawn a subagent", which the files in `skills/vrub-mode/references/harness/` map to each harness's tools. Model names and tool names belong only in those harness files, with one exception. Every skill that asks the user a question carries the same **Ask with the question tool** paragraph, which names the three question tools, so the skill shows the picker when it runs without `vrub-mode`. The skills that ask only when blocked also share an **Ask rarely** paragraph. Edit all copies together. The docs check fails when they differ.
+- **Four harnesses.** Skills name no models and no harness-specific tools. They name a role and a tier, which `skills/vrub-mode/references/models.md` resolves, and verbs such as "spawn a subagent", which the files in `skills/vrub-mode/references/harness/` map to each harness's tools. Model names and tool names belong only in those harness files, with one exception. Every skill that asks the user a question carries the same **Ask with the question tool** paragraph, which names the four question tools, so the skill shows the picker when it runs without `vrub-mode`. The skills that ask only when blocked also share an **Ask rarely** paragraph. Edit all copies together. The docs check fails when they differ.
 - **Its own rules.**
   - A PR opens only when the code is ready, and every push to an open PR passes the push gate in `playbooks/opening-a-pr.md`. pstack opens the PR early.
   - Arena seats two cross-judges by default, from providers other than the parent's when they can run, and one judge otherwise. Judges who split get one more round, and the judges check a grafted result. pstack seats one judge.
   - Everything jstack routes to is bundled. Nothing depends on Cursor's `cursor-team-kit` plugin or on Cursor's built-in `create-skill`.
-- **Its own skills.** `grill-me`, `spec`, `product`, `research`, `design-system`, `council`, `codex-computer-use`, `deslop`, `control-ui`, and `control-cli`. `babysit`, `ship`, and `pickup` are short entry points to pstack's own Babysit, Shipping, and Session pickup playbooks, so those run without `/vrub-mode`. `setup-jstack` and `vrub-help` are rewritten for three harnesses.
+- **Its own skills.** `grill-me`, `spec`, `product`, `research`, `design-system`, `council`, `codex-computer-use`, `deslop`, `control-ui`, and `control-cli`. `babysit`, `ship`, and `pickup` are short entry points to pstack's own Babysit, Shipping, and Session pickup playbooks, so those run without `/vrub-mode`. `setup-jstack` and `vrub-help` are rewritten for four harnesses.
 - **Left out.** pstack's benny automation pack, its `make-bot-ui` skill, its root `plugin.json`, its Claude Code adapter doc, and its logo. `rename.sh` deletes them on every sync.
 
 ## Sync from pstack
@@ -49,12 +49,13 @@ The docs check fails when the README or the guide names a skill that doesn't exi
 
 ## Release and install
 
-1. Run `scripts/bump-version.sh minor` (or `major`, `patch`, or an exact version). It sets the version in all four manifests. Claude Code and Codex fetch an update only when the version changes.
+1. Run `scripts/bump-version.sh minor` (or `major`, `patch`, or an exact version). It sets the version in all five manifests. Claude Code and Codex fetch an update only when the version changes.
 2. Merge to `main`.
 3. Update each harness:
    - Claude Code: `claude plugin marketplace update jstack && claude plugin update jstack@jstack`, then restart.
    - Codex: `codex plugin marketplace upgrade jstack`.
    - Cursor: `scripts/install-cursor-local.sh`, then **Developer: Reload Window**.
+   - Antigravity: `scripts/install-antigravity.sh`, then start a new session. It also installs into each T3 Code Antigravity profile.
 
 ## One trap
 

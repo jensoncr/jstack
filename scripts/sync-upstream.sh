@@ -36,9 +36,9 @@ echo
 echo "merging into $(git branch --show-current)..."
 if git merge --no-edit "$gen_branch"; then
   next="$(bash scripts/bump-version.sh minor)"
-  git add .claude-plugin .codex-plugin .cursor-plugin
+  git add .claude-plugin .codex-plugin .cursor-plugin .antigravity-plugin
   git commit --quiet -m "chore: release jstack $next (pstack $version)"
-  echo "merged clean as jstack $next. run the tests in skills/vrub-mode/scripts, then scripts/install-cursor-local.sh."
+  echo "merged clean as jstack $next. run the tests in skills/vrub-mode/scripts, then scripts/install-cursor-local.sh and scripts/install-antigravity.sh."
 else
   echo "merge has conflicts. resolve them, git commit, then: scripts/bump-version.sh minor"
   exit 1

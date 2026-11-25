@@ -1,6 +1,6 @@
 # Harness capabilities
 
-Use the current session's tool descriptions, schemas, permissions, and user instructions as the source of truth. Read the matching adapter for examples: [Codex](codex.md), [Cursor](cursor.md), or [Claude Code](claude-code.md). Product names and optional UI fields do not establish which tools a session supports.
+Use the current session's tool descriptions, schemas, permissions, and user instructions as the source of truth. Read the matching adapter for examples: [Codex](codex.md), [Cursor](cursor.md), [Claude Code](claude-code.md), or [Antigravity](antigravity.md). Product names and optional UI fields do not establish which tools a session supports.
 
 Before a workflow needs delegation, questions, or continuation, check those capabilities. Use supported arguments only. Reuse an existing capability decision until a tool becomes unavailable or the environment changes.
 

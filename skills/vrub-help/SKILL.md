@@ -1,6 +1,6 @@
 ---
 name: vrub-help
-description: Guides users through jstack setup on Cursor, Claude Code, or Codex, /vrub-mode, and picking the skill, playbook, or principle for a task. Type /vrub-help with a question.
+description: Guides users through jstack setup on Cursor, Claude Code, Codex, or Antigravity, /vrub-mode, and picking the skill, playbook, or principle for a task. Type /vrub-help with a question.
 disable-model-invocation: true
 ---
 
@@ -16,7 +16,7 @@ This file maps questions to the skills and guide pages that hold the answers. Th
 
 Infer the need from the message and the conversation. A named situation, such as "which skill reviews a PR?", goes straight to its section. If the need is still unclear, ask the user one multiple-choice question with the options below, then answer only the section they pick.
 
-**Ask with the question tool.** A question in a normal message goes unseen, and the thread looks done. Put every question that has two or more real options through the harness question tool, so the thread shows that it is waiting: `AskUserQuestion` on Claude Code, `request_user_input` on Codex, `AskQuestion` on Cursor. Make each question stand alone, with what you found, what blocks you, and the options. Follow the tool's own schema for how many questions and options one call takes, and put the recommended option first, marked. When there are more questions than one call takes, make back-to-back calls and never drop to prose. Ask in prose only when a question has no real options, or when the tool is missing or its call fails. Then start your message with the question, use prose for the rest of the session, and say once how to get the picker: on Codex, Plan mode or the `default_mode_request_user_input` feature flag that `/setup-jstack` sets; on Cursor, a local chat on a model that has the tool.
+**Ask with the question tool.** A question in a normal message goes unseen, and the thread looks done. Put every question that has two or more real options through the harness question tool, so the thread shows that it is waiting: `AskUserQuestion` on Claude Code, `request_user_input` on Codex, `AskQuestion` on Cursor, `ask_question` on Antigravity. Make each question stand alone, with what you found, what blocks you, and the options. Follow the tool's own schema for how many questions and options one call takes, and put the recommended option first, marked. When there are more questions than one call takes, make back-to-back calls and never drop to prose. Ask in prose only when a question has no real options, or when the tool is missing or its call fails. Then start your message with the question, use prose for the rest of the session, and say once how to get the picker: on Codex, Plan mode or the `default_mode_request_user_input` feature flag that `/setup-jstack` sets; on Cursor, a local chat on a model that has the tool.
 
 The options:
 
@@ -26,7 +26,7 @@ The options:
 - Fix a run that went wrong
 - Make jstack my own
 
-Answers differ by harness. Identify the one you are running in (Cursor, Claude Code, or Codex) and answer for it. Its adapter is `../vrub-mode/references/harness/<harness>.md`. Check the state that changes the answer, and mention it only when it does:
+Answers differ by harness. Identify the one you are running in (Cursor, Claude Code, Codex, or Antigravity) and answer for it. Its adapter is `../vrub-mode/references/harness/<harness>.md`. Check the state that changes the answer, and mention it only when it does:
 
 - No `verify-*` skill or other app harness in the project means agents have no scripted way to drive the app. Mention `/create-verification-skill` when the question is about proving a change works.
 - No formal verification skill in the project means no property is checked past what tests reach. Mention `/create-formal-verification-skill` when the question is about a race, an invariant, or another case tests rarely hit. When one exists and the code it covers changed after the commit it records as last in sync, mention `/maintain-formal-verification-skill` if the question touches that code.
@@ -37,12 +37,13 @@ Answers differ by harness. Identify the one you are running in (Cursor, Claude C
    - Cursor: `/add-plugin jstack`. From a local checkout, run `scripts/install-cursor-local.sh`, then Developer: Reload Window.
    - Claude Code: `/plugin marketplace add jensoncr/jstack`, then `/plugin install jstack`.
    - Codex: `codex plugin marketplace add jensoncr/jstack`, then `codex plugin add jstack@jstack`.
+   - Antigravity: from a local checkout, run `scripts/install-antigravity.sh`. It also installs into T3 Code's Antigravity profiles, which never read the `agy` CLI's plugin folder.
 2. Run [`/setup-jstack`](../setup-jstack/SKILL.md). It turns on the Codex question picker and offers once each to generate a verification skill and a formal verification skill for the project, unless the project already has one.
 3. Start a real task with `/vrub-mode`, a goal, and a check that can pass or fail.
 
-The command syntax differs by harness: `/vrub-mode` on Cursor, `/jstack:vrub-mode` on Claude Code (or `/vrub-mode` when no other plugin claims the name), and `$vrub-mode` on Codex. Most jstack skills also load when the request matches their description. `/vrub-help`, `/automate-me`, and `/product` run only when typed. The [README](../../README.md) and [guide page 1](../../docs/guide/01-setup.md) have the details. Offer to word their first prompt with them, per [`references/prompting.md`](references/prompting.md).
+The command syntax differs by harness: `/vrub-mode` on Cursor, `/jstack:vrub-mode` on Claude Code (or `/vrub-mode` when no other plugin claims the name), `$vrub-mode` on Codex, and `/jstack:vrub-mode` on Antigravity. Most jstack skills also load when the request matches their description. `/vrub-help`, `/automate-me`, and `/product` run only when typed. The [README](../../README.md) and [guide page 1](../../docs/guide/01-setup.md) have the details. Offer to word their first prompt with them, per [`references/prompting.md`](references/prompting.md).
 
-To update, the plugin's version must change. Claude Code: `claude plugin marketplace update jstack`, then `claude plugin update jstack@jstack`, then restart. Codex: `codex plugin marketplace upgrade jstack`, then start a new session. Cursor: rerun the install script, or update from Customize, then reload the window.
+To update, the plugin's version must change. Claude Code: `claude plugin marketplace update jstack`, then `claude plugin update jstack@jstack`, then restart. Codex: `codex plugin marketplace upgrade jstack`, then start a new session. Cursor: rerun the install script, or update from Customize, then reload the window. Antigravity: rerun the install script, then start a new session.
 
 If cost is the worry, say where the tokens go and how to spend fewer. jstack spends extra tokens on subagents and review panels. Ask for fewer panel candidates per task. Model choices are fixed in the config in `../vrub-mode/references/models.md`; a user who wants different ones forks jstack and edits it. Save `/vrub-mode` for work that needs rigor.
 
@@ -53,9 +54,9 @@ If cost is the worry, say where the tokens go and how to spend fewer. jstack spe
 Whether `/vrub-mode` stays on depends on the harness:
 
 - Cursor: Enter on `/vrub-mode` attaches it to one message, and it fades as the chat moves on. Option+Enter on Mac, Alt+Enter on Windows, or Use as Mode from the skill entry makes it a Custom Mode that stays in context every turn until the user exits it.
-- Claude Code and Codex have no persistent mode. The loaded skill stays in the conversation but weighs less as the chat grows. Start each new task with `/vrub-mode`.
+- Claude Code, Codex, and Antigravity have no persistent mode. The loaded skill stays in the conversation but weighs less as the chat grows. Start each new task with `/vrub-mode`.
 
-Mid-chat, "new task" makes the mode match a fresh playbook. `/vrub-mode` already uses `vrub-agent` for the subagents its playbook steps spawn. To get the same style from a subagent of your own, spawn the named agent `vrub-agent` (`jstack:vrub-agent` on Claude Code).
+Mid-chat, "new task" makes the mode match a fresh playbook. `/vrub-mode` already uses `vrub-agent` for the subagents its playbook steps spawn. To get the same style from a subagent of your own, spawn the named agent `vrub-agent` (`jstack:vrub-agent` on Claude Code; on Antigravity, the `named agent` verb in its harness file).
 
 ## Pick a skill
 
@@ -120,7 +121,7 @@ Close calls:
 
 Not in jstack:
 
-- `/loop` is built into Cursor and Claude Code. The Codex CLI has none, so jstack falls back to the continuation steps in `../vrub-mode/references/harness/README.md`.
+- `/loop` is built into Cursor and Claude Code. The Codex and Antigravity CLIs have none, so jstack falls back to the continuation steps in `../vrub-mode/references/harness/README.md`.
 - jstack has no `/orchestrate` skill. If the command list shows `/orchestrate`, another plugin provides it.
 
 ## Playbooks and principles
