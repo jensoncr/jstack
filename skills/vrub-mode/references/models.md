@@ -74,7 +74,7 @@ interrogate reviewers: panel
 trail reviewer: judge
 recall workers: fast
 computer use: gpt-6.2-sol@high
-council: claudeAgent/fable@high, codex/gpt-6.2-sol@high, antigravity/gemini-4-neon@high
+council: claudeAgent/opus@high, codex/gpt-6.2-sol@high, antigravity/gemini-4-neon@high
 ```
 
 ## Resolving a role
